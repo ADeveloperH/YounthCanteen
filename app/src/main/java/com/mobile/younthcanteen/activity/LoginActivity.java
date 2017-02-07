@@ -78,6 +78,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Vie
         ivDeletePwd.setOnClickListener(this);
         ivIsShowPwd.setOnClickListener(this);
         btnLogin.setOnClickListener(this);
+        tvRegister.setOnClickListener(this);
     }
 
     private TextWatcher watcherIsCanLogin = new TextWatcher() {
@@ -140,6 +141,9 @@ public class LoginActivity extends Activity implements View.OnClickListener, Vie
                 break;
             case R.id.btn_login://登录
                 login();
+                break;
+            case R.id.tv_register://注册
+                startActivity(new Intent(act,RegisterActivity.class));
                 break;
         }
     }

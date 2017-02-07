@@ -29,12 +29,12 @@
         <!-- 登录 -->
         <activity
             android:name=".activity.LoginActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
         <!-- 注册 -->
         <activity
             android:name=".activity.RegisterActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
     </application>
 
