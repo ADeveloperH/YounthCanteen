@@ -35,7 +35,7 @@ public class GetDataUtil {
     public GetDataUtil(Context context) {
         super();
         this.context = context;
-        number = SharedPreferencesUtil.getPhoneNumber(); //得到登录手机号
+        number = SharedPreferencesUtil.getAccount(); //得到登录手机号
         sdf = new SimpleDateFormat("yyyyMMdd");
         date = sdf.format(new Date());
     }
@@ -48,7 +48,7 @@ public class GetDataUtil {
      * @param isShowRemind
      */
     public void getUnsubscribeBusiness(String phoneNumber, boolean isShowRemind, String moduleId) {
-        String url = com.mobile.younthcanteen.http.Http.QUERY_BUSINESS;
+        String url = Http.LOGIN;
         com.mobile.younthcanteen.http.RequestParams params = new com.mobile.younthcanteen.http.RequestParams();
         params.put("phoneNumber", phoneNumber);
         params.put("moduleId", moduleId);
