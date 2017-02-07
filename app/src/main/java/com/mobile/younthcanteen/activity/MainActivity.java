@@ -1,7 +1,9 @@
-package com.mobile.younthcanteen;
+package com.mobile.younthcanteen.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+
+import com.mobile.younthcanteen.R;
 
 public class MainActivity extends Activity {
 
