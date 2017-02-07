@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/title_height"
-        android:background="#ffd161"
+        android:background="@color/myyellow"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="10dp"
@@ -28,6 +28,7 @@
             android:layout_weight="1" />
 
         <TextView
+            android:id="@+id/tv_register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
@@ -41,10 +42,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="10dp">
+        android:padding="15dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -53,6 +51,7 @@
             android:textColor="@color/black" />
 
         <EditText
+            android:id="@+id/et_account"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -64,9 +63,11 @@
             android:textSize="16dp" />
 
         <ImageView
+            android:id="@+id/iv_deleteaccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/delete_pic" />
+            android:src="@drawable/delete_pic"
+            android:visibility="gone" />
     </LinearLayout>
 
     <View
@@ -79,10 +80,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="10dp">
+        android:padding="15dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -91,16 +89,25 @@
             android:textColor="@color/black" />
 
         <EditText
+            android:id="@+id/et_password"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:background="@null"
             android:hint="请输入密码"
+            android:inputType="textPassword"
             android:singleLine="true"
             android:textSize="16dp" />
-
         <ImageView
+            android:id="@+id/iv_deletepwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/delete_pic"
+            android:layout_marginRight="10dp"
+            android:visibility="gone" />
+        <ImageView
+            android:id="@+id/iv_isshowpwd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/passport_ic_hide_password" />
@@ -111,4 +118,23 @@
         android:layout_height="1px"
         android:background="@color/divideline" />
 
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_margin="15dp"
+        android:background="@drawable/login_btn_unable"
+        android:enabled="false"
+        android:text="登录"
+        android:textColor="@color/white"
+        android:textSize="16dp" />
+
+    <TextView
+        android:id="@+id/tv_forgetpwd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="10dp"
+        android:text="忘记密码?"
+        android:textSize="16dp" />
 </LinearLayout>
