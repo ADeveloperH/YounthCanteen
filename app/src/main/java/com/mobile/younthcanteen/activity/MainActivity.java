@@ -110,10 +110,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case 1:
                 mTabFind.setTextColor(Color.parseColor("#67c0f4"));
                 mImageFind.setImageDrawable(act.getResources().getDrawable(R.drawable.tab_find_icon_select));
-                mContentPage.setCurrentItem(2, false);
+                mContentPage.setCurrentItem(1, false);
                 break;
             case 2:
-                mContentPage.setCurrentItem(3, false);
+                mContentPage.setCurrentItem(2, false);
                 mTabCustome.setTextColor(Color.parseColor("#67c0f4"));
                 mImageCustome.setImageDrawable(act.getResources().getDrawable(R.drawable.tab_customer_icon_select));
                 break;

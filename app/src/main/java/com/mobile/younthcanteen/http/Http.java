@@ -246,7 +246,7 @@ public class Http {
     public static final String BASE_URL;
 
     static {
-        BASE_URL = "http://wx.10086.cn/gfms/";//主机域名
+        BASE_URL = "http://116.255.130.49:8732/";//主机域名
     }
 
     /**

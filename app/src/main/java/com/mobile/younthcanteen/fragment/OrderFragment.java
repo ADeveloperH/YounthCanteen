@@ -1,21 +1,26 @@
 package com.mobile.younthcanteen.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.mobile.younthcanteen.R;
+import com.mobile.younthcanteen.activity.LoginActivity;
 
 /**
  * author：hj
  * time: 2017/2/7 0007 15:15
  */
 
-public class OrderFragment extends Fragment {
+public class OrderFragment extends Fragment implements View.OnClickListener {
     private View rootView;//缓存Fragment的View
     private boolean isNeedReLoad = true;//是否需要重新加载该Fragment数据
+    private Button btnLogin;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -35,11 +40,29 @@ public class OrderFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (isNeedReLoad) {
-//            initView(getView());
+            initView(getView());
 //            initData();
-//            setListener();
+            setListener();
 //            getData();
             isNeedReLoad = false;
         }
     }
+
+    private void setListener() {
+        btnLogin.setOnClickListener(this);
+    }
+
+    private void initView(View view) {
+        btnLogin = (Button) view.findViewById(R.id.btn_login);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_login://跳转到登录注册页面
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+                break;
+        }
+    }
+
 }

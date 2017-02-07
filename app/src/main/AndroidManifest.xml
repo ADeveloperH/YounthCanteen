@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mobile.younthcanteen">
-
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:name=".activity.CanteenApplication"
         android:allowBackup="true"
@@ -25,6 +25,11 @@
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <!-- 登录 -->
+        <activity
+            android:name=".activity.LoginActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
     </application>
 
