@@ -19,6 +19,7 @@ import com.mobile.younthcanteen.bean.LoginResultBean;
 import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
 import com.mobile.younthcanteen.http.RequestParams;
+import com.mobile.younthcanteen.util.DataCheckUtils;
 import com.mobile.younthcanteen.util.JsonUtil;
 import com.mobile.younthcanteen.util.SharedPreferencesUtil;
 import com.mobile.younthcanteen.util.ToastUtils;
@@ -34,7 +35,7 @@ import retrofit2.Call;
 public class LoginActivity extends Activity implements View.OnClickListener, View.OnFocusChangeListener {
     private TextView tvRegister;
     private TextView tvForgetPwd;
-    private EditText etAccount;
+    private EditText etPhone;
     private EditText etPassword;
     private ImageView ivDeleteAccount;
     private ImageView ivIsShowPwd;
@@ -58,7 +59,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Vie
         tvRegister = (TextView) findViewById(R.id.tv_register);
         tvForgetPwd = (TextView) findViewById(R.id.tv_forgetpwd);
 
-        etAccount = (EditText) findViewById(R.id.et_account);
+        etPhone = (EditText) findViewById(R.id.et_account);
         etPassword = (EditText) findViewById(R.id.et_password);
 
         ivDeleteAccount = (ImageView) findViewById(R.id.iv_deleteaccount);
@@ -69,9 +70,9 @@ public class LoginActivity extends Activity implements View.OnClickListener, Vie
     }
 
     private void setListener() {
-        etAccount.addTextChangedListener(watcherIsCanLogin);
+        etPhone.addTextChangedListener(watcherIsCanLogin);
         etPassword.addTextChangedListener(watcherIsCanLogin);
-        etAccount.setOnFocusChangeListener(this);
+        etPhone.setOnFocusChangeListener(this);
         etPassword.setOnFocusChangeListener(this);
 
         ivDeleteAccount.setOnClickListener(this);
@@ -93,9 +94,9 @@ public class LoginActivity extends Activity implements View.OnClickListener, Vie
 
         @Override
         public void afterTextChanged(Editable s) {
-            String inputAccountStr = etAccount.getText().toString().trim();
+            String inputPhoneStr = etPhone.getText().toString().trim();
             String inputPwdStr = etPassword.getText().toString().trim();
-            if (!TextUtils.isEmpty(inputAccountStr) && etAccount.hasFocus()) {
+            if (!TextUtils.isEmpty(inputPhoneStr) && etPhone.hasFocus()) {
                 ivDeleteAccount.setVisibility(View.VISIBLE);
             } else {
                 ivDeleteAccount.setVisibility(View.GONE);
@@ -105,7 +106,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Vie
             } else {
                 ivDeletePwd.setVisibility(View.GONE);
             }
-            if (TextUtils.isEmpty(inputAccountStr) || TextUtils.isEmpty(inputPwdStr)
+            if (!DataCheckUtils.isValidatePhone(inputPhoneStr) || TextUtils.isEmpty(inputPwdStr)
                     || inputPwdStr.length() < 6) {
                 btnLogin.setEnabled(false);
                 btnLogin.setBackgroundResource(R.drawable.login_btn_unable);
@@ -122,7 +123,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Vie
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_deleteaccount://账号右侧删除
-                etAccount.setText("");
+                etPhone.setText("");
                 break;
             case R.id.iv_deletepwd://账号右侧删除
                 etPassword.setText("");
@@ -154,7 +155,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Vie
     }
 
     private void login() {
-        final String inputAccountStr = etAccount.getText().toString().trim();
+        final String inputAccountStr = etPhone.getText().toString().trim();
         String inputPwdStr = etPassword.getText().toString().trim();
         RequestParams params = new RequestParams();
         params.put("account", inputAccountStr);
@@ -190,7 +191,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Vie
     public void onFocusChange(View v, boolean hasFocus) {
         switch (v.getId()) {
             case R.id.et_account:
-                String inputAccountStr = etAccount.getText().toString().trim();
+                String inputAccountStr = etPhone.getText().toString().trim();
                 if (hasFocus) {
                     //输入框有焦点
                     if (TextUtils.isEmpty(inputAccountStr)) {
@@ -223,8 +224,8 @@ public class LoginActivity extends Activity implements View.OnClickListener, Vie
         super.onNewIntent(intent);
         if (null != intent && intent.hasExtra("phoneNum")) {
             String phoneNum = intent.getStringExtra("phoneNum");
-            etAccount.setText(phoneNum);
-            etAccount.setSelection(phoneNum.length());
+            etPhone.setText(phoneNum);
+            etPhone.setSelection(phoneNum.length());
         }
     }
 }
