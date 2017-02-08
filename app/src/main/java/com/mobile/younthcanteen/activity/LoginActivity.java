@@ -79,6 +79,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Vie
         ivIsShowPwd.setOnClickListener(this);
         btnLogin.setOnClickListener(this);
         tvRegister.setOnClickListener(this);
+        tvForgetPwd.setOnClickListener(this);
     }
 
     private TextWatcher watcherIsCanLogin = new TextWatcher() {
@@ -104,7 +105,8 @@ public class LoginActivity extends Activity implements View.OnClickListener, Vie
             } else {
                 ivDeletePwd.setVisibility(View.GONE);
             }
-            if (TextUtils.isEmpty(inputAccountStr) || TextUtils.isEmpty(inputPwdStr)) {
+            if (TextUtils.isEmpty(inputAccountStr) || TextUtils.isEmpty(inputPwdStr)
+                    || inputPwdStr.length() < 6) {
                 btnLogin.setEnabled(false);
                 btnLogin.setBackgroundResource(R.drawable.login_btn_unable);
                 btnLogin.setTextColor(Color.parseColor("#ffffff"));
@@ -144,6 +146,9 @@ public class LoginActivity extends Activity implements View.OnClickListener, Vie
                 break;
             case R.id.tv_register://注册
                 startActivity(new Intent(act,RegisterActivity.class));
+                break;
+            case R.id.tv_forgetpwd://忘记密码
+                startActivity(new Intent(act,FindPwdActivity.class));
                 break;
         }
     }
@@ -210,6 +215,16 @@ public class LoginActivity extends Activity implements View.OnClickListener, Vie
                     ivDeletePwd.setVisibility(View.GONE);
                 }
                 break;
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (null != intent && intent.hasExtra("phoneNum")) {
+            String phoneNum = intent.getStringExtra("phoneNum");
+            etAccount.setText(phoneNum);
+            etAccount.setSelection(phoneNum.length());
         }
     }
 }

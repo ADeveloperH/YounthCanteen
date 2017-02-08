@@ -36,6 +36,11 @@
             android:name=".activity.RegisterActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
+        <!-- 忘记密码 -->
+        <activity
+            android:name=".activity.FindPwdActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

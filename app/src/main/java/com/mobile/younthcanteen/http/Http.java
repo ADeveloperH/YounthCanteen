@@ -21,9 +21,11 @@ import retrofit2.Callback;
  */
 public class Http {
 
-    public static final String LOGIN = "userLogin";
-    public static final String SENDCODE = "sendCode";
-    public static final String REGISTER = "userReg";
+    public static final String LOGIN = "userLogin";//登录
+    public static final String SENDCODE = "sendCode";//注册页面发送验证码
+    public static final String REGISTER = "userReg";//注册
+    public static final String FINDPWD = "userPasswordFind";//找回密码
+    public static final String SENDCODEFIND = "sendCodeFind";//找回密码中发送短信验证码
 
     public static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;

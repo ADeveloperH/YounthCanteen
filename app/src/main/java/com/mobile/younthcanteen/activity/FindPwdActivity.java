@@ -15,13 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.mobile.younthcanteen.R;
-import com.mobile.younthcanteen.bean.RegisterResultBean;
 import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
 import com.mobile.younthcanteen.http.RequestParams;
 import com.mobile.younthcanteen.util.DataCheckUtils;
-import com.mobile.younthcanteen.util.JsonUtil;
-import com.mobile.younthcanteen.util.SharedPreferencesUtil;
 import com.mobile.younthcanteen.util.ToastUtils;
 
 import org.json.JSONObject;
@@ -34,16 +31,16 @@ import retrofit2.Call;
 
 /**
  * author：hj
- * time: 2017/2/7 0007 23:12
+ * time: 2017/2/8 0008 16:26
  */
 
-public class RegisterActivity extends Activity implements View.OnClickListener {
+public class FindPwdActivity extends Activity implements View.OnClickListener {
     private EditText etPhone;
     private EditText etPassword;
     private EditText etRePassword;
     private EditText etCode;
     private Button btnGetCode;
-    private Button btnRegister;
+    private Button btnFindPwd;
     private Activity act;
     private boolean isTiming = false;//是否正在倒计时
     private TextWatcher watcherCanReg = new TextWatcher() {
@@ -66,13 +63,13 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
             if (!TextUtils.isEmpty(pwdStr) && !TextUtils.isEmpty(rePwdStr)
                     && !TextUtils.isEmpty(codeStr) && DataCheckUtils.isValidatePhone(phoneNumStr)) {
                 //输入数据合法
-                btnRegister.setEnabled(true);
-                btnRegister.setBackgroundResource(R.drawable.login_btn_enable);
-                btnRegister.setTextColor(Color.parseColor("#000000"));
+                btnFindPwd.setEnabled(true);
+                btnFindPwd.setBackgroundResource(R.drawable.login_btn_enable);
+                btnFindPwd.setTextColor(Color.parseColor("#000000"));
             } else {
-                btnRegister.setEnabled(false);
-                btnRegister.setBackgroundResource(R.drawable.login_btn_unable);
-                btnRegister.setTextColor(Color.parseColor("#ffffff"));
+                btnFindPwd.setEnabled(false);
+                btnFindPwd.setBackgroundResource(R.drawable.login_btn_unable);
+                btnFindPwd.setTextColor(Color.parseColor("#ffffff"));
             }
 
             if (DataCheckUtils.isValidatePhone(phoneNumStr) && !isTiming) {
@@ -87,11 +84,10 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
             }
         }
     };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_layout);
+        setContentView(R.layout.activity_findpwd_layout);
 
         act = this;
         initView();
@@ -104,7 +100,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         etRePassword = (EditText) findViewById(R.id.et_repassword);
         etCode = (EditText) findViewById(R.id.et_code);
         btnGetCode = (Button) findViewById(R.id.btn_getcode);
-        btnRegister = (Button) findViewById(R.id.btn_register);
+        btnFindPwd = (Button) findViewById(R.id.btn_find);
     }
 
     private void setListener() {
@@ -114,7 +110,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         etRePassword.addTextChangedListener(watcherCanReg);
 
         btnGetCode.setOnClickListener(this);
-        btnRegister.setOnClickListener(this);
+        btnFindPwd.setOnClickListener(this);
     }
 
     @Override
@@ -123,16 +119,16 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
             case R.id.btn_getcode://获取验证码
                 getCode();
                 break;
-            case R.id.btn_register:
-                register();
+            case R.id.btn_find:
+                findPwd();
                 break;
         }
     }
 
     /**
-     * 注册
+     * 找回密码
      */
-    private void register() {
+    private void findPwd() {
         final String phoneNumStr = etPhone.getText().toString().trim();
         String codeStr = etCode.getText().toString().trim();
         String pwdStr = etPassword.getText().toString().trim();
@@ -145,9 +141,9 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         }
         RequestParams params = new RequestParams();
         params.put("phone", phoneNumStr);
-        params.put("password", pwdStr);
+        params.put("newPass", pwdStr);
         params.put("code", codeStr);
-        Http.post(Http.REGISTER, params, new MyTextAsyncResponseHandler(act, "注册中...") {
+        Http.post(Http.FINDPWD, params, new MyTextAsyncResponseHandler(act, "找回中...") {
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
@@ -155,15 +151,20 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                     ToastUtils.showLongToast("服务器响应失败");
                     return;
                 }
-                RegisterResultBean registerResultBean = JsonUtil.fromJson(content,
-                        RegisterResultBean.class);
-                ToastUtils.showLongToast(registerResultBean.getReturnMessage());
-                if ("0".equals(registerResultBean.getReturnCode())) {
-                    SharedPreferencesUtil.setToken(registerResultBean.getResults().getToken());
-                    SharedPreferencesUtil.setAccount(phoneNumStr);
-                    SharedPreferencesUtil.setUserId(registerResultBean.getResults().getUserid());
-                    startActivity(new Intent(act,MainActivity.class));
-                    finish();
+                try {
+                    JSONObject jsonObject = new JSONObject(content);
+                    String returnCode = jsonObject.optString("returnCode");
+                    String returnMessage = jsonObject.optString("returnMessage");
+                    ToastUtils.showLongToast(returnMessage);
+                    if ("0".equals(returnCode)) {
+                        Intent intent = new Intent(act, LoginActivity.class);
+                        intent.putExtra("phoneNum", phoneNumStr);
+                        startActivity(intent);
+                        finish();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showLongToast("发送失败，请重试");
                 }
 
             }
@@ -225,7 +226,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         String phoneNumStr = etPhone.getText().toString().trim();
         RequestParams params = new RequestParams();
         params.put("phone", phoneNumStr);
-        Http.post(Http.SENDCODE, params, new MyTextAsyncResponseHandler(act, "正在发送中...") {
+        Http.post(Http.SENDCODEFIND, params, new MyTextAsyncResponseHandler(act, "正在发送中...") {
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
