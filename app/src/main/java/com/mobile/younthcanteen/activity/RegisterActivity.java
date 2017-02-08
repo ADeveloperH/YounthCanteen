@@ -13,6 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
+import com.mobile.younthcanteen.http.Http;
+import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
+import com.mobile.younthcanteen.http.RequestParams;
 import com.mobile.younthcanteen.util.DataCheckUtils;
 
 /**
@@ -36,6 +39,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     private Button btnCommitCode;
     private Button btnGetCode;
     private Button btnRegister;
+    private Activity act;
     private TextWatcher watcherPhone = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -93,6 +97,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_layout);
 
+        act = this;
         initView();
         setListener();
     }
@@ -129,12 +134,24 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.btn_sendcode:
                 //到第二步
+                sendCode();
                 handleStepState(2);
                 break;
             case R.id.btn_commitcode:
                 handleStepState(3);
                 break;
         }
+
+    }
+
+    /**
+     * 发送短信验证码
+     */
+    private void sendCode() {
+        RequestParams params = new RequestParams();
+        Http.post(Http.SENDCODE,params,new MyTextAsyncResponseHandler(act,"正在发送..."){
+
+        });
 
     }
 

@@ -22,6 +22,7 @@ import retrofit2.Callback;
 public class Http {
 
     public static final String LOGIN = "userLogin";
+    public static final String SENDCODE = "sendCode";
 
     public static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;
