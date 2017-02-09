@@ -84,6 +84,8 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
 
     private void setListener() {
         llUser.setOnClickListener(this);
+        tvNickName.setOnClickListener(this);
+        ivUserIcon.setOnClickListener(this);
     }
 
     @Override
