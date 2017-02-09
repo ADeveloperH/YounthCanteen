@@ -5,6 +5,7 @@
     android:background="#f4f4f4">
 
     <LinearLayout
+        android:id="@+id/ll_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/title_height"
         android:background="#fff"
@@ -21,10 +22,36 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_allogin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/ll_header"
+        android:orientation="vertical">
+
+        <com.mobile.younthcanteen.ui.TabPageIndicator
+            android:id="@+id/tab_page_indicator"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:background="@color/white"
+            android:visibility="visible" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/tab_page_indicator"
+            android:background="@color/white"
+            android:overScrollMode="never" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_unlogin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="100dp"

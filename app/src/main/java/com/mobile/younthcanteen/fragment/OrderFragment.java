@@ -3,13 +3,22 @@ package com.mobile.younthcanteen.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.activity.LoginActivity;
+import com.mobile.younthcanteen.adapter.OrderFragmentPagerAdapter;
+import com.mobile.younthcanteen.ui.TabPageIndicator;
+import com.mobile.younthcanteen.util.LoginUtils;
+import com.mobile.younthcanteen.util.UIUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * author：hj
@@ -20,6 +29,13 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
     private View rootView;//缓存Fragment的View
     private boolean isNeedReLoad = true;//是否需要重新加载该Fragment数据
     private Button btnLogin;
+    private OrderFragmentPagerAdapter mAdatpter;
+    private ArrayList<Fragment> listFragmentsa = new ArrayList<Fragment>();
+    private static List<String> titleList = new ArrayList<String>();
+    private TabPageIndicator tabPageIndicator;
+    private ViewPager viewpager;
+    private LinearLayout llAlLogin;
+    private LinearLayout llUnLogin;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,7 +57,6 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
         super.onActivityCreated(savedInstanceState);
         if (isNeedReLoad) {
             initView(getView());
-//            initData();
             setListener();
 //            getData();
             isNeedReLoad = false;
@@ -54,6 +69,37 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 
     private void initView(View view) {
         btnLogin = (Button) view.findViewById(R.id.btn_login);
+        tabPageIndicator = (TabPageIndicator) view.findViewById(R.id.tab_page_indicator);
+        viewpager = (ViewPager) view.findViewById(R.id.viewpager);
+        llAlLogin = (LinearLayout) view.findViewById(R.id.ll_allogin);
+        llUnLogin = (LinearLayout) view.findViewById(R.id.ll_unlogin);
+
+        if (LoginUtils.isLogin()) {
+            llAlLogin.setVisibility(View.VISIBLE);
+            llUnLogin.setVisibility(View.GONE);
+            initFragment();
+        } else {
+            llAlLogin.setVisibility(View.GONE);
+            llUnLogin.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void initFragment() {
+        titleList.add("全部订单");
+        titleList.add("待评价");
+        listFragmentsa.add(new AllOrderFragment());
+        listFragmentsa.add(new ToBeEvaluateFragment());
+        // 此处，如果不是继承的FragmentActivity,而是继承的Fragment，则参数应该传入getChildFragmentManager()
+        mAdatpter = new OrderFragmentPagerAdapter(getChildFragmentManager(),
+                listFragmentsa, titleList);
+        viewpager.setAdapter(mAdatpter);
+        tabPageIndicator.setViewPager(viewpager);
+        tabPageIndicator.setVisibility(View.VISIBLE);
+        tabPageIndicator.setIndicatorHeight(UIUtils.dip2px(2));
+        tabPageIndicator.setIndicatorMode(TabPageIndicator.IndicatorMode.MODE_WEIGHT_NOEXPAND_NOSAME);
+        tabPageIndicator.requestLayout();
+//        tabPageIndicator.setBackgroundResource(R.drawable.viewpager_tab_indicator);
+        viewpager.setVisibility(View.VISIBLE);
     }
 
     @Override
