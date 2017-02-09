@@ -82,6 +82,8 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
         } else {
             tvNickName.setText("登录/注册");
             ivRightArrow.setVisibility(View.GONE);
+            tvYuE.setText("----");
+            tvJiFen.setText("----");
         }
     }
 
