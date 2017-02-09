@@ -1,5 +1,6 @@
 package com.mobile.younthcanteen.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
+import com.mobile.younthcanteen.activity.MyAccountActivity;
 
 /**
  * author：hj
@@ -90,7 +92,7 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
             case R.id.ll_userinfo:
             case R.id.tv_nickname:
             case R.id.iv_usericon://进入用户信息页面
-
+                startActivity(new Intent(getActivity(), MyAccountActivity.class));
                 break;
         }
     }

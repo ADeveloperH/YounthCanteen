@@ -8,7 +8,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/MyAppTheme">
         <activity
             android:name=".activity.SplashActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -39,6 +39,12 @@
         <!-- 忘记密码 -->
         <activity
             android:name=".activity.FindPwdActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+
+        <!-- 忘记密码 -->
+        <activity
+            android:name=".activity.MyAccountActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
     </application>
