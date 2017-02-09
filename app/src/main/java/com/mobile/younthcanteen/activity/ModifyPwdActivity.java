@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.mobile.younthcanteen.AppManager;
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.bean.SimpleResultBean;
 import com.mobile.younthcanteen.http.Http;
@@ -22,64 +23,72 @@ import retrofit2.Call;
 
 /**
  * author：hj
- * time: 2017/2/9 0009 14:45
+ * time: 2017/2/9 0009 21:28
  */
 
-public class ModifyNickNameActivity extends BaseActivity {
-    private EditText etNickName;
+public class ModifyPwdActivity extends BaseActivity {
+    private EditText etOldPwd;
+    private EditText etNewPwd;
+    private EditText etReNewPwd;
     private Button btnOk;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle("修改用户名");
+        setTitle("修改密码");
         setTitleBackVisible(true);
         checkLogin(true);
-        setContentView(R.layout.activity_modifynickname_layout);
+        setContentView(R.layout.activity_modifypwd_layout);
 
         initView();
-        initData();
         setListener();
     }
 
     private void initView() {
-        etNickName = (EditText) findViewById(R.id.et_nickname);
-        btnOk = (Button) findViewById(R.id.btn_ok);
-    }
+        etOldPwd = (EditText) findViewById(R.id.et_old_pwd);
+        etNewPwd = (EditText) findViewById(R.id.et_new_pwd);
+        etReNewPwd = (EditText) findViewById(R.id.et_re_new_pwd);
 
-    private void initData() {
-        Intent intent = getIntent();
-        if (null != intent && intent.hasExtra("nickName")) {
-            String nickName = intent.getStringExtra("nickName");
-            etNickName.setText(nickName);
-            etNickName.setSelection(nickName.length());
-        }
+        btnOk = (Button) findViewById(R.id.btn_ok);
     }
 
     private void setListener() {
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String nickNameStr = etNickName.getText().toString();
-                if (TextUtils.isEmpty(nickNameStr)) {
-                    ToastUtils.showLongToast("请输入新用户名");
+                String oldPwdStr = etOldPwd.getText().toString();
+                String newPwdStr = etNewPwd.getText().toString();
+                String newRePwdStr = etReNewPwd.getText().toString();
+
+                if (TextUtils.isEmpty(oldPwdStr)) {
+                    ToastUtils.showLongToast("当前密码不能为空");
+                } else if (TextUtils.isEmpty(newPwdStr)) {
+                    ToastUtils.showLongToast("新密码不能为空");
+                } else if (TextUtils.isEmpty(newRePwdStr)) {
+                    ToastUtils.showLongToast("确认密码不能为空");
+                } else if (!newPwdStr.equals(newRePwdStr)) {
+                    ToastUtils.showLongToast("两次输入的密码不一致");
+                } else if (newPwdStr.length() < 6) {
+                    ToastUtils.showLongToast("新密码的长度应为6到15个字符");
                 } else {
-                    modifyNickName(nickNameStr);
+                    modifyPwd(oldPwdStr, newPwdStr);
                 }
             }
         });
     }
 
-
     /**
-     * 修改用户名
-     * @param nickNameStr
+     * 修改密码
+     *
+     * @param oldPwdStr
+     * @param newPwdStr
      */
-    private void modifyNickName(final String nickNameStr) {
+    private void modifyPwd(String oldPwdStr, String newPwdStr) {
         RequestParams params = new RequestParams();
-        params.put("nick", nickNameStr);
+        params.put("oldPass", oldPwdStr);
+        params.put("newPass", newPwdStr);
         params.put("token", SharedPreferencesUtil.getToken());
-        Http.post(Http.MODIFYNICKNAME,params,new MyTextAsyncResponseHandler(act,"提交中..."){
+        Http.post(Http.MODIFYPWD, params, new MyTextAsyncResponseHandler(act, "提交中...") {
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
@@ -87,8 +96,9 @@ public class ModifyNickNameActivity extends BaseActivity {
                 if (null != bean) {
                     ToastUtils.showLongToast(bean.getReturnMessage());
                     if ("0".equals(bean.getReturnCode())) {
-                        SharedPreferencesUtil.setNickName(nickNameStr);
-                        finish();
+                        SharedPreferencesUtil.clear();
+                        AppManager.getAppManager().finishAllActivity();
+                        startActivity(new Intent(act, LoginActivity.class));
                     }
                 } else {
                     ToastUtils.showLongToast("服务器异常，请稍后重试");
@@ -97,8 +107,9 @@ public class ModifyNickNameActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                super.onFailure(call,t);
+                super.onFailure(call, t);
                 ToastUtils.showLongToast("服务器异常，请稍后重试");
+
             }
         });
     }

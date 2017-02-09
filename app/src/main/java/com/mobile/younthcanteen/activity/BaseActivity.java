@@ -101,7 +101,8 @@ public class BaseActivity extends AppCompatActivity {
         toolbar.setVisibility(isShow ? View.VISIBLE : View.GONE);
     }
 
-    public void setTitleBackVisible(int visibility) {
+    public void setTitleBackVisible(boolean isVisible) {
+        int visibility = isVisible ? View.VISIBLE : View.GONE;
         ImageButton back_Btn = (ImageButton) findViewById(R.id.titlebar_back);
         back_Btn.setVisibility(visibility);
         back_Btn.setOnClickListener(new View.OnClickListener() {

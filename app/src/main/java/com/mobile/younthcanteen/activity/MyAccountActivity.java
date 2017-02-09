@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.mobile.younthcanteen.AppManager;
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.util.DataCheckUtils;
+import com.mobile.younthcanteen.util.DialogUtil;
 import com.mobile.younthcanteen.util.SharedPreferencesUtil;
 
 /**
@@ -34,7 +35,7 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("我的账号");
-        setTitleBackVisible(View.VISIBLE);
+        setTitleBackVisible(true);
         checkLogin(true);
         setContentView(R.layout.activity_myaccount_layout);
 
@@ -62,9 +63,9 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
     private void initData() {
         nickNameStr = SharedPreferencesUtil.getNickName();
         tvNickName.setText(nickNameStr);
-        String phoneNumber = SharedPreferencesUtil.getAccount().replace(" ","");
+        String phoneNumber = SharedPreferencesUtil.getAccount().replace(" ", "");
         if (DataCheckUtils.isValidatePhone(phoneNumber)) {
-            phoneNumber = phoneNumber.replaceAll("(\\d{3})\\d{4}(\\d{4})","$1****$2");
+            phoneNumber = phoneNumber.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
         }
         tvPhoneNumber.setText(phoneNumber);
     }
@@ -72,6 +73,7 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
     private void setListener() {
         llNickName.setOnClickListener(this);
         btnLogout.setOnClickListener(this);
+        llPwd.setOnClickListener(this);
     }
 
     @Override
@@ -83,9 +85,18 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
                 startActivity(nickNameIntent);
                 break;
             case R.id.btn_logout://退出登录
-                SharedPreferencesUtil.clear();
-                AppManager.getAppManager().finishAllActivity();
-                startActivity(new Intent(this,MainActivity.class));
+                DialogUtil.getSimpleDialog(act, "提示", "确定退出?", "取消", "确认", null, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SharedPreferencesUtil.clear();
+                        AppManager.getAppManager().finishAllActivity();
+                        startActivity(new Intent(act, MainActivity.class));
+                    }
+                }, false).show();
+
+                break;
+            case R.id.ll_pwd://修改密码
+                startActivity(new Intent(act, ModifyPwdActivity.class));
                 break;
         }
     }

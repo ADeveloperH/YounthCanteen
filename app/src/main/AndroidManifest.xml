@@ -47,10 +47,18 @@
             android:name=".activity.MyAccountActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
+
         <!-- 修改用户名 -->
         <activity
             android:name=".activity.ModifyNickNameActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+
+        <!-- 修改密码 -->
+        <activity
+            android:name=".activity.ModifyPwdActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateAlwaysVisible"
             android:screenOrientation="portrait"/>
     </application>
 
