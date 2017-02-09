@@ -63,6 +63,19 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (LoginUtils.isLogin()) {
+            llAlLogin.setVisibility(View.VISIBLE);
+            llUnLogin.setVisibility(View.GONE);
+            initFragment();
+        } else {
+            llAlLogin.setVisibility(View.GONE);
+            llUnLogin.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void setListener() {
         btnLogin.setOnClickListener(this);
     }
@@ -73,15 +86,6 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
         viewpager = (ViewPager) view.findViewById(R.id.viewpager);
         llAlLogin = (LinearLayout) view.findViewById(R.id.ll_allogin);
         llUnLogin = (LinearLayout) view.findViewById(R.id.ll_unlogin);
-
-        if (LoginUtils.isLogin()) {
-            llAlLogin.setVisibility(View.VISIBLE);
-            llUnLogin.setVisibility(View.GONE);
-            initFragment();
-        } else {
-            llAlLogin.setVisibility(View.GONE);
-            llUnLogin.setVisibility(View.VISIBLE);
-        }
     }
 
     private void initFragment() {

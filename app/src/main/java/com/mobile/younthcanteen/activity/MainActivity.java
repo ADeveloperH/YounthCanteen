@@ -108,17 +108,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         switch (index) {
             case 0:
                 mContentPage.setCurrentItem(0, false);
-                mTabHome.setTextColor(Color.parseColor("#67c0f4"));
+                mTabHome.setTextColor(Color.parseColor("#000000"));
                 mImageHome.setImageDrawable(act.getResources().getDrawable(R.drawable.tab_home_icon_select));
                 break;
             case 1:
-                mTabFind.setTextColor(Color.parseColor("#67c0f4"));
-                mImageFind.setImageDrawable(act.getResources().getDrawable(R.drawable.tab_find_icon_select));
+                mTabFind.setTextColor(Color.parseColor("#000000"));
+                mImageFind.setImageDrawable(act.getResources().getDrawable(R.drawable.tab_order_icon_select));
                 mContentPage.setCurrentItem(1, false);
                 break;
             case 2:
                 mContentPage.setCurrentItem(2, false);
-                mTabCustome.setTextColor(Color.parseColor("#67c0f4"));
+                mTabCustome.setTextColor(Color.parseColor("#000000"));
                 mImageCustome.setImageDrawable(act.getResources().getDrawable(R.drawable.tab_customer_icon_select));
                 break;
             default:
@@ -133,7 +133,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mTabHome.setTextColor(Color.parseColor("#ababab"));
         mImageHome.setImageDrawable(act.getResources().getDrawable(R.drawable.tab_home_icon_default));
         mTabFind.setTextColor(Color.parseColor("#ababab"));
-        mImageFind.setImageDrawable(act.getResources().getDrawable(R.drawable.tab_find_icon_default));
+        mImageFind.setImageDrawable(act.getResources().getDrawable(R.drawable.tab_order_icon_default));
         mTabCustome.setTextColor(Color.parseColor("#ababab"));
         mImageCustome.setImageDrawable(act.getResources().getDrawable(R.drawable.tab_customer_icon_default));
     }
