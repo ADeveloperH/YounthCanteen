@@ -5,6 +5,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
 
@@ -13,9 +16,24 @@ import com.mobile.younthcanteen.R;
  * time: 2017/2/7 0007 15:15
  */
 
-public class CustomerFragment extends Fragment {
+public class CustomerFragment extends Fragment implements View.OnClickListener {
     private View rootView;//缓存Fragment的View
     private boolean isNeedReLoad = true;//是否需要重新加载该Fragment数据
+    private LinearLayout llUser;
+    private ImageView ivUserIcon;
+    private TextView tvNickName;
+    private LinearLayout llYuE;
+    private LinearLayout llJiFen;
+    private TextView tvYuE;
+    private TextView tvJiFen;
+    private LinearLayout llPingJia;
+    private LinearLayout llShouCang;
+    private LinearLayout llAddress;
+    private LinearLayout llYaoQing;
+    private LinearLayout llFanKui;
+    private LinearLayout llKeFu;
+    private LinearLayout llUpdate;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -35,11 +53,45 @@ public class CustomerFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (isNeedReLoad) {
-//            initView(getView());
+            initView(getView());
+            setListener();
 //            initData();
-//            setListener();
 //            getData();
             isNeedReLoad = false;
+        }
+    }
+
+    private void initView(View view) {
+        llUser = (LinearLayout) view.findViewById(R.id.ll_userinfo);
+        ivUserIcon = (ImageView) view.findViewById(R.id.iv_usericon);
+        tvNickName = (TextView) view.findViewById(R.id.tv_nickname);
+
+        llYuE = (LinearLayout) view.findViewById(R.id.ll_yue);
+        llJiFen = (LinearLayout) view.findViewById(R.id.ll_jifen);
+        tvYuE = (TextView) view.findViewById(R.id.tv_yue);
+        tvJiFen = (TextView) view.findViewById(R.id.tv_jifen);
+
+        llPingJia = (LinearLayout) view.findViewById(R.id.ll_pingjia);
+        llShouCang = (LinearLayout) view.findViewById(R.id.ll_shoucang);
+        llAddress = (LinearLayout) view.findViewById(R.id.ll_address);
+        llYaoQing = (LinearLayout) view.findViewById(R.id.ll_yaoqing);
+        llFanKui = (LinearLayout) view.findViewById(R.id.ll_fankui);
+        llKeFu = (LinearLayout) view.findViewById(R.id.ll_kefu);
+        llUpdate = (LinearLayout) view.findViewById(R.id.ll_update);
+    }
+
+    private void setListener() {
+        llUser.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ll_userinfo:
+            case R.id.tv_nickname:
+            case R.id.iv_usericon://进入用户信息页面
+
+                break;
         }
     }
 }
