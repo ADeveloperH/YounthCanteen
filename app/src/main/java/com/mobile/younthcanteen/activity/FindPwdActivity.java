@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.mobile.younthcanteen.AppManager;
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
@@ -89,6 +90,7 @@ public class FindPwdActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_findpwd_layout);
 
+        AppManager.getAppManager().addActivity(this);
         act = this;
         initView();
         setListener();
@@ -254,5 +256,11 @@ public class FindPwdActivity extends Activity implements View.OnClickListener {
                 ToastUtils.showLongToast("发送失败，请重试");
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AppManager.getAppManager().finishActivity(this);
     }
 }

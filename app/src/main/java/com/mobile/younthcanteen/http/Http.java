@@ -26,6 +26,7 @@ public class Http {
     public static final String REGISTER = "userReg";//注册
     public static final String FINDPWD = "userPasswordFind";//找回密码
     public static final String SENDCODEFIND = "sendCodeFind";//找回密码中发送短信验证码
+    public static final String MODIFYNICKNAME = "userNickUp";//修改用户名
 
     public static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;

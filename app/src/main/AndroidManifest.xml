@@ -42,9 +42,14 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
 
-        <!-- 忘记密码 -->
+        <!-- 我的账号 -->
         <activity
             android:name=".activity.MyAccountActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <!-- 修改用户名 -->
+        <activity
+            android:name=".activity.ModifyNickNameActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
     </application>

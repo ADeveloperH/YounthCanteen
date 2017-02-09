@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mobile.younthcanteen.AppManager;
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.bean.LoginResultBean;
 import com.mobile.younthcanteen.http.Http;
@@ -51,6 +52,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Vie
         setContentView(R.layout.activity_login_layout);
 
         act = this;
+        AppManager.getAppManager().addActivity(this);
         initView();
         setListener();
     }
@@ -229,4 +231,11 @@ public class LoginActivity extends Activity implements View.OnClickListener, Vie
             etPhone.setSelection(phoneNum.length());
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AppManager.getAppManager().finishActivity(this);
+    }
+
 }

@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.mobile.younthcanteen.AppManager;
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.bean.RegisterResultBean;
 import com.mobile.younthcanteen.http.Http;
@@ -94,6 +95,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_register_layout);
 
         act = this;
+        AppManager.getAppManager().addActivity(this);
         initView();
         setListener();
     }
@@ -254,5 +256,11 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                 ToastUtils.showLongToast("发送失败，请重试");
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AppManager.getAppManager().finishActivity(this);
     }
 }

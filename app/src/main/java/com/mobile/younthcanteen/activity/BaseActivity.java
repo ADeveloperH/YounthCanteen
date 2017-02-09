@@ -1,6 +1,7 @@
 package com.mobile.younthcanteen.activity;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.mobile.younthcanteen.AppManager;
 import com.mobile.younthcanteen.R;
+import com.mobile.younthcanteen.util.LoginUtils;
 
 
 /**
@@ -22,11 +24,13 @@ import com.mobile.younthcanteen.R;
  */
 public class BaseActivity extends AppCompatActivity {
     private LinearLayout rootLayout;
+    protected Activity act;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppManager.getAppManager().addActivity(this);
+        act = this;
         // 这句很关键，注意是调用父类的方法
         super.setContentView(R.layout.activity_base_layout);
 //        // 经测试在代码里直接声明透明状态栏更有效
@@ -43,6 +47,12 @@ public class BaseActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
+        }
+    }
+
+    public void checkLogin(boolean isNeedLogin) {
+        if (isNeedLogin && !LoginUtils.isLogin()) {
+            finish();
         }
     }
 

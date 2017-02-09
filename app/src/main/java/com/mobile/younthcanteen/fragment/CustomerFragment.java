@@ -14,6 +14,7 @@ import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.activity.LoginActivity;
 import com.mobile.younthcanteen.activity.MyAccountActivity;
 import com.mobile.younthcanteen.util.LoginUtils;
+import com.mobile.younthcanteen.util.SharedPreferencesUtil;
 
 /**
  * author：hj
@@ -37,6 +38,7 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
     private LinearLayout llFanKui;
     private LinearLayout llKeFu;
     private LinearLayout llUpdate;
+    private ImageView ivRightArrow;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,15 +61,34 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
         if (isNeedReLoad) {
             initView(getView());
             setListener();
-//            initData();
-//            getData();
+//            getData()
+// ;
             isNeedReLoad = false;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
+
+    }
+
+    private void initData() {
+        if (LoginUtils.isLogin()) {
+            String nickName = SharedPreferencesUtil.getNickName();
+            tvNickName.setText(nickName);
+            ivRightArrow.setVisibility(View.VISIBLE);
+        } else {
+            tvNickName.setText("登录/注册");
+            ivRightArrow.setVisibility(View.GONE);
         }
     }
 
     private void initView(View view) {
         llUser = (LinearLayout) view.findViewById(R.id.ll_userinfo);
         ivUserIcon = (ImageView) view.findViewById(R.id.iv_usericon);
+        ivRightArrow = (ImageView) view.findViewById(R.id.iv_right_arrow);
         tvNickName = (TextView) view.findViewById(R.id.tv_nickname);
 
         llYuE = (LinearLayout) view.findViewById(R.id.ll_yue);

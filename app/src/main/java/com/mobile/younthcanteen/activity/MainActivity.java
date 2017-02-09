@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobile.younthcanteen.AppManager;
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.adapter.FragmentAdapter;
 import com.mobile.younthcanteen.fragment.OrderFragment;
@@ -40,6 +41,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         act = this;
+        AppManager.getAppManager().addActivity(this);
         initView();
         initViewPager();
     }
@@ -158,5 +160,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }
             }, 2000);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AppManager.getAppManager().finishActivity(this);
     }
 }

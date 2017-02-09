@@ -16,8 +16,10 @@ public class LoginUtils {
         String phoneNumber = SharedPreferencesUtil.getAccount();
         String token = SharedPreferencesUtil.getToken();
         String userId = SharedPreferencesUtil.getUserId();
+        String nickName = SharedPreferencesUtil.getNickName();
         return !TextUtils.isEmpty(phoneNumber) &&
                 !TextUtils.isEmpty(token) &&
-                !TextUtils.isEmpty(userId);
+                !TextUtils.isEmpty(userId)&&
+                !TextUtils.isEmpty(nickName);
     }
 }
