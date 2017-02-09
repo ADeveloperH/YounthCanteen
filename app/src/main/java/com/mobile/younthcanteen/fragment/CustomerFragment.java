@@ -11,7 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
+import com.mobile.younthcanteen.activity.LoginActivity;
 import com.mobile.younthcanteen.activity.MyAccountActivity;
+import com.mobile.younthcanteen.util.LoginUtils;
 
 /**
  * author：hj
@@ -94,6 +96,10 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
             case R.id.ll_userinfo:
             case R.id.tv_nickname:
             case R.id.iv_usericon://进入用户信息页面
+                if (!LoginUtils.isLogin()) {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    return;
+                }
                 startActivity(new Intent(getActivity(), MyAccountActivity.class));
                 break;
         }

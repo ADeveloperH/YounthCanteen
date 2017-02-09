@@ -47,11 +47,19 @@ public class RegisterResultBean {
     }
 
     public static class ResultsEntity {
+        private String nick;
         private String token;
         private String userid;
 
         public String getToken() {
             return token;
+        }
+        public String getNick() {
+            return nick;
+        }
+
+        public void setNick(String nick) {
+            this.nick = nick;
         }
 
         public void setToken(String token) {

@@ -3,12 +3,14 @@ package com.mobile.younthcanteen.activity;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.adapter.FragmentAdapter;
@@ -132,5 +134,29 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mImageFind.setImageDrawable(act.getResources().getDrawable(R.drawable.tab_find_icon_default));
         mTabCustome.setTextColor(Color.parseColor("#ababab"));
         mImageCustome.setImageDrawable(act.getResources().getDrawable(R.drawable.tab_customer_icon_default));
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        exit();
+    }
+
+    private boolean exiting = false;
+
+    // 按两次返回键退出程序
+    private void exit() {
+        if (exiting) {
+            moveTaskToBack(true);
+        } else {
+            Toast.makeText(this, "再按一次返回键退出", Toast.LENGTH_SHORT).show();
+            exiting = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exiting = false;
+                }
+            }, 2000);
+        }
     }
 }

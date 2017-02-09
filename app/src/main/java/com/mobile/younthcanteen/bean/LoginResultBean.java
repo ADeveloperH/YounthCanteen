@@ -8,13 +8,14 @@ package com.mobile.younthcanteen.bean;
 public class LoginResultBean {
 
     /**
-     * token : 5adc5d026ef150b0
-     * userid : 3
+     * nick : zz_17739775520
+     * token : d189724cb2885918
+     * userid : 4
      */
 
     private ResultsEntity results;
     /**
-     * results : {"token":"5adc5d026ef150b0","userid":3}
+     * results : {"nick":"zz_17739775520","token":"d189724cb2885918","userid":4}
      * returnCode : 0
      * returnMessage : 登录成功！
      */
@@ -47,8 +48,17 @@ public class LoginResultBean {
     }
 
     public static class ResultsEntity {
+        private String nick;
         private String token;
         private String userid;
+
+        public String getNick() {
+            return nick;
+        }
+
+        public void setNick(String nick) {
+            this.nick = nick;
+        }
 
         public String getToken() {
             return token;

@@ -14,6 +14,7 @@ public class SharedPreferencesUtil {
     public static final String KEY_ACCOUNT = "KEY_ACCOUNT";//手机号
 
     public static final String KEY_USERID = "KEY_USERID";//userid
+    public static final String KEY_NICKNAME = "KEY_NICKNAME";//nickname
 
     private static Context mcontext;
     static {
@@ -101,6 +102,29 @@ public class SharedPreferencesUtil {
     public static String getUserId() {
         if (getPreferencesPrivate() != null) {
             return getPreferencesPrivate().getString(KEY_USERID, "");
+        }
+        return "";
+    }
+
+    /**
+     * 保存nickName
+     * @return
+     */
+    public static boolean setNickName(String nickName) {
+        if (getPreferencesPrivate() != null) {
+            return getPreferencesPrivate().edit().putString(KEY_NICKNAME, nickName).commit();
+        }
+        return false;
+    }
+
+    /**
+     * 获取当前nickName
+     *
+     * @return
+     */
+    public static String getNickName() {
+        if (getPreferencesPrivate() != null) {
+            return getPreferencesPrivate().getString(KEY_NICKNAME, "");
         }
         return "";
     }

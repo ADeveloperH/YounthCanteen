@@ -162,6 +162,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                     SharedPreferencesUtil.setToken(registerResultBean.getResults().getToken());
                     SharedPreferencesUtil.setAccount(phoneNumStr);
                     SharedPreferencesUtil.setUserId(registerResultBean.getResults().getUserid());
+                    SharedPreferencesUtil.setNickName(registerResultBean.getResults().getNick());
                     startActivity(new Intent(act,MainActivity.class));
                     finish();
                 }

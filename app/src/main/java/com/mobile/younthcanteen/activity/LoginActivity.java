@@ -171,6 +171,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Vie
                         SharedPreferencesUtil.setToken(loginResultBean.getResults().getToken());
                         SharedPreferencesUtil.setAccount(inputAccountStr);
                         SharedPreferencesUtil.setUserId(loginResultBean.getResults().getUserid());
+                        SharedPreferencesUtil.setNickName(loginResultBean.getResults().getNick());
                         startActivity(new Intent(act,MainActivity.class));
                         finish();
                     }
