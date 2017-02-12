@@ -89,21 +89,33 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initFragment() {
+        if (titleList.size() > 0) {
+            titleList.clear();
+        }
+        if (listFragmentsa.size() >0) {
+            listFragmentsa.clear();
+        }
+
         titleList.add("全部订单");
         titleList.add("待评价");
         listFragmentsa.add(new AllOrderFragment());
         listFragmentsa.add(new ToBeEvaluateFragment());
-        // 此处，如果不是继承的FragmentActivity,而是继承的Fragment，则参数应该传入getChildFragmentManager()
-        mAdatpter = new OrderFragmentPagerAdapter(getChildFragmentManager(),
-                listFragmentsa, titleList);
-        viewpager.setAdapter(mAdatpter);
-        tabPageIndicator.setViewPager(viewpager);
-        tabPageIndicator.setVisibility(View.VISIBLE);
-        tabPageIndicator.setIndicatorHeight(UIUtils.dip2px(2));
-        tabPageIndicator.setIndicatorMode(TabPageIndicator.IndicatorMode.MODE_WEIGHT_NOEXPAND_NOSAME);
-        tabPageIndicator.requestLayout();
+        if (mAdatpter == null) {
+            // 此处，如果不是继承的FragmentActivity,而是继承的Fragment，则参数应该传入getChildFragmentManager()
+            mAdatpter = new OrderFragmentPagerAdapter(getChildFragmentManager(),
+                    listFragmentsa, titleList);
+            viewpager.setAdapter(mAdatpter);
+            tabPageIndicator.setViewPager(viewpager);
+            tabPageIndicator.setVisibility(View.VISIBLE);
+            tabPageIndicator.setIndicatorHeight(UIUtils.dip2px(2));
+            tabPageIndicator.setIndicatorMode(TabPageIndicator.IndicatorMode.MODE_WEIGHT_NOEXPAND_NOSAME);
+            tabPageIndicator.requestLayout();
 //        tabPageIndicator.setBackgroundResource(R.drawable.viewpager_tab_indicator);
-        viewpager.setVisibility(View.VISIBLE);
+            viewpager.setVisibility(View.VISIBLE);
+        } else {
+            mAdatpter.notifyDataSetChanged();
+        }
+
     }
 
     @Override
