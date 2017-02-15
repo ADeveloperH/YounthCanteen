@@ -13,12 +13,6 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Callback;
 
-/**
- * Created with IntelliJ IDEA.
- * User: sfce
- * Date: 13-10-22
- * Time: 上午9:30
- */
 public class Http {
 
     public static final String LOGIN = "userLogin";//登录

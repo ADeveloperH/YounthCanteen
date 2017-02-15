@@ -2,8 +2,11 @@ package com.mobile.younthcanteen.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.mobile.younthcanteen.activity.CanteenApplication;
+import com.mobile.younthcanteen.bean.DownLoadBean;
 
 public class SharedPreferencesUtil {
     //记录项目中其他需要记录的字段
@@ -15,6 +18,7 @@ public class SharedPreferencesUtil {
 
     public static final String KEY_USERID = "KEY_USERID";//userid
     public static final String KEY_NICKNAME = "KEY_NICKNAME";//nickname
+    public static final String KEY_DOWNLODEMSG = "downlodemsg"; //已下载安装包的信息
 
     private static Context mcontext;
     static {
@@ -127,6 +131,40 @@ public class SharedPreferencesUtil {
             return getPreferencesPrivate().getString(KEY_NICKNAME, "");
         }
         return "";
+    }
+
+
+    /**
+     * 保存已下载安装包的信息
+     *
+     * @return
+     */
+    public static boolean setDownMsg(DownLoadBean downLoadBean) {
+        if (getPreferencesPrivate() != null) {
+            String beanStr = "";
+            if (downLoadBean != null) {
+                beanStr = new Gson().toJson(downLoadBean);
+            }
+            return getPreferencesPrivate().edit().putString(KEY_DOWNLODEMSG, beanStr).commit();
+        }
+        return false;
+    }
+
+    /**
+     * 获取已下载安装包的信息
+     *
+     * @return
+     */
+    public static DownLoadBean getDownMsg() {
+        if (getPreferencesPrivate() != null) {
+            String downMsgStr = getPreferencesPrivate().getString(KEY_DOWNLODEMSG, "");
+            if (TextUtils.isEmpty(downMsgStr)) {
+                return null;
+            } else {
+                return new Gson().fromJson(downMsgStr, DownLoadBean.class);
+            }
+        }
+        return null;
     }
 
 //==============================getPreferencesLogin	END=========================================//

@@ -1,5 +1,6 @@
 package com.mobile.younthcanteen.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,12 +10,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.activity.LoginActivity;
 import com.mobile.younthcanteen.activity.MyAccountActivity;
+import com.mobile.younthcanteen.http.RequestParams;
+import com.mobile.younthcanteen.util.DownLoader;
 import com.mobile.younthcanteen.util.LoginUtils;
+import com.mobile.younthcanteen.util.NetWorkUtil;
 import com.mobile.younthcanteen.util.SharedPreferencesUtil;
+import com.mobile.younthcanteen.util.ToastUtils;
+import com.mobile.younthcanteen.util.UpdateAppUtil;
 
 /**
  * author：hj
@@ -39,6 +46,7 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
     private LinearLayout llKeFu;
     private LinearLayout llUpdate;
     private ImageView ivRightArrow;
+    private Activity mActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,6 +83,7 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initData() {
+        mActivity = getActivity();
         if (LoginUtils.isLogin()) {
             String nickName = SharedPreferencesUtil.getNickName();
             tvNickName.setText(nickName);
@@ -111,6 +120,7 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
         llUser.setOnClickListener(this);
         tvNickName.setOnClickListener(this);
         ivUserIcon.setOnClickListener(this);
+        llUpdate.setOnClickListener(this);
     }
 
     @Override
@@ -125,6 +135,55 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
                 }
                 startActivity(new Intent(getActivity(), MyAccountActivity.class));
                 break;
+            case R.id.ll_update://检查更新
+                if (!NetWorkUtil.hasAvailableNetWork(mActivity)) {
+                    Toast.makeText(mActivity, "当前无可用网络", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                /**
+                 * 判断当前是否在下载，如果正在下载就直接显示下载的对话框
+                 */
+                if (DownLoader.getInstance(mActivity).isDownloading()) {
+                    //当前正在下载
+                    ToastUtils.showLongToast("当前正在下载中");
+                } else {
+                    checkNewVersion();
+                }
+                break;
         }
+    }
+
+    /**
+     * 检测是否有新的版本更新
+     */
+    private void checkNewVersion() {
+        RequestParams params = new RequestParams();
+//        params.put("moduleId", "CustomerFragment");
+        UpdateAppUtil.checkNewVersion(mActivity, "正在检查更新...", params,
+                new UpdateAppUtil.CheckVersionResultListener() {
+                    @Override
+                    public void getDataFailure(Throwable error) {
+                        UpdateAppUtil.isUpdating = false;
+                    }
+
+                    @Override
+                    public void aleryNewVersion(String curVersionName) {
+                        //当前已是最新版本
+                        Toast.makeText(mActivity, "当前已是最新版本", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void hasNewVersion() {
+                    }
+
+                    @Override
+                    public void parseDataFailure(Exception e) {
+                        ToastUtils.showLongToast("数据异常，请稍后重试");
+                    }
+
+                    @Override
+                    public void startRequest() {
+                    }
+                });
     }
 }
