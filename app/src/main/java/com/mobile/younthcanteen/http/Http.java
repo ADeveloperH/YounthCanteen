@@ -28,6 +28,8 @@ public class Http {
     public static final String SENDCODEFIND = "sendCodeFind";//找回密码中发送短信验证码
     public static final String MODIFYNICKNAME = "userNickUp";//修改用户名
     public static final String MODIFYPWD = "userPasswordUp";//修改密码
+    public static final String UPLOADIMG = "userImgUpload";//上传头像
+    public static final String CHECKVERSION = "appversion";//检查版本更新
 
     public static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;
