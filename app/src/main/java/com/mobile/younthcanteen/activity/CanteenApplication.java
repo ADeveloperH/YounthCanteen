@@ -6,6 +6,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
 
+import com.baidu.mapapi.SDKInitializer;
+
 public class CanteenApplication extends Application {
     private static CanteenApplication mSingleton;
     private static Context context;
@@ -24,6 +26,11 @@ public class CanteenApplication extends Application {
             mainThread = Thread.currentThread();// 当前的线程一定在主线程中
             handler = new Handler();
         }
+        initBaiDuMap();
+    }
+
+    private void initBaiDuMap() {
+        SDKInitializer.initialize(getApplicationContext());
     }
 
     private String getCurProcessName(Context context) {

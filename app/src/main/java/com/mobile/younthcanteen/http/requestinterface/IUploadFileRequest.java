@@ -28,6 +28,18 @@ public interface IUploadFileRequest {
     Call<ResponseBody>uploadFile(@Path(value = "url",encoded = true) String url,
                                  @Part MultipartBody.Part photo,
                                  @QueryMap Map<String, String> queryMap);
+
+    /**
+     * 上传单个文件的POST请求
+     * @param url  相对地址
+     * @param photo 上传的文件
+     * @return
+     */
+    @Multipart
+    @POST("{url}")
+    Call<ResponseBody>uploadFile(@Path(value = "url",encoded = true) String url,
+                                 @Part("token") String token,
+                                 @Part MultipartBody.Part photo);
     /**
      *
      * 带参数的另一种写法。直接写死参数

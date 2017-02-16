@@ -10,6 +10,10 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.Poi;
+import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
+import com.baidu.mapapi.search.sug.SuggestionResult;
+import com.baidu.mapapi.search.sug.SuggestionSearch;
+import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.mobile.younthcanteen.AppManager;
 import com.mobile.younthcanteen.R;
 
@@ -42,7 +46,39 @@ public class SplashActivity extends Activity {
         mLocationClient.start();
         //声明LocationClient类
         mLocationClient.registerLocationListener( myListener );
+
+        initSuggest();
     }
+
+    private void initSuggest() {
+        SuggestionSearch mSuggestionSearch = SuggestionSearch.newInstance();
+        mSuggestionSearch.setOnGetSuggestionResultListener(listener);
+        // 使用建议搜索服务获取建议列表，结果在onSuggestionResult()中更新
+        mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
+                .keyword("长椿路")
+                .city("郑州"));
+    }
+
+    OnGetSuggestionResultListener listener = new OnGetSuggestionResultListener() {
+        public void onGetSuggestionResult(SuggestionResult res) {
+            System.out.println("--------------onGetSuggestionResult");
+            if (res == null || res.getAllSuggestions() == null) {
+                return;
+                //未找到相关结果
+            }
+            //获取在线建议检索结果
+            List<SuggestionResult.SuggestionInfo> suggestionInfoList = res.getAllSuggestions();
+            for (int i = 0; i < suggestionInfoList.size(); i++) {
+                SuggestionResult.SuggestionInfo bean= suggestionInfoList.get(i);
+                System.out.println("city:" + bean.city +
+                        "district:" + bean.district +
+                        "key:" + bean.key +
+                        "pt:" + bean.pt +
+                        "uid:" + bean.uid);
+
+            }
+        }
+    };
 
     @Override
     protected void onDestroy() {
