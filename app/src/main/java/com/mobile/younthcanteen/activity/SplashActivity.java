@@ -1,15 +1,23 @@
 package com.mobile.younthcanteen.activity;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.Poi;
+import com.baidu.mapapi.search.core.PoiInfo;
+import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
+import com.baidu.mapapi.search.poi.PoiAddrInfo;
+import com.baidu.mapapi.search.poi.PoiCitySearchOption;
+import com.baidu.mapapi.search.poi.PoiDetailResult;
+import com.baidu.mapapi.search.poi.PoiIndoorResult;
+import com.baidu.mapapi.search.poi.PoiResult;
+import com.baidu.mapapi.search.poi.PoiSearch;
 import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
@@ -36,8 +44,15 @@ public class SplashActivity extends Activity {
 
         getLocation();
 
-        startActivity(new Intent(this,MainActivity.class));
-        finish();
+//        startActivity(new Intent(this,MainActivity.class));
+//        finish();
+        findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initSuggest();
+                poiSerch();
+            }
+        });
     }
 
     private void getLocation() {
@@ -45,17 +60,67 @@ public class SplashActivity extends Activity {
         initLocation();
         mLocationClient.start();
         //声明LocationClient类
-        mLocationClient.registerLocationListener( myListener );
-
-        initSuggest();
+        mLocationClient.registerLocationListener(myListener);
     }
+
+    private void poiSerch() {
+        PoiSearch mPoiSearch = PoiSearch.newInstance();
+        mPoiSearch.setOnGetPoiSearchResultListener(poiListener);
+        mPoiSearch.searchInCity((new PoiCitySearchOption())
+                .city("郑州")
+                .keyword("长椿路玉兰街移动")
+                .pageNum(10));
+    }
+
+    OnGetPoiSearchResultListener poiListener = new OnGetPoiSearchResultListener() {
+        public void onGetPoiResult(PoiResult result) {
+            //获取POI检索结果
+            System.out.println("--------------onGetPoiResult");
+            List<PoiAddrInfo> addrInfoList = result.getAllAddr();
+            if (null != addrInfoList) {
+                for (int i = 0; i < addrInfoList.size(); i++) {
+                    PoiAddrInfo poiAddrInfo = addrInfoList.get(i);
+                    System.out.println("poiAddrInfo:address:" + poiAddrInfo.address +
+                            "location:" + poiAddrInfo.location +
+                            "name:" + poiAddrInfo.name);
+                }
+            }
+
+
+            List<PoiInfo> poiInfoList = result.getAllPoi();
+            if (null != poiInfoList) {
+                for (int i = 0; i < poiInfoList.size(); i++) {
+                    PoiInfo poiInfo = poiInfoList.get(i);
+                    System.out.println("PoiInfo:address:" + poiInfo.address +
+                            "city:" + poiInfo.city +
+                            "location:" + poiInfo.location +
+                            "name:" + poiInfo.name +
+                            "phoneNum:" + poiInfo.phoneNum +
+                            "type:" + poiInfo.type);
+                }
+            }
+
+
+        }
+
+        public void onGetPoiDetailResult(PoiDetailResult result) {
+            //获取Place详情页检索结果
+            System.out.println("--------------onGetPoiDetailResult");
+        }
+
+        @Override
+        public void onGetPoiIndoorResult(PoiIndoorResult poiIndoorResult) {
+            System.out.println("--------------onGetPoiIndoorResult");
+
+        }
+    };
 
     private void initSuggest() {
         SuggestionSearch mSuggestionSearch = SuggestionSearch.newInstance();
         mSuggestionSearch.setOnGetSuggestionResultListener(listener);
         // 使用建议搜索服务获取建议列表，结果在onSuggestionResult()中更新
         mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
-                .keyword("长椿路")
+                .keyword("长椿路玉兰街移动")
                 .city("郑州"));
     }
 
@@ -69,12 +134,13 @@ public class SplashActivity extends Activity {
             //获取在线建议检索结果
             List<SuggestionResult.SuggestionInfo> suggestionInfoList = res.getAllSuggestions();
             for (int i = 0; i < suggestionInfoList.size(); i++) {
-                SuggestionResult.SuggestionInfo bean= suggestionInfoList.get(i);
+                SuggestionResult.SuggestionInfo bean = suggestionInfoList.get(i);
                 System.out.println("city:" + bean.city +
                         "district:" + bean.district +
                         "key:" + bean.key +
                         "pt:" + bean.pt +
-                        "uid:" + bean.uid);
+                        "uid:" + bean.uid +
+                        "describe:" + bean.describeContents() );
 
             }
         }
@@ -85,7 +151,8 @@ public class SplashActivity extends Activity {
         super.onDestroy();
         AppManager.getAppManager().finishActivity(this);
     }
-    private void initLocation(){
+
+    private void initLocation() {
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
         //可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
@@ -93,7 +160,7 @@ public class SplashActivity extends Activity {
         option.setCoorType("bd09ll");
         //可选，默认gcj02，设置返回的定位结果坐标系
 
-        int span=0;
+        int span = 0;
         option.setScanSpan(span);
         //可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
 
@@ -107,7 +174,7 @@ public class SplashActivity extends Activity {
         //可选，默认false，设置是否当GPS有效时按照1S/1次频率输出GPS结果
 
         option.setIsNeedLocationDescribe(true);
-        //可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
+        //可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于"在北京天安门附近"
 
         option.setIsNeedLocationPoiList(true);
         //可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
@@ -147,7 +214,7 @@ public class SplashActivity extends Activity {
             sb.append("\nradius : ");
             sb.append(location.getRadius());    //获取定位精准度
 
-            if (location.getLocType() == BDLocation.TypeGpsLocation){
+            if (location.getLocType() == BDLocation.TypeGpsLocation) {
 
                 // GPS定位结果
                 sb.append("\nspeed : ");
@@ -168,7 +235,7 @@ public class SplashActivity extends Activity {
                 sb.append("\ndescribe : ");
                 sb.append("gps定位成功");
 
-            } else if (location.getLocType() == BDLocation.TypeNetWorkLocation){
+            } else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {
 
                 // 网络定位结果
                 sb.append("\naddr : ");
