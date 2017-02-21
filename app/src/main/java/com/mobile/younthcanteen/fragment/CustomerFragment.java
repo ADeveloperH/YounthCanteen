@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.activity.LoginActivity;
 import com.mobile.younthcanteen.activity.MyAccountActivity;
+import com.mobile.younthcanteen.activity.MyAddressActivity;
 import com.mobile.younthcanteen.http.RequestParams;
 import com.mobile.younthcanteen.util.DownLoader;
 import com.mobile.younthcanteen.util.LoginUtils;
@@ -121,6 +122,7 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
         tvNickName.setOnClickListener(this);
         ivUserIcon.setOnClickListener(this);
         llUpdate.setOnClickListener(this);
+        llAddress.setOnClickListener(this);
     }
 
     @Override
@@ -149,6 +151,9 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
                 } else {
                     checkNewVersion();
                 }
+                break;
+            case R.id.ll_address://常用地址
+                startActivity(new Intent(mActivity,MyAddressActivity.class));
                 break;
         }
     }
