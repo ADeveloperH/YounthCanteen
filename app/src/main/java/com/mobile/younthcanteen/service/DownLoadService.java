@@ -47,7 +47,6 @@ public class DownLoadService extends IntentService {
         // 设置Notification
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         final NotificationCompat.Builder noticomBuilder = new NotificationCompat.Builder(this);
-
 //        noticomBuilder.setTicker("版本更新下载") //通知首次出现在通知栏，带上升动画效果的
 ////                .setWhen(System.currentTimeMillis())//通知产生的时间，会在通知信息里显示，一般是系统获取到的时间
 //                .setPriority(Notification.PRIORITY_MIN) //设置该通知优先级

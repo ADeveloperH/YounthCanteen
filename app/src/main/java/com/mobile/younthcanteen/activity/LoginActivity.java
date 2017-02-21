@@ -25,9 +25,6 @@ import com.mobile.younthcanteen.util.JsonUtil;
 import com.mobile.younthcanteen.util.SharedPreferencesUtil;
 import com.mobile.younthcanteen.util.ToastUtils;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-
 /**
  * author：hj
  * time: 2017/2/7 0007 18:24
@@ -183,8 +180,8 @@ public class LoginActivity extends Activity implements View.OnClickListener, Vie
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                super.onFailure(call, t);
+            public void onFailure(Throwable error) {
+                super.onFailure(error);
                 ToastUtils.showLongToast("登录失败,请重试");
             }
         });

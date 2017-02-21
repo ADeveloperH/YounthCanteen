@@ -18,9 +18,6 @@ import com.mobile.younthcanteen.util.JsonUtil;
 import com.mobile.younthcanteen.util.SharedPreferencesUtil;
 import com.mobile.younthcanteen.util.ToastUtils;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-
 /**
  * author：hj
  * time: 2017/2/9 0009 21:28
@@ -106,8 +103,8 @@ public class ModifyPwdActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                super.onFailure(call, t);
+            public void onFailure(Throwable error) {
+                super.onFailure(error);
                 ToastUtils.showLongToast("服务器异常，请稍后重试");
 
             }

@@ -1,6 +1,7 @@
 package com.mobile.younthcanteen.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -44,8 +45,8 @@ public class SplashActivity extends Activity {
 
         getLocation();
 
-//        startActivity(new Intent(this,MainActivity.class));
-//        finish();
+        startActivity(new Intent(this,MainActivity.class));
+        finish();
         findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

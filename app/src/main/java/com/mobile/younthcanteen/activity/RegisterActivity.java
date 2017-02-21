@@ -30,9 +30,6 @@ import org.json.JSONObject;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-
 /**
  * author：hj
  * time: 2017/2/7 0007 23:12
@@ -172,8 +169,8 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                super.onFailure(call, t);
+            public void onFailure(Throwable error) {
+                super.onFailure(error);
                 ToastUtils.showLongToast("注册失败，请重试");
             }
         });
@@ -251,8 +248,8 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                super.onFailure(call, t);
+            public void onFailure(Throwable error) {
+                super.onFailure(error);
                 ToastUtils.showLongToast("发送失败，请重试");
             }
         });

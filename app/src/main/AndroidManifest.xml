@@ -90,6 +90,14 @@
         <!-- 下载apk -->
         <service android:name=".service.DownLoadService" />
 
+        <receiver
+            android:name=".receiver.UpdateClickBroadCastReceiver">
+        </receiver>
+
+
+
+
+
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
