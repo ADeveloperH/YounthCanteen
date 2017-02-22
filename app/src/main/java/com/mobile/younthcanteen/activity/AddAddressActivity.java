@@ -1,6 +1,7 @@
 package com.mobile.younthcanteen.activity;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -9,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -22,6 +24,7 @@ import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
 import com.mobile.younthcanteen.http.RequestParams;
 import com.mobile.younthcanteen.util.DataCheckUtils;
+import com.mobile.younthcanteen.util.DialogUtil;
 import com.mobile.younthcanteen.util.JsonUtil;
 import com.mobile.younthcanteen.util.SharedPreferencesUtil;
 import com.mobile.younthcanteen.util.ToastUtils;
@@ -58,8 +61,11 @@ public class AddAddressActivity extends BaseActivity {
     TextView tvAddress;
     @BindView(R.id.et_detailadd)
     EditText etDetailadd;
+    @BindView(R.id.titlebar_back)
+    ImageButton backBtn;
     private List<OfficeAddressBean.ResultsEntity> officeDataList;
     private String choiceOfficeId;
+    private Intent intent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,8 +75,30 @@ public class AddAddressActivity extends BaseActivity {
         checkLogin(true);
         setContentView(R.layout.activity_addaddress_layout);
         ButterKnife.bind(this);
-
+        intent = getIntent();
+        if (intent != null && intent.hasExtra("title")) {
+            setTitle(intent.getStringExtra("title"));
+            initData();
+        }
         getAddList();
+    }
+
+    private void initData() {
+        String title = intent.getStringExtra("title");
+        String name = intent.getStringExtra("name");
+        String sex = intent.getStringExtra("sex");
+        String phone = intent.getStringExtra("phone");
+        String office = intent.getStringExtra("office");
+        String officeId = intent.getStringExtra("officeId");
+        String address = intent.getStringExtra("address");
+
+        setTitle(title);
+        etName.setText(name);
+        etName.setSelection(name.length());
+        etPhone.setText(phone);
+        tvAddress.setText(office);
+        choiceOfficeId = officeId;
+        etDetailadd.setText(address);
     }
 
     /**
@@ -85,6 +113,10 @@ public class AddAddressActivity extends BaseActivity {
                 super.onSuccess(content);
                 OfficeAddressBean bean = JsonUtil.fromJson(content, OfficeAddressBean.class);
                 if (null != bean) {
+                    if (!"0".equals(bean.getReturnCode())) {
+                        ToastUtils.showShortToast(bean.getReturnMessage());
+                        return;
+                    }
                     officeDataList = bean.getResults();
                     if (officeDataList == null || officeDataList.size() == 0) {
                         ToastUtils.showShortToast("当前无可配送地址");
@@ -104,7 +136,7 @@ public class AddAddressActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.ll_address, R.id.btn_add})
+    @OnClick({R.id.ll_address, R.id.btn_add ,R.id.titlebar_back})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_address://选择地址
@@ -116,6 +148,9 @@ public class AddAddressActivity extends BaseActivity {
                 break;
             case R.id.btn_add://添加
                 commit();
+                break;
+            case R.id.titlebar_back://返回按键
+                clickBack();
                 break;
         }
     }
@@ -157,7 +192,9 @@ public class AddAddressActivity extends BaseActivity {
                 SimpleResultBean bean = JsonUtil.fromJson(content, SimpleResultBean.class);
                 if (null != bean) {
                     ToastUtils.showLongToast(bean.getReturnMessage());
-                    finish();
+                    if ("0".equals(bean.getReturnCode())) {
+                        finish();
+                    }
                 } else {
                     ToastUtils.showShortToast("服务器异常，请稍后重试");
                 }
@@ -201,7 +238,32 @@ public class AddAddressActivity extends BaseActivity {
                 }
             }
         });
+    }
 
+    @Override
+    public void onBackPressed() {
+        clickBack();
+    }
 
+    /**
+     * 使用了返回按键
+     */
+    private void clickBack() {
+        String nameStr = etName.getText().toString().trim();
+        String phoneStr = etPhone.getText().toString().trim();
+        String detailAddStr = etDetailadd.getText().toString().trim();
+        if (!TextUtils.isEmpty(nameStr) ||
+                !TextUtils.isEmpty(phoneStr) ||
+                !TextUtils.isEmpty(detailAddStr)) {
+            DialogUtil.getSimpleDialogNoTitle(act, "确定要放弃此编辑", "取消", "确定", null
+                    , new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                        }
+                    }).show();
+        } else {
+            finish();
+        }
     }
 }

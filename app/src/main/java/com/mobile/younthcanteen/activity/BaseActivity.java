@@ -63,6 +63,21 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+     public void setSubTitle(CharSequence title) {
+        TextView tvSubTitle = (TextView) findViewById(R.id.tv_subtitle);
+         tvSubTitle.setVisibility(View.VISIBLE);
+        if (null != tvSubTitle) {
+            tvSubTitle.setText(title);
+        }
+    }
+
+    public String getSubTitle() {
+        TextView tvSubTitle = (TextView) findViewById(R.id.tv_subtitle);
+        return tvSubTitle.getText().toString().trim();
+    }
+
+
+
     protected void setToolbarBg(int color) {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {

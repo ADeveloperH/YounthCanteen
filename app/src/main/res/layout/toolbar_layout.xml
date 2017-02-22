@@ -33,13 +33,26 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="middle"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/titlebar_back"
+            android:ellipsize="middle"
             android:gravity="center"
             android:singleLine="true"
             android:text="标题"
             android:textColor="@color/textblack"
             android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/tv_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
+            android:text="副标题"
+            android:textColor="@color/black"
+            android:visibility="gone"
+            android:textSize="16dp" />
     </RelativeLayout>
 </android.support.v7.widget.Toolbar>
