@@ -28,6 +28,7 @@ public class Http {
     public static final String GETOFFICELIST = "officeList";//获取写字楼列表
     public static final String ADDADDRESS = "userAddrAdd";//添加收货地址
     public static final String DELETEADDRESS = "userAddrDel";//删除收货地址
+    public static final String GETHOMEDATA = "indexPage";//获取首页数据
 
     public static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;

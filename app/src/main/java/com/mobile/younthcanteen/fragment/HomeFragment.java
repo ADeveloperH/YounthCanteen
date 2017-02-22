@@ -1,12 +1,21 @@
 package com.mobile.younthcanteen.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.mobile.younthcanteen.R;
+import com.mobile.younthcanteen.adapter.HomeListAdapter;
+import com.mobile.younthcanteen.bean.HomeDataBean;
+import com.mobile.younthcanteen.http.Http;
+import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
+import com.mobile.younthcanteen.http.RequestParams;
+import com.mobile.younthcanteen.util.JsonUtil;
+import com.mobile.younthcanteen.util.ToastUtils;
 
 /**
  * author：hj
@@ -16,6 +25,9 @@ import com.mobile.younthcanteen.R;
 public class HomeFragment extends Fragment {
     private View rootView;//缓存Fragment的View
     private boolean isNeedReLoad = true;//是否需要重新加载该Fragment数据
+    private ListView lvHome;
+    private Context mActivity;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -35,11 +47,45 @@ public class HomeFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (isNeedReLoad) {
-//            initView(getView());
+            initView(getView());
 //            initData();
 //            setListener();
-//            getData();
+            mActivity = getActivity();
+            getData();
             isNeedReLoad = false;
         }
+    }
+
+    private void initView(View view) {
+        lvHome = (ListView) view.findViewById(R.id.iv_home);
+    }
+
+    private void getData() {
+        RequestParams params = new RequestParams();
+        Http.post(Http.GETHOMEDATA, params, new MyTextAsyncResponseHandler(mActivity, "正在加载中...") {
+            @Override
+            public void onSuccess(String content) {
+                super.onSuccess(content);
+                HomeDataBean homeDataBean = JsonUtil.fromJson(content, HomeDataBean.class);
+                if (null != homeDataBean) {
+                    if ("1".equals(homeDataBean.getReturnCode())) {
+                        //成功
+                        HomeListAdapter adapter = new HomeListAdapter(mActivity, homeDataBean.getCenter());
+                        lvHome.setAdapter(adapter);
+                    } else {
+                        ToastUtils.showShortToast(homeDataBean.getReturnMessage());
+                    }
+
+                } else {
+                    ToastUtils.showShortToast("服务器数据异常,请稍后重试.");
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable error) {
+                super.onFailure(error);
+                ToastUtils.showShortToast("服务器异常,请稍后重试.");
+            }
+        });
     }
 }

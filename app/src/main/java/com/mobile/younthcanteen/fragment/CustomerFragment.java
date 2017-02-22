@@ -80,7 +80,6 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
     public void onResume() {
         super.onResume();
         initData();
-
     }
 
     private void initData() {
