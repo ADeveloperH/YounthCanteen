@@ -24,6 +24,9 @@ public class Http {
     public static final String MODIFYPWD = "userPasswordUp";//修改密码
     public static final String UPLOADIMG = "userImgUpload";//上传头像
     public static final String CHECKVERSION = "appversion";//检查版本更新
+    public static final String GETADDRESSLIST = "userAddrGet";//获取常用地址列表
+    public static final String GETOFFICELIST = "officeList";//获取写字楼列表
+    public static final String ADDADDRESS = "userAddrAdd";//添加收货地址
 
     public static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;
