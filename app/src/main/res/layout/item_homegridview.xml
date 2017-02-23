@@ -11,12 +11,12 @@
         android:id="@+id/iv"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@color/gray_bg"
-        android:scaleType="fitXY" />
-
+        android:scaleType="fitXY"
+        android:src="@color/gray_bg" />
+    <!--android:layout_height="wrap_content"不能设置match_parent否则内容过长显示不全-->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:gravity="center_vertical"
         android:orientation="vertical">
