@@ -156,4 +156,8 @@ public class MyAddressListAdapter extends BaseAdapter {
     public void setShowModify(boolean showModify) {
         isShowModify = showModify;
     }
+
+    public void setAddressDataList(List<AddressListBean.ResultsEntity> addressDataList) {
+        this.addressDataList = addressDataList;
+    }
 }

@@ -96,6 +96,7 @@
         <activity
             android:name=".activity.AddAddressActivity"
             android:launchMode="singleTask"
+            android:windowSoftInputMode="stateAlwaysVisible"
             android:screenOrientation="portrait" />
 
 

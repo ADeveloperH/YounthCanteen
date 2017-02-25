@@ -56,10 +56,17 @@ public class MyAddressActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         //恢复初始状态。请求数据
+        showInitState();
+        getAddList();
+    }
+
+    /**
+     * 副标题显示初始状态
+     */
+    private void showInitState() {
         isShowModify = false;
         setSubTitle("管理");
         llAddAddress.setVisibility(View.VISIBLE);
-        getAddList();
     }
 
     /**
@@ -82,12 +89,18 @@ public class MyAddressActivity extends BaseActivity {
                             adapter = new MyAddressListAdapter(act,addressDataList, isShowModify, new DeleteAddressListener() {
                                 @Override
                                 public void deleteSucess() {
+                                    ToastUtils.showShortToast("删除成功");
                                     getAddList();
                                 }
                             });
                             lvAddress.setAdapter(adapter);
                         } else {
+                            if (adapter != null) {
+                                adapter.setAddressDataList(null);
+                                adapter.notifyDataSetChanged();
+                            }
                             ToastUtils.showShortToast("当前暂无常用收货地址");
+                            showInitState();
                         }
                     } else {
                         ToastUtils.showShortToast(bean.getReturnMessage());
@@ -108,9 +121,7 @@ public class MyAddressActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.tv_subtitle://管理
                 if ("完成".equals(getSubTitle())) {
-                    setSubTitle("管理");
-                    isShowModify = false;
-                    llAddAddress.setVisibility(View.VISIBLE);
+                    showInitState();
                 } else {
                     setSubTitle("完成");
                     isShowModify = true;
