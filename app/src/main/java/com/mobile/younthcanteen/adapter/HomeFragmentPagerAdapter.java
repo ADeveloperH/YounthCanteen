@@ -10,6 +10,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 
 import com.mobile.younthcanteen.bean.HomeDataBean;
+import com.mobile.younthcanteen.util.ToastUtils;
 
 import java.util.List;
 
@@ -61,17 +62,10 @@ public class HomeFragmentPagerAdapter extends PagerAdapter {
 
 		@Override
 		public void onClick(View v) {
-//			HomePageViewPagerItemBean homePageViewPagerItemBean = viewPagerDataList.get(curPosition);
-//			if(homePageViewPagerItemBean != null){
-//				if(!LoginUtil.checkLoginState(act)){
-//					return;
-//				}
-//				String className = homePageViewPagerItemBean.getClass_name_android();
-//				String linkUrl = homePageViewPagerItemBean.getImage_link();
-//				String moduleName = homePageViewPagerItemBean.getContent();
-//				MobclickAgent.onEvent(act,"home_banner");
-//				FunctionModularUtil.handleClickEvent(act,className,linkUrl,moduleName);
-//			}
+			HomeDataBean.TopEntity homePageViewPagerItemBean = viewPagerDataList.get(curPosition);
+			if(homePageViewPagerItemBean != null){
+				ToastUtils.showShortToast("你点击了第" + (curPosition + 1) + "张图片");
+			}
 		}
 
 	}

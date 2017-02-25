@@ -118,7 +118,6 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             initView(getView());
 //            initData();
             setListener();
-
             getData();
             isNeedReLoad = false;
         }
