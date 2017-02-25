@@ -166,7 +166,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Vie
                 if (!TextUtils.isEmpty(content)) {
                     LoginResultBean loginResultBean = JsonUtil.fromJson(content, LoginResultBean.class);
                     ToastUtils.showLongToast(loginResultBean.getReturnMessage());
-                    if ("0".equals(loginResultBean.getReturnCode())) {
+                    if (Http.SUCCESS.equals(loginResultBean.getReturnCode())) {
                         SharedPreferencesUtil.setToken(loginResultBean.getResults().getToken());
                         SharedPreferencesUtil.setAccount(inputAccountStr);
                         SharedPreferencesUtil.setUserId(loginResultBean.getResults().getUserid());

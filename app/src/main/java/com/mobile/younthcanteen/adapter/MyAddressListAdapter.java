@@ -93,11 +93,12 @@ public class MyAddressListAdapter extends BaseAdapter {
                 Intent intent = new Intent(context, AddAddressActivity.class);
                 intent.putExtra("title", "编辑收货地址");
                 intent.putExtra("name", resultsEntity.getConsignee());
-                intent.putExtra("sex", resultsEntity.getConsignee());
+                intent.putExtra("sex", resultsEntity.getSex());
                 intent.putExtra("phone", resultsEntity.getTel());
                 intent.putExtra("office", resultsEntity.getOffice());
                 intent.putExtra("officeId", resultsEntity.getOfficeid());
                 intent.putExtra("address", resultsEntity.getAddr());
+                intent.putExtra("addressid", resultsEntity.getAddressid());
                 context.startActivity(intent);
             }
         });

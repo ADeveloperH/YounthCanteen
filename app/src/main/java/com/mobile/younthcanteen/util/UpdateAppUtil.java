@@ -46,7 +46,8 @@ public class UpdateAppUtil {
                 final String versionOnServer = updateBean.getResults().getVersion();
                 if (null != updateBean) {
                     //当前版本名称
-                    if(versionOnServer.compareTo(versionInstalled) > 0){
+                    if (Http.SUCCESS.equals(updateBean.getReturnCode())) {
+                        if (versionOnServer.compareTo(versionInstalled) > 0) {
                             ThreadManager.getThreadPool().execute(new Runnable() {
                                 @Override
                                 public void run() {
@@ -58,8 +59,8 @@ public class UpdateAppUtil {
                                         UIUtils.runOnUIThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                showCheckDialog(context,versionOnServer,updateBean.getResults().getDescribe(),
-                                                        apkSize,updateBean.getResults().getUrl());
+                                                showCheckDialog(context, versionOnServer, updateBean.getResults().getDescribe(),
+                                                        apkSize, updateBean.getResults().getUrl());
                                                 if (checkVersionResultListener != null) {
                                                     checkVersionResultListener.hasNewVersion();
                                                 }
@@ -72,12 +73,16 @@ public class UpdateAppUtil {
                                     }
                                 }
                             });
-                    }else{
-                        //当前已是最新版本
-                        if (checkVersionResultListener != null) {
-                            checkVersionResultListener.aleryNewVersion(versionInstalled);
+                        } else {
+                            //当前已是最新版本
+                            if (checkVersionResultListener != null) {
+                                checkVersionResultListener.aleryNewVersion(versionInstalled);
+                            }
                         }
+                    } else {
+                        ToastUtils.showShortToast(updateBean.getReturnMessage());
                     }
+
                 } else {
                     if (checkVersionResultListener != null) {
                         checkVersionResultListener.parseDataFailure(new Exception("APPUpdateBean is null"));

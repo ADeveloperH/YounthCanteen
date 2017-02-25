@@ -83,7 +83,7 @@ public class ModifyNickNameActivity extends BaseActivity {
                 SimpleResultBean bean = JsonUtil.fromJson(content, SimpleResultBean.class);
                 if (null != bean) {
                     ToastUtils.showLongToast(bean.getReturnMessage());
-                    if ("0".equals(bean.getReturnCode())) {
+                    if (Http.SUCCESS.equals(bean.getReturnCode())) {
                         SharedPreferencesUtil.setNickName(nickNameStr);
                         finish();
                     }

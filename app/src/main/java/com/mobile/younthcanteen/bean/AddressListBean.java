@@ -10,7 +10,7 @@ import java.util.List;
 public class AddressListBean {
 
     /**
-     * results : [{"addr":"520","addressid":2,"consignee":"苗苗","office":"御玺大厦","officeid":1,"tel":"17739775520"},{"addr":"520","addressid":1,"consignee":"苗苗","office":"御玺大厦","officeid":1,"tel":"17739775520"}]
+     * results : [{"addr":"520","addressid":6,"consignee":"苗苗","office":"御玺大厦","officeid":1,"sex":1,"tel":"17739775520"}]
      * returnCode : 0
      * returnMessage : 获取成功
      */
@@ -19,10 +19,11 @@ public class AddressListBean {
     private String returnMessage;
     /**
      * addr : 520
-     * addressid : 2
+     * addressid : 6
      * consignee : 苗苗
      * office : 御玺大厦
      * officeid : 1
+     * sex : 1
      * tel : 17739775520
      */
 
@@ -58,6 +59,7 @@ public class AddressListBean {
         private String consignee;
         private String office;
         private String officeid;
+        private String sex;
         private String tel;
 
         public String getAddr() {
@@ -98,6 +100,14 @@ public class AddressListBean {
 
         public void setOfficeid(String officeid) {
             this.officeid = officeid;
+        }
+
+        public String getSex() {
+            return sex;
+        }
+
+        public void setSex(String sex) {
+            this.sex = sex;
         }
 
         public String getTel() {

@@ -157,7 +157,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                 RegisterResultBean registerResultBean = JsonUtil.fromJson(content,
                         RegisterResultBean.class);
                 ToastUtils.showLongToast(registerResultBean.getReturnMessage());
-                if ("0".equals(registerResultBean.getReturnCode())) {
+                if (Http.SUCCESS.equals(registerResultBean.getReturnCode())) {
                     SharedPreferencesUtil.setToken(registerResultBean.getResults().getToken());
                     SharedPreferencesUtil.setAccount(phoneNumStr);
                     SharedPreferencesUtil.setUserId(registerResultBean.getResults().getUserid());
@@ -237,7 +237,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                     JSONObject jsonObject = new JSONObject(content);
                     String returnCode = jsonObject.optString("returnCode");
                     String returnMessage = jsonObject.optString("returnMessage");
-                    if ("0".equals(returnCode)) {
+                    if (Http.SUCCESS.equals(returnCode)) {
                         startTimer();
                     }
                     ToastUtils.showLongToast(returnMessage);

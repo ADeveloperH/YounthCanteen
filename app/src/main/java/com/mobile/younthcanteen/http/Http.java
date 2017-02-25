@@ -15,6 +15,7 @@ import retrofit2.Callback;
 
 public class Http {
 
+    public static final String SUCCESS = "0";//接口请求成功的标志
     public static final String LOGIN = "userLogin";//登录
     public static final String SENDCODE = "sendCode";//注册页面发送验证码
     public static final String REGISTER = "userReg";//注册

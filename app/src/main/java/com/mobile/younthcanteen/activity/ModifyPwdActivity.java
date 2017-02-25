@@ -92,7 +92,7 @@ public class ModifyPwdActivity extends BaseActivity {
                 SimpleResultBean bean = JsonUtil.fromJson(content, SimpleResultBean.class);
                 if (null != bean) {
                     ToastUtils.showLongToast(bean.getReturnMessage());
-                    if ("0".equals(bean.getReturnCode())) {
+                    if (Http.SUCCESS.equals(bean.getReturnCode())) {
                         SharedPreferencesUtil.clear();
                         AppManager.getAppManager().finishAllActivity();
                         startActivity(new Intent(act, LoginActivity.class));

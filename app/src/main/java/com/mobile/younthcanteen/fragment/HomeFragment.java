@@ -3,9 +3,12 @@ package com.mobile.younthcanteen.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.mobile.younthcanteen.R;
@@ -27,6 +30,9 @@ public class HomeFragment extends Fragment {
     private boolean isNeedReLoad = true;//是否需要重新加载该Fragment数据
     private ListView lvHome;
     private Context mActivity;
+    private ImageView ivBanner;
+    private ViewPager viewPager;
+    private LinearLayout llPointGroup;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,7 +63,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void initView(View view) {
-        lvHome = (ListView) view.findViewById(R.id.iv_home);
+        lvHome = (ListView) view.findViewById(R.id.lv_home);
+        ivBanner = (ImageView) view.findViewById(R.id.iv_banner);
+        viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+        llPointGroup = (LinearLayout) view.findViewById(R.id.ll_point_group);
+
     }
 
     private void getData() {
@@ -68,7 +78,7 @@ public class HomeFragment extends Fragment {
                 super.onSuccess(content);
                 HomeDataBean homeDataBean = JsonUtil.fromJson(content, HomeDataBean.class);
                 if (null != homeDataBean) {
-                    if ("1".equals(homeDataBean.getReturnCode())) {
+                    if (Http.SUCCESS.equals(homeDataBean.getReturnCode())) {
                         //成功
                         HomeListAdapter adapter = new HomeListAdapter(mActivity, homeDataBean.getCenter());
                         lvHome.setAdapter(adapter);

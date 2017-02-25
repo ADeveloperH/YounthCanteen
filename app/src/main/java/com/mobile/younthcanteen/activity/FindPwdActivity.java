@@ -155,7 +155,7 @@ public class FindPwdActivity extends Activity implements View.OnClickListener {
                     String returnCode = jsonObject.optString("returnCode");
                     String returnMessage = jsonObject.optString("returnMessage");
                     ToastUtils.showLongToast(returnMessage);
-                    if ("0".equals(returnCode)) {
+                    if (Http.SUCCESS.equals(returnCode)) {
                         Intent intent = new Intent(act, LoginActivity.class);
                         intent.putExtra("phoneNum", phoneNumStr);
                         startActivity(intent);
@@ -237,7 +237,7 @@ public class FindPwdActivity extends Activity implements View.OnClickListener {
                     JSONObject jsonObject = new JSONObject(content);
                     String returnCode = jsonObject.optString("returnCode");
                     String returnMessage = jsonObject.optString("returnMessage");
-                    if ("0".equals(returnCode)) {
+                    if (Http.SUCCESS.equals(returnCode)) {
                         startTimer();
                     }
                     ToastUtils.showLongToast(returnMessage);

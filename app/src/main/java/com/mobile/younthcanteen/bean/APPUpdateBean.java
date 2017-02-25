@@ -20,7 +20,7 @@ public class APPUpdateBean {
     private ResultsEntity results;
     /**
      * results : {"IOSdescribe":"最新版","IOSversion":"1.1","describe":"第一版","md5":"md5","sha1":"sha1","url":"http://116.255.130.49:10001/apk/app-release.apk","version":"1.1"}
-     * returnCode : 1
+     * returnCode : 0
      * returnMessage : 获取成功
      */
 

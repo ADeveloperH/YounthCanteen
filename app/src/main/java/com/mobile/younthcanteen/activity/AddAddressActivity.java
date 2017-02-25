@@ -66,6 +66,7 @@ public class AddAddressActivity extends BaseActivity {
     private List<OfficeAddressBean.ResultsEntity> officeDataList;
     private String choiceOfficeId;
     private Intent intent;
+    private String addressid = "0";//默认新增
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,16 +90,23 @@ public class AddAddressActivity extends BaseActivity {
         String sex = intent.getStringExtra("sex");
         String phone = intent.getStringExtra("phone");
         String office = intent.getStringExtra("office");
-        String officeId = intent.getStringExtra("officeId");
+        choiceOfficeId = intent.getStringExtra("officeId");
         String address = intent.getStringExtra("address");
+        addressid = intent.getStringExtra("addressid");
 
         setTitle(title);
         etName.setText(name);
         etName.setSelection(name.length());
         etPhone.setText(phone);
         tvAddress.setText(office);
-        choiceOfficeId = officeId;
         etDetailadd.setText(address);
+        if ("1".equals(sex)) {
+            //女士
+            rbFemale.setChecked(true);
+        } else {
+            rbMale.setChecked(true);
+        }
+        btnAdd.setText("提交修改");
     }
 
     /**
@@ -113,7 +121,7 @@ public class AddAddressActivity extends BaseActivity {
                 super.onSuccess(content);
                 OfficeAddressBean bean = JsonUtil.fromJson(content, OfficeAddressBean.class);
                 if (null != bean) {
-                    if (!"0".equals(bean.getReturnCode())) {
+                    if (!Http.SUCCESS.equals(bean.getReturnCode())) {
                         ToastUtils.showShortToast(bean.getReturnMessage());
                         return;
                     }
@@ -178,7 +186,7 @@ public class AddAddressActivity extends BaseActivity {
         }
 
         RequestParams params = new RequestParams();
-        params.put("addressid", "0");
+        params.put("addressid", addressid);
         params.put("consignee", nameStr);
         params.put("tel", phoneStr);
         params.put("officeid", choiceOfficeId);
@@ -192,7 +200,7 @@ public class AddAddressActivity extends BaseActivity {
                 SimpleResultBean bean = JsonUtil.fromJson(content, SimpleResultBean.class);
                 if (null != bean) {
                     ToastUtils.showLongToast(bean.getReturnMessage());
-                    if ("0".equals(bean.getReturnCode())) {
+                    if (Http.SUCCESS.equals(bean.getReturnCode())) {
                         finish();
                     }
                 } else {

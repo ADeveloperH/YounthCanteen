@@ -76,7 +76,7 @@ public class MyAddressActivity extends BaseActivity {
                 if (bean == null) {
                     ToastUtils.showShortToast("服务器数据异常，请稍后重试");
                 } else {
-                    if ("0".equals(bean.getReturnCode())) {
+                    if (Http.SUCCESS.equals(bean.getReturnCode())) {
                         addressDataList = bean.getResults();
                         if (addressDataList != null && addressDataList.size() > 0) {
                             adapter = new MyAddressListAdapter(act,addressDataList, isShowModify, new DeleteAddressListener() {
