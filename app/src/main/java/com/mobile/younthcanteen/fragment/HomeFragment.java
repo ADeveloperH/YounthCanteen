@@ -53,10 +53,10 @@ public class HomeFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (isNeedReLoad) {
+            mActivity = getActivity();
             initView(getView());
 //            initData();
 //            setListener();
-            mActivity = getActivity();
             getData();
             isNeedReLoad = false;
         }
@@ -64,6 +64,11 @@ public class HomeFragment extends Fragment {
 
     private void initView(View view) {
         lvHome = (ListView) view.findViewById(R.id.lv_home);
+        LayoutInflater lif = (LayoutInflater) mActivity.
+                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View headerView = lif.inflate(R.layout.fragment_home_lv_header,
+                lvHome, false);
+        lvHome.addHeaderView(headerView);
         ivBanner = (ImageView) view.findViewById(R.id.iv_banner);
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         llPointGroup = (LinearLayout) view.findViewById(R.id.ll_point_group);

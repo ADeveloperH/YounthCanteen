@@ -74,6 +74,7 @@ public class MyAddressListAdapter extends BaseAdapter {
         vh.tvOffice.setText(resultsEntity.getOffice());
         vh.tvName.setText(resultsEntity.getConsignee());
         vh.tvTel.setText(resultsEntity.getTel());
+        vh.tvSex.setText("1".equals(resultsEntity.getSex()) ? "女士" : "先生");
         vh.ivModify.setVisibility(isShowModify ? View.VISIBLE : View.GONE);
         vh.ivDelete.setVisibility(isShowModify ? View.VISIBLE : View.GONE);
         vh.ivDelete.setOnClickListener(new View.OnClickListener() {
@@ -144,6 +145,8 @@ public class MyAddressListAdapter extends BaseAdapter {
         ImageView ivDelete;
         @BindView(R.id.iv_modify)
         ImageView ivModify;
+        @BindView(R.id.tv_sex)
+        TextView tvSex;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);

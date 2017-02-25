@@ -186,7 +186,7 @@ public class AddAddressActivity extends BaseActivity {
         }
 
         RequestParams params = new RequestParams();
-        params.put("addressid", addressid);
+        params.put("addrid", addressid);
         params.put("consignee", nameStr);
         params.put("tel", phoneStr);
         params.put("officeid", choiceOfficeId);
