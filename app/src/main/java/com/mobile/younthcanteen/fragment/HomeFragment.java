@@ -139,7 +139,9 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View headerView = lif.inflate(R.layout.fragment_home_lv_header,
                 lvHome, false);
-        lvHome.addHeaderView(headerView);
+        lvHome.addHeaderView(headerView,null,true);
+        //不显示header的分割线
+        lvHome.setHeaderDividersEnabled(false);
     }
 
     private void setListener() {
