@@ -130,7 +130,6 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         ivBanner = (ImageView) view.findViewById(R.id.iv_banner);
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         llPointGroup = (LinearLayout) view.findViewById(R.id.ll_point_group);
-        ivBanner.setImageResource(R.drawable.shoucang_icon);
     }
 
     /**
