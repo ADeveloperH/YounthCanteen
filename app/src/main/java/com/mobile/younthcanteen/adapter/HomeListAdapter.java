@@ -4,12 +4,14 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.bean.HomeDataBean;
 import com.mobile.younthcanteen.ui.GridViewForScroll;
+import com.mobile.younthcanteen.util.ToastUtils;
 import com.mobile.younthcanteen.util.UIUtils;
 
 import java.util.List;
@@ -59,7 +61,7 @@ public class HomeListAdapter extends BaseAdapter {
             Log.d("hj", "ListView:convertView != null:" + position);
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        HomeDataBean.CenterEntity bean = centerList.get(position);
+        final HomeDataBean.CenterEntity bean = centerList.get(position);
         viewHolder.tvTypeName.setText(bean.getTypename());
         HomeGridViewAdapter adapter = (HomeGridViewAdapter) viewHolder.gvHome.getAdapter();
         if (adapter == null) {
@@ -71,6 +73,12 @@ public class HomeListAdapter extends BaseAdapter {
             adapter.notifyDataSetChanged();
         }
         viewHolder.gvHome.setAdapter(adapter);
+        viewHolder.gvHome.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ToastUtils.showShortToast("您点击了:" + bean.getPros().get(position).getName());
+            }
+        });
         return convertView;
     }
 
