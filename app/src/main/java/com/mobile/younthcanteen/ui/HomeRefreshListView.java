@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Scroller;
@@ -20,7 +21,7 @@ import com.mobile.younthcanteen.R;
  * time: 2017/2/26 0026 22:17
  */
 
-public class HomeRefreshListView extends ListView {
+public class HomeRefreshListView extends ListView implements AbsListView.OnScrollListener {
 
     private final int PULL_REFRESH = 0;//下拉刷新
     private final int RELEASE_REFRESH = 1;//释放刷新
@@ -35,6 +36,7 @@ public class HomeRefreshListView extends ListView {
     private int needPaddingTop;
     private ImageView imageView;
     private AnimationDrawable animationDrawable;
+    private int mFirstVisibleItem;
 
     public HomeRefreshListView(Context context) {
         super(context);
@@ -52,6 +54,8 @@ public class HomeRefreshListView extends ListView {
     }
 
     private void init(Context context) {
+        setOnScrollListener(this);
+
         refreshHeaderView = LayoutInflater.from(context).inflate(R.layout.home_lv_refresh_header,
                 null, false);
         imageView = (ImageView) refreshHeaderView.findViewById(R.id.iv);
@@ -70,60 +74,62 @@ public class HomeRefreshListView extends ListView {
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         Log.d("hj", "ev.getAction()::" + ev.getAction());
-        switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                downY = ev.getY();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (curState != REFRESHING) {
-                    //当前不是正在刷新状态
-                    float tempY = ev.getY();
-                    Log.d("hj", "downY::" + downY);
-                    if (downY == 0) {
-                        downY = tempY;
-                    }
-                    float offsetY = tempY - downY;
-                    Log.d("hj", "offsetY::" + offsetY);
-                    needPaddingTop = (int) (-refreshHeaderHeight + offsetY / RATIO);
-                    Log.d("hj", "needPaddingTop::" + needPaddingTop);
+        if (mFirstVisibleItem == 0) {
+            switch (ev.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    downY = ev.getY();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    if (curState != REFRESHING) {
+                        //当前不是正在刷新状态
+                        float tempY = ev.getY();
+                        Log.d("hj", "downY::" + downY);
+                        if (downY == 0) {
+                            downY = tempY;
+                        }
+                        float offsetY = tempY - downY;
+                        Log.d("hj", "offsetY::" + offsetY);
+                        needPaddingTop = (int) (-refreshHeaderHeight + offsetY / RATIO);
+                        Log.d("hj", "needPaddingTop::" + needPaddingTop);
 
-                    if (needPaddingTop >= 0) {
-                        //刷新头完全显示
-                        setSelection(0);
-                        curState = RELEASE_REFRESH;
-                        refreshHeaderView.setPadding(0, needPaddingTop, 0, 0);
-                    } else if (needPaddingTop < 0 && needPaddingTop >= -refreshHeaderHeight) {
-                        //刷新头部分显示
-                        setSelection(0);
-                        curState = PULL_REFRESH;
-                        refreshHeaderView.setPadding(0, needPaddingTop, 0, 0);
-                    } else {
-                        //未显示刷新头
+                        if (needPaddingTop >= 0) {
+                            //刷新头完全显示
+                            setSelection(0);
+                            curState = RELEASE_REFRESH;
+                            refreshHeaderView.setPadding(0, needPaddingTop, 0, 0);
+                        } else if (needPaddingTop < 0 && needPaddingTop >= -refreshHeaderHeight) {
+                            //刷新头部分显示
+                            setSelection(0);
+                            curState = PULL_REFRESH;
+                            refreshHeaderView.setPadding(0, needPaddingTop, 0, 0);
+                        } else {
+                            //未显示刷新头
+                            curState = REFRESH_FINISH;
+                        }
+
+                        changeState(curState);
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    downY = 0;
+                    int paddingTop = refreshHeaderView.getPaddingTop();
+                    if (curState == RELEASE_REFRESH) {
+                        //刷新头完全显示了.释放刷新setpaddingtop=0
+                        scroller.startScroll(0, paddingTop,
+                                0, -paddingTop, 500);
+                        Log.d("hj", "getPaddingTop())" + paddingTop);
+                        Log.d("hj", "needPaddingTop" + needPaddingTop);
+                        handler.sendEmptyMessageDelayed(REFRESH_FINISH, 1000);
+                        curState = REFRESHING;
+                    } else if (curState == PULL_REFRESH) {
+                        //刷新头部分显示。下拉刷新。setpaddingtop=-refreshHeaderHeight
+                        scroller.startScroll(0, paddingTop,
+                                0, -refreshHeaderHeight - paddingTop, 500);
+                        Log.d("hj", "getPaddingTop())" + paddingTop);
                         curState = REFRESH_FINISH;
                     }
-
-                    changeState(curState);
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-                downY = 0;
-                int paddingTop = refreshHeaderView.getPaddingTop();
-                if (curState == RELEASE_REFRESH) {
-                    //刷新头完全显示了.释放刷新setpaddingtop=0
-                    scroller.startScroll(0, paddingTop,
-                            0, -paddingTop, 500);
-                    Log.d("hj", "getPaddingTop())" + paddingTop);
-                    Log.d("hj", "needPaddingTop" + needPaddingTop);
-                    handler.sendEmptyMessageDelayed(REFRESH_FINISH, 1000);
-                    curState = REFRESHING;
-                } else if (curState == PULL_REFRESH) {
-                    //刷新头部分显示。下拉刷新。setpaddingtop=-refreshHeaderHeight
-                    scroller.startScroll(0, paddingTop,
-                            0, -refreshHeaderHeight - paddingTop, 500);
-                    Log.d("hj", "getPaddingTop())" + paddingTop);
-                    curState = REFRESH_FINISH;
-                }
-                break;
+                    break;
+            }
         }
         return super.onTouchEvent(ev);
     }
@@ -173,5 +179,14 @@ public class HomeRefreshListView extends ListView {
         curState = REFRESH_FINISH;
         changeState(curState);
         setSelection(0);
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        mFirstVisibleItem = firstVisibleItem;
     }
 }
