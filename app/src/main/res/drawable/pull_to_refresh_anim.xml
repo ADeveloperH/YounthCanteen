@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item android:drawable="@drawable/home_lv_refresh_frame02" android:duration="100"/>
+    <item android:drawable="@drawable/home_lv_refresh_frame03" android:duration="100"/>
+    <item android:drawable="@drawable/home_lv_refresh_frame04" android:duration="100"/>
+    <item android:drawable="@drawable/home_lv_refresh_frame05" android:duration="100"/>
+    <item android:drawable="@drawable/home_lv_refresh_frame06" android:duration="100"/>
+    <item android:drawable="@drawable/home_lv_refresh_frame07" android:duration="100"/>
+    <item android:drawable="@drawable/home_lv_refresh_frame08" android:duration="100"/>
+    <item android:drawable="@drawable/home_lv_refresh_frame09" android:duration="100"/>
+    <item android:drawable="@drawable/home_lv_refresh_frame10" android:duration="100"/>
+    <item android:drawable="@drawable/home_lv_refresh_frame11" android:duration="100"/>
+    <item android:drawable="@drawable/home_lv_refresh_frame12" android:duration="100"/>
+    <item android:drawable="@drawable/home_lv_refresh_frame13" android:duration="100"/>
+
+</animation-list>

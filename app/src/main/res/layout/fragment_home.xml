@@ -4,11 +4,13 @@
     android:layout_height="match_parent"
     android:background="@color/gray_bg"
     android:orientation="vertical">
-    <ListView
+    <com.mobile.younthcanteen.ui.HomeRefreshListView
         android:id="@+id/lv_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
         android:overScrollMode="never"
+        android:dividerHeight="0dp"
+        android:divider="@null"
         android:scrollbars="none" />
 </LinearLayout>

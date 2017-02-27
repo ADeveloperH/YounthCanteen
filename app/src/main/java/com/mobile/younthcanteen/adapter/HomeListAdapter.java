@@ -1,7 +1,6 @@
 package com.mobile.younthcanteen.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -51,24 +50,24 @@ public class HomeListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
-        Log.d("hj", "ListView:getView:" + position);
+//        Log.d("hj", "ListView:getView:" + position);
         if (convertView == null) {
-            Log.d("hj", "ListView:convertView == null:" + position);
+//            Log.d("hj", "ListView:convertView == null:" + position);
             convertView = UIUtils.inflate(R.layout.item_homelistview);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {
-            Log.d("hj", "ListView:convertView != null:" + position);
+//            Log.d("hj", "ListView:convertView != null:" + position);
             viewHolder = (ViewHolder) convertView.getTag();
         }
         final HomeDataBean.CenterEntity bean = centerList.get(position);
         viewHolder.tvTypeName.setText(bean.getTypename());
         HomeGridViewAdapter adapter = (HomeGridViewAdapter) viewHolder.gvHome.getAdapter();
         if (adapter == null) {
-            Log.d("hj", "ListView:adapter == null:" + position);
+//            Log.d("hj", "ListView:adapter == null:" + position);
             adapter = new HomeGridViewAdapter(viewHolder.gvHome,context, bean.getPros());
         } else {
-            Log.d("hj", "ListView:adapter != null:" + position);
+//            Log.d("hj", "ListView:adapter != null:" + position);
             adapter.setProsList(bean.getPros());
             adapter.notifyDataSetChanged();
         }

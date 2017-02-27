@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.adapter.HomeFragmentPagerAdapter;
@@ -21,6 +20,7 @@ import com.mobile.younthcanteen.bean.HomeDataBean;
 import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
 import com.mobile.younthcanteen.http.RequestParams;
+import com.mobile.younthcanteen.ui.HomeRefreshListView;
 import com.mobile.younthcanteen.util.BitmapUtil;
 import com.mobile.younthcanteen.util.FileUtil;
 import com.mobile.younthcanteen.util.JsonUtil;
@@ -39,7 +39,7 @@ import java.util.List;
 public class HomeFragment extends Fragment implements ViewPager.OnPageChangeListener {
     private View rootView;//缓存Fragment的View
     private boolean isNeedReLoad = true;//是否需要重新加载该Fragment数据
-    private ListView lvHome;
+    private HomeRefreshListView lvHome;
     private Context mActivity;
     private ImageView ivBanner;
     private ViewPager viewPager;
@@ -124,7 +124,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     }
 
     private void initView(View view) {
-        lvHome = (ListView) view.findViewById(R.id.lv_home);
+        lvHome = (HomeRefreshListView) view.findViewById(R.id.lv_home);
         addLvHeaderView();
         ivBanner = (ImageView) view.findViewById(R.id.iv_banner);
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
