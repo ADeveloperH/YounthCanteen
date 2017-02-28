@@ -51,6 +51,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     private List<ImageView> imageList;// 轮播图图片的集合
     private List<HomeDataBean.TopEntity> viewPagerDataList;// 轮播图的数据集合
     private MyHandler mHandler = new MyHandler(this);
+    private HomeListAdapter adapter;
 
     private static class MyHandler extends Handler {
         private WeakReference<HomeFragment> homeFragmentWeakReference;
@@ -139,14 +140,20 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View headerView = lif.inflate(R.layout.fragment_home_lv_header,
                 lvHome, false);
-        lvHome.addHeaderView(headerView,null,true);
+        lvHome.addHeaderView(headerView, null, true);
         //不显示header的分割线
         lvHome.setHeaderDividersEnabled(false);
     }
 
     private void setListener() {
         viewPager.setOnPageChangeListener(this);
+        lvHome.setOnRefreshListener(new HomeRefreshListView.OnListViewRefreshListener() {
 
+            @Override
+            public void onRefresh() {
+                getData();
+            }
+        });
     }
 
     private void getData() {
@@ -163,9 +170,8 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                         viewPagerDataList = homeDataBean.getTop();
                         initViewPagerData();
 
-                    } else {
-                        ToastUtils.showShortToast(homeDataBean.getReturnMessage());
                     }
+                    ToastUtils.showShortToast(homeDataBean.getReturnMessage());
 
                 } else {
                     ToastUtils.showShortToast("服务器数据异常,请稍后重试.");
@@ -176,6 +182,13 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             public void onFailure(Throwable error) {
                 super.onFailure(error);
                 ToastUtils.showShortToast("服务器异常,请稍后重试.");
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                //刷新完成。
+                lvHome.setRefreshFinished();
             }
         });
     }
@@ -306,20 +319,25 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     }
 
 
-
     /**
      * 显示套餐内容数据
      *
      * @param homeDataBean
      */
     private void showListView(List<HomeDataBean.CenterEntity> homeDataBean) {
-        HomeListAdapter adapter = new HomeListAdapter(mActivity, homeDataBean);
-        lvHome.setAdapter(adapter);
+        if (adapter == null) {
+            adapter = new HomeListAdapter(mActivity, homeDataBean);
+            lvHome.setAdapter(adapter);
+        } else {
+            adapter.setCenterList(homeDataBean);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     // 上一个选中的页面的下标
     private int lastPosition = 0;
     private HomeFragmentPagerAdapter viewPagerAdapter;
+
     @Override
     public void onPageScrollStateChanged(int state) {
         if (state == ViewPager.SCROLL_STATE_IDLE) {
@@ -332,6 +350,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             viewPagerAdapter.notifyDataSetChanged();
         }
     }
+
     @Override
     public void onPageSelected(int position) {
         // 切换指示点的选中状态
@@ -350,6 +369,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         // 为lastPosition 设值
         lastPosition = position;
     }
+
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
     }

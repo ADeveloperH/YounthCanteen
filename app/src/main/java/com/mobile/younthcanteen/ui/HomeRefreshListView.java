@@ -132,11 +132,11 @@ public class HomeRefreshListView extends ListView implements AbsListView.OnScrol
                             //未显示刷新头
                             curState = REFRESH_FINISH;
                         }
-
                         changeState(curState);
                     }
                     break;
                 case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
                     downY = 0;
                     int paddingTop = refreshHeaderView.getPaddingTop();
                     if (curState == RELEASE_REFRESH) {
@@ -145,7 +145,6 @@ public class HomeRefreshListView extends ListView implements AbsListView.OnScrol
                                 0, -paddingTop, 500);
                         Log.d("hj", "getPaddingTop())" + paddingTop);
                         Log.d("hj", "needPaddingTop" + needPaddingTop);
-                        handler.sendEmptyMessageDelayed(REFRESH_FINISH, 1000);
                         curState = REFRESHING;
                     } else if (curState == PULL_REFRESH) {
                         //刷新头部分显示。下拉刷新。setpaddingtop=-refreshHeaderHeight
@@ -154,6 +153,7 @@ public class HomeRefreshListView extends ListView implements AbsListView.OnScrol
                         Log.d("hj", "getPaddingTop())" + paddingTop);
                         curState = REFRESH_FINISH;
                     }
+                    changeState(curState);
                     break;
             }
         }
@@ -163,7 +163,8 @@ public class HomeRefreshListView extends ListView implements AbsListView.OnScrol
     @Override
     public void computeScroll() {
         super.computeScroll();
-        if (scroller.computeScrollOffset()) {
+        if (scroller.computeScrollOffset()
+                && curState != REFRESH_FINISH) {
             setSelection(0);
             refreshHeaderView.setPadding(0, scroller.getCurrY(), 0, 0);
             Log.d("hj", "scroller.getCurrY()" + scroller.getCurrY());
@@ -174,15 +175,33 @@ public class HomeRefreshListView extends ListView implements AbsListView.OnScrol
     private void changeState(int state) {
         switch (state) {
             case REFRESH_FINISH://刷新完成.隐藏刷新头.停止动画
-                refreshHeaderView.setPadding(0, -refreshHeaderHeight, 0, 0);
-                animationDrawable.stop();
+                Log.d("hj", "-----------------------------刷新完成.隐藏刷新头.停止动画");
+                if (getPaddingTop() != -refreshHeaderHeight) {
+                    Log.d("hj", "-----------------------------getPaddingTop() != -refreshHeaderHeight");
+                    refreshHeaderView.setPadding(0, -refreshHeaderHeight, 0, 0);
+                }
+                if (animationDrawable.isRunning()) {
+                    Log.d("hj", "-----------------------------animationDrawable.isRunning()");
+                    animationDrawable.stop();
+                }
                 break;
             case PULL_REFRESH://下拉刷新
-                animationDrawable.start();
+                if (!animationDrawable.isRunning()) {
+                    animationDrawable.start();
+                }
                 break;
             case RELEASE_REFRESH://释放刷新
+                if (!animationDrawable.isRunning()) {
+                    animationDrawable.start();
+                }
                 break;
             case REFRESHING://刷新中
+                if (!animationDrawable.isRunning()) {
+                    animationDrawable.start();
+                }
+                if (refreshListener != null) {
+                    refreshListener.onRefresh();
+                }
                 break;
 
         }
@@ -195,16 +214,23 @@ public class HomeRefreshListView extends ListView implements AbsListView.OnScrol
             super.handleMessage(msg);
             switch (msg.what) {
                 case REFRESH_FINISH:
-                    setRefreshFinish();
+                    changeState(curState);
                     break;
             }
         }
     };
 
-    public void setRefreshFinish() {
+
+    /**
+     * 刷新数据完成
+     * 延迟隐藏刷新头。隐藏过快太突兀
+     */
+    public void setRefreshFinished() {
         curState = REFRESH_FINISH;
-        changeState(curState);
-        setSelection(0);
+//        changeState(curState);
+        handler.sendEmptyMessageDelayed(REFRESH_FINISH, 500);
+        Log.d("hj", "-----------------------------setRefreshFinished");
+//        setSelection(0);
     }
 
     @Override
@@ -216,22 +242,19 @@ public class HomeRefreshListView extends ListView implements AbsListView.OnScrol
         mFirstVisibleItem = firstVisibleItem;
     }
 
-    private void measureView(View child) {
-        ViewGroup.LayoutParams p = child.getLayoutParams();
-        if (p == null) {
-            p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-        }
-        int childWidthSpec = ViewGroup.getChildMeasureSpec(0, 0 + 0, p.width);
-        int lpHeight = p.height;
-        int childHeightSpec;
-        if (lpHeight > 0) {
-            childHeightSpec = MeasureSpec.makeMeasureSpec(lpHeight,
-                    MeasureSpec.EXACTLY);
-        } else {
-            childHeightSpec = MeasureSpec.makeMeasureSpec(0,
-                    MeasureSpec.UNSPECIFIED);
-        }
-        child.measure(childWidthSpec, childHeightSpec);
+
+    private OnListViewRefreshListener refreshListener;
+
+    public interface OnListViewRefreshListener {
+        void onRefresh();//正在刷新
+    }
+
+    /**
+     * 设置刷新监听
+     *
+     * @param refreshListener
+     */
+    public void setOnRefreshListener(OnListViewRefreshListener refreshListener) {
+        this.refreshListener = refreshListener;
     }
 }

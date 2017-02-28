@@ -91,4 +91,8 @@ public class HomeListAdapter extends BaseAdapter {
             ButterKnife.bind(this, view);
         }
     }
+
+    public void setCenterList(List<HomeDataBean.CenterEntity> centerList) {
+        this.centerList = centerList;
+    }
 }

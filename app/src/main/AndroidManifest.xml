@@ -29,10 +29,11 @@
 
     <application
         android:name=".activity.CanteenApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:hardwareAccelerated="true"
         android:theme="@style/MyAppTheme">
         <activity
             android:name=".activity.SplashActivity"
