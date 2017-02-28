@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -37,6 +38,9 @@ public class HomeRefreshListView extends ListView implements AbsListView.OnScrol
     private ImageView imageView;
     private AnimationDrawable animationDrawable;
     private int mFirstVisibleItem;
+    private ViewGroup.LayoutParams layoutParams;
+    private int imageViewHeight;//图片的真实高度
+    private int imageViewWidth;//图片的真是宽度
 
     public HomeRefreshListView(Context context) {
         super(context);
@@ -63,12 +67,20 @@ public class HomeRefreshListView extends ListView implements AbsListView.OnScrol
         animationDrawable = (AnimationDrawable) imageView.getBackground();
 
         refreshHeaderView.measure(0, 0);
+//        measureView(refreshHeaderView);
         this.addHeaderView(refreshHeaderView);
         refreshHeaderHeight = refreshHeaderView.getMeasuredHeight();
         refreshHeaderView.setPadding(0, -refreshHeaderHeight, 0, 0);
-        Log.d("hj", -refreshHeaderHeight + "");
+
+        imageViewHeight = imageView.getMeasuredHeight();
+        imageViewWidth = imageView.getMeasuredWidth();
+        Log.d("hj", "refreshHeaderViewHeight:" + refreshHeaderView.getMeasuredHeight());
+        Log.d("hj", "refreshHeaderViewWidth:" + refreshHeaderView.getMeasuredWidth());
+        Log.d("hj", "imageViewHeight:" + imageViewHeight);
+        Log.d("hj", "imageViewWidth:" + imageViewWidth);
 
         scroller = new Scroller(context);
+        layoutParams = imageView.getLayoutParams();
     }
 
     @Override
@@ -91,16 +103,30 @@ public class HomeRefreshListView extends ListView implements AbsListView.OnScrol
                         Log.d("hj", "offsetY::" + offsetY);
                         needPaddingTop = (int) (-refreshHeaderHeight + offsetY / RATIO);
                         Log.d("hj", "needPaddingTop::" + needPaddingTop);
-
+//                        float scale =  (needPaddingTop-refreshHeaderHeight) / refreshHeaderHeight;
+                        float scale = 1 + (float) needPaddingTop / (float) refreshHeaderHeight;
+//                        scale = scale * scale ;
+                        Log.d("hj", "---------------------------------scale::" + scale);
+                        if (scale >= 1) {
+                            scale = 1;
+                        } else if (scale <= 0) {
+                            scale = 0;
+                        }
                         if (needPaddingTop >= 0) {
                             //刷新头完全显示
                             setSelection(0);
                             curState = RELEASE_REFRESH;
+                            layoutParams.height = (int) (imageViewHeight * scale);
+                            layoutParams.width = (int) (imageViewWidth * scale);
+                            imageView.setLayoutParams(layoutParams);
                             refreshHeaderView.setPadding(0, needPaddingTop, 0, 0);
                         } else if (needPaddingTop < 0 && needPaddingTop >= -refreshHeaderHeight) {
                             //刷新头部分显示
                             setSelection(0);
                             curState = PULL_REFRESH;
+                            layoutParams.height = (int) (imageViewHeight * scale);
+                            layoutParams.width = (int) (imageViewWidth * scale);
+                            imageView.setLayoutParams(layoutParams);
                             refreshHeaderView.setPadding(0, needPaddingTop, 0, 0);
                         } else {
                             //未显示刷新头
@@ -188,5 +214,24 @@ public class HomeRefreshListView extends ListView implements AbsListView.OnScrol
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         mFirstVisibleItem = firstVisibleItem;
+    }
+
+    private void measureView(View child) {
+        ViewGroup.LayoutParams p = child.getLayoutParams();
+        if (p == null) {
+            p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+        int childWidthSpec = ViewGroup.getChildMeasureSpec(0, 0 + 0, p.width);
+        int lpHeight = p.height;
+        int childHeightSpec;
+        if (lpHeight > 0) {
+            childHeightSpec = MeasureSpec.makeMeasureSpec(lpHeight,
+                    MeasureSpec.EXACTLY);
+        } else {
+            childHeightSpec = MeasureSpec.makeMeasureSpec(0,
+                    MeasureSpec.UNSPECIFIED);
+        }
+        child.measure(childWidthSpec, childHeightSpec);
     }
 }
