@@ -1,6 +1,7 @@
 package com.mobile.younthcanteen.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,9 +16,9 @@ import android.widget.Toast;
 import com.mobile.younthcanteen.AppManager;
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.adapter.FragmentAdapter;
-import com.mobile.younthcanteen.fragment.OrderFragment;
 import com.mobile.younthcanteen.fragment.CustomerFragment;
 import com.mobile.younthcanteen.fragment.HomeFragment;
+import com.mobile.younthcanteen.fragment.OrderFragment;
 import com.mobile.younthcanteen.ui.NoScrollViewPager;
 
 import java.util.ArrayList;
@@ -35,6 +36,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private HomeFragment mHomeFragment;
     private OrderFragment mOrderFragment;
     private CustomerFragment mCustomerFragment;
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent != null) {
+            int tabIndex = intent.getIntExtra("tabIndex",-1);
+            if (tabIndex != -1) {
+                setTabSelection(tabIndex);
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

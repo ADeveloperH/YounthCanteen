@@ -76,16 +76,17 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void setListener() {
-        btnLogin.setOnClickListener(this);
-    }
-
     private void initView(View view) {
         btnLogin = (Button) view.findViewById(R.id.btn_login);
         tabPageIndicator = (TabPageIndicator) view.findViewById(R.id.tab_page_indicator);
         viewpager = (ViewPager) view.findViewById(R.id.viewpager);
         llAlLogin = (LinearLayout) view.findViewById(R.id.ll_allogin);
         llUnLogin = (LinearLayout) view.findViewById(R.id.ll_unlogin);
+    }
+
+    private void setListener() {
+        btnLogin.setOnClickListener(this);
+
     }
 
     private void initFragment() {
