@@ -1,6 +1,7 @@
 package com.mobile.younthcanteen.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -8,9 +9,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
+import com.mobile.younthcanteen.activity.GoodsDetailInfoActivity;
 import com.mobile.younthcanteen.bean.HomeDataBean;
 import com.mobile.younthcanteen.ui.GridViewForScroll;
-import com.mobile.younthcanteen.util.ToastUtils;
 import com.mobile.younthcanteen.util.UIUtils;
 
 import java.util.List;
@@ -75,7 +76,9 @@ public class HomeListAdapter extends BaseAdapter {
         viewHolder.gvHome.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ToastUtils.showShortToast("您点击了:" + bean.getPros().get(position).getName());
+                Intent intent = new Intent(context, GoodsDetailInfoActivity.class);
+                intent.putExtra("proid", bean.getPros().get(position).getProid());
+                context.startActivity(intent);
             }
         });
         return convertView;
