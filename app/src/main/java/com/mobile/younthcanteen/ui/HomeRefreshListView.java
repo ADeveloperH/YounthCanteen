@@ -2,8 +2,6 @@ package com.mobile.younthcanteen.ui;
 
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
-import android.os.Handler;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -67,7 +65,6 @@ public class HomeRefreshListView extends ListView implements AbsListView.OnScrol
         animationDrawable = (AnimationDrawable) imageView.getBackground();
 
         refreshHeaderView.measure(0, 0);
-//        measureView(refreshHeaderView);
         this.addHeaderView(refreshHeaderView);
         refreshHeaderHeight = refreshHeaderView.getMeasuredHeight();
         refreshHeaderView.setPadding(0, -refreshHeaderHeight, 0, 0);
@@ -95,18 +92,18 @@ public class HomeRefreshListView extends ListView implements AbsListView.OnScrol
                     if (curState != REFRESHING) {
                         //当前不是正在刷新状态
                         float tempY = ev.getY();
-                        Log.d("hj", "downY::" + downY);
+//                        Log.d("hj", "downY::" + downY);
                         if (downY == 0) {
                             downY = tempY;
                         }
                         float offsetY = tempY - downY;
-                        Log.d("hj", "offsetY::" + offsetY);
+//                        Log.d("hj", "offsetY::" + offsetY);
                         needPaddingTop = (int) (-refreshHeaderHeight + offsetY / RATIO);
-                        Log.d("hj", "needPaddingTop::" + needPaddingTop);
+//                        Log.d("hj", "needPaddingTop::" + needPaddingTop);
 //                        float scale =  (needPaddingTop-refreshHeaderHeight) / refreshHeaderHeight;
                         float scale = 1 + (float) needPaddingTop / (float) refreshHeaderHeight;
 //                        scale = scale * scale ;
-                        Log.d("hj", "---------------------------------scale::" + scale);
+//                        Log.d("hj", "---------------------------------scale::" + scale);
                         if (scale >= 1) {
                             scale = 1;
                         } else if (scale <= 0) {
@@ -143,17 +140,11 @@ public class HomeRefreshListView extends ListView implements AbsListView.OnScrol
                         //刷新头完全显示了.释放刷新setpaddingtop=0
                         scroller.startScroll(0, paddingTop,
                                 0, -paddingTop, 500);
-                        Log.d("hj", "getPaddingTop())" + paddingTop);
-                        Log.d("hj", "needPaddingTop" + needPaddingTop);
-                        curState = REFRESHING;
                     } else if (curState == PULL_REFRESH) {
                         //刷新头部分显示。下拉刷新。setpaddingtop=-refreshHeaderHeight
                         scroller.startScroll(0, paddingTop,
                                 0, -refreshHeaderHeight - paddingTop, 500);
-                        Log.d("hj", "getPaddingTop())" + paddingTop);
-                        curState = REFRESH_FINISH;
                     }
-                    changeState(curState);
                     break;
             }
         }
@@ -163,25 +154,39 @@ public class HomeRefreshListView extends ListView implements AbsListView.OnScrol
     @Override
     public void computeScroll() {
         super.computeScroll();
-        if (scroller.computeScrollOffset()
-                && curState != REFRESH_FINISH) {
-            setSelection(0);
-            refreshHeaderView.setPadding(0, scroller.getCurrY(), 0, 0);
-            Log.d("hj", "scroller.getCurrY()" + scroller.getCurrY());
-            invalidate();
+        if (scroller.computeScrollOffset()) {
+            Log.d("hj", "scroller.computeScrollOffset()");
+            if (curState != REFRESH_FINISH) {
+                setSelection(0);
+                refreshHeaderView.setPadding(0, scroller.getCurrY(), 0, 0);
+                Log.d("hj", "scroller.getCurrY()" + scroller.getCurrY());
+                invalidate();
+            }
+            if (scroller.getCurrY() == scroller.getFinalY()) {
+                //动画结束
+                Log.d("hj", "scroller.getCurrY() == scroller.getFinalY()::" + curState);
+                if (curState == RELEASE_REFRESH) {
+                    //开始动画的状态是释放刷新。结束动画后为刷新中
+                    curState = REFRESHING;
+                } else if (curState == PULL_REFRESH) {
+                    //开始动画的状态是下拉刷新。结束动画后为初始状态
+                    curState = REFRESH_FINISH;
+                } else if (curState == REFRESHING) {
+                    //开始动画的状态是刷新中。结束动画后为初始状态。完成状态
+                    curState = REFRESH_FINISH;
+                }
+                changeState(curState);
+                //强制结束。否则还会多次调用computeScroll
+                scroller.forceFinished(true);
+            }
         }
     }
 
     private void changeState(int state) {
+        Log.d("hj", "changeState:::" + state);
         switch (state) {
             case REFRESH_FINISH://刷新完成.隐藏刷新头.停止动画
-                Log.d("hj", "-----------------------------刷新完成.隐藏刷新头.停止动画");
-                if (getPaddingTop() != -refreshHeaderHeight) {
-                    Log.d("hj", "-----------------------------getPaddingTop() != -refreshHeaderHeight");
-                    refreshHeaderView.setPadding(0, -refreshHeaderHeight, 0, 0);
-                }
                 if (animationDrawable.isRunning()) {
-                    Log.d("hj", "-----------------------------animationDrawable.isRunning()");
                     animationDrawable.stop();
                 }
                 break;
@@ -203,34 +208,27 @@ public class HomeRefreshListView extends ListView implements AbsListView.OnScrol
                     refreshListener.onRefresh();
                 }
                 break;
-
         }
     }
 
-
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case REFRESH_FINISH:
-                    changeState(curState);
-                    break;
-            }
-        }
-    };
-
-
     /**
      * 刷新数据完成
-     * 延迟隐藏刷新头。隐藏过快太突兀
+     * 隐藏刷新头
      */
     public void setRefreshFinished() {
-        curState = REFRESH_FINISH;
-//        changeState(curState);
-        handler.sendEmptyMessageDelayed(REFRESH_FINISH, 500);
-        Log.d("hj", "-----------------------------setRefreshFinished");
-//        setSelection(0);
+        Log.d("hj", "setRefreshFinished" + curState);
+        int paddingTop = refreshHeaderView.getPaddingTop();
+        scroller.forceFinished(true);
+        scroller.startScroll(0, paddingTop,
+                0, -refreshHeaderHeight - paddingTop, 1000);
+    }
+
+    /**
+     * 刷新头是否显示
+     * @return
+     */
+    public boolean headerViewIsShowing() {
+        return getPaddingTop() >= - refreshHeaderHeight;
     }
 
     @Override

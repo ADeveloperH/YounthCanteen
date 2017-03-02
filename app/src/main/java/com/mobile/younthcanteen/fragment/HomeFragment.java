@@ -188,7 +188,9 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             public void onFinish() {
                 super.onFinish();
                 //刷新完成。
-                lvHome.setRefreshFinished();
+                if (lvHome.headerViewIsShowing()) {
+                    lvHome.setRefreshFinished();
+                }
             }
         });
     }
