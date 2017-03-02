@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
@@ -20,6 +21,7 @@ import com.mobile.younthcanteen.bean.GoodsDetailInfoBean;
 import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
 import com.mobile.younthcanteen.http.RequestParams;
+import com.mobile.younthcanteen.ui.ZoomScrollView;
 import com.mobile.younthcanteen.util.BitmapUtil;
 import com.mobile.younthcanteen.util.FileUtil;
 import com.mobile.younthcanteen.util.JsonUtil;
@@ -58,6 +60,10 @@ public class GoodsDetailInfoActivity extends Activity implements ViewPager.OnPag
     ImageView ivBanner;
     @BindView(R.id.ll_point_group)
     LinearLayout llPointGroup;
+    @BindView(R.id.sv_root)
+    ZoomScrollView svRoot;
+    @BindView(R.id.rl_container)
+    RelativeLayout rlContainer;
     private Context context;
     private List<String> viewPagerDataList;
     private ArrayList<ImageView> imageList;
@@ -104,14 +110,21 @@ public class GoodsDetailInfoActivity extends Activity implements ViewPager.OnPag
 
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goodsdetailinfo_layout);
         ButterKnife.bind(this);
         context = this;
+        init();
         getData();
 
+    }
+
+    private void init() {
+        svRoot.setZoomView(rlContainer);
+//        viewpager.getLayoutParams();
     }
 
     private void getData() {
@@ -167,7 +180,6 @@ public class GoodsDetailInfoActivity extends Activity implements ViewPager.OnPag
         initViewPagerData();
 
     }
-
 
 
     /**
