@@ -76,9 +76,15 @@ public class HomeListAdapter extends BaseAdapter {
         viewHolder.gvHome.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(context, GoodsDetailInfoActivity.class);
-                intent.putExtra("proid", bean.getPros().get(position).getProid());
-                context.startActivity(intent);
+                if ("1".equals(bean.getTypeid())) {
+                    //套餐类
+
+                } else {
+                    //非套餐类
+                    Intent intent = new Intent(context, GoodsDetailInfoActivity.class);
+                    intent.putExtra("proid", bean.getPros().get(position).getProid());
+                    context.startActivity(intent);
+                }
             }
         });
         return convertView;

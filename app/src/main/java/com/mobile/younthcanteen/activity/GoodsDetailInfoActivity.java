@@ -64,6 +64,24 @@ public class GoodsDetailInfoActivity extends Activity implements ViewPager.OnPag
     ZoomScrollView svRoot;
     @BindView(R.id.rl_container)
     RelativeLayout rlContainer;
+    @BindView(R.id.ll_out)
+    LinearLayout llOut;
+    @BindView(R.id.iv_cart_add)
+    ImageView ivCartAdd;
+    @BindView(R.id.tv_cart_num)
+    TextView tvCartNum;
+    @BindView(R.id.iv_cart_subtract)
+    ImageView ivCartSubtract;
+    @BindView(R.id.ll_add_subtract)
+    LinearLayout llAddSubtract;
+    @BindView(R.id.tv_clearing)
+    TextView tvClearing;
+    @BindView(R.id.iv_cart)
+    ImageView ivCart;
+    @BindView(R.id.tv_red_num)
+    TextView tvRedNum;
+    @BindView(R.id.tv_result_price)
+    TextView tvResultPrice;
     private Context context;
     private List<String> viewPagerDataList;
     private ArrayList<ImageView> imageList;
@@ -72,6 +90,56 @@ public class GoodsDetailInfoActivity extends Activity implements ViewPager.OnPag
     private final static int CHANGVIEWPAGERITEM = 3;
     private MyHandler mHandler = new MyHandler(this);
 
+    private int goodsCount = 0;//已添加的商品数量
+    private double unitPrice = 0;//商品单价
+
+    @OnClick({R.id.iv_back, R.id.ll_add_to_cart, R.id.iv_cart_add,
+            R.id.iv_cart_subtract, R.id.tv_clearing})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_back://返回
+                finish();
+                break;
+            case R.id.ll_add_to_cart://添加到购物车
+                llAddToCart.setVisibility(View.GONE);
+                llAddSubtract.setVisibility(View.VISIBLE);
+                goodsCount++;
+                tvCartNum.setText(goodsCount + "");
+                tvRedNum.setVisibility(View.VISIBLE);
+                tvRedNum.setText(goodsCount + "");
+                ivCart.setImageResource(R.drawable.cart_enable);
+                tvResultPrice.setText("￥" + goodsCount * unitPrice + "");
+                tvClearing.setVisibility(View.VISIBLE);
+                break;
+            case R.id.iv_cart_add://添加购物车加号
+                goodsCount++;
+                tvCartNum.setText(goodsCount + "");
+                tvRedNum.setText(goodsCount + "");
+                tvResultPrice.setText("￥" + goodsCount * unitPrice + "");
+                break;
+            case R.id.iv_cart_subtract://添加购物车减号
+                goodsCount--;
+                if (goodsCount == 0) {
+                    //
+                    llAddToCart.setVisibility(View.VISIBLE);
+                    llAddSubtract.setVisibility(View.GONE);
+                    tvCartNum.setText(goodsCount + "");
+                    tvRedNum.setVisibility(View.GONE);
+                    tvRedNum.setText(goodsCount + "");
+                    ivCart.setImageResource(R.drawable.cart_unable);
+                    tvResultPrice.setText("￥" + "0");
+                    tvClearing.setVisibility(View.GONE);
+                } else {
+                    tvCartNum.setText(goodsCount + "");
+                    tvRedNum.setText(goodsCount + "");
+                    tvResultPrice.setText("￥" + goodsCount * unitPrice + "");
+                }
+                break;
+            case R.id.tv_clearing://去结算
+                ToastUtils.showShortToast("该功能正在开发中...");
+                break;
+        }
+    }
 
     private static class MyHandler extends Handler {
         private WeakReference<GoodsDetailInfoActivity> activityWeakReference;
@@ -168,7 +236,8 @@ public class GoodsDetailInfoActivity extends Activity implements ViewPager.OnPag
      */
     private void showDetailInfo(GoodsDetailInfoBean bean) {
         tvName.setText(bean.getResults().getName());
-        tvPrice.setText("￥" + bean.getResults().getPrice() + "元");
+        unitPrice = Double.parseDouble(bean.getResults().getPrice());
+        tvPrice.setText("￥" + unitPrice + "元");
         String goodsDes = bean.getResults().getDescribe();
         if (!TextUtils.isEmpty(goodsDes)) {
             llGoodsInfo.setVisibility(View.VISIBLE);
@@ -294,18 +363,6 @@ public class GoodsDetailInfoActivity extends Activity implements ViewPager.OnPag
         } else {
             lastPosition = 0;
             viewpager.setCurrentItem(0, true);// 显示第一个图片。
-        }
-    }
-
-
-    @OnClick({R.id.iv_back, R.id.ll_add_to_cart})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.iv_back://返回
-                finish();
-                break;
-            case R.id.ll_add_to_cart://添加到购物车
-                break;
         }
     }
 

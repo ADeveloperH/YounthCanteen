@@ -12,5 +12,7 @@
     <color name="myyellow">#ffd161</color>
     <color name="gray_bg">#efefef</color>
     <color name="text_price_red">#ff4038</color>
+    <color name="bottom_black_bg">#404040</color>
+    <color name="cart_num_red_bg">#fa4e44</color>
 
 </resources>
