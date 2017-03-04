@@ -14,5 +14,6 @@
     <color name="text_price_red">#ff4038</color>
     <color name="bottom_black_bg">#404040</color>
     <color name="cart_num_red_bg">#fa4e44</color>
+    <color name="gray_select_border">#999999</color>
 
 </resources>

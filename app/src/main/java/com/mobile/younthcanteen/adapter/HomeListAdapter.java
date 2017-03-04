@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.activity.GoodsDetailInfoActivity;
+import com.mobile.younthcanteen.activity.PackageGoodsInfoActivity;
 import com.mobile.younthcanteen.bean.HomeDataBean;
 import com.mobile.younthcanteen.ui.GridViewForScroll;
 import com.mobile.younthcanteen.util.UIUtils;
@@ -78,7 +79,9 @@ public class HomeListAdapter extends BaseAdapter {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if ("1".equals(bean.getTypeid())) {
                     //套餐类
-
+                    Intent intent = new Intent(context, PackageGoodsInfoActivity.class);
+                    intent.putExtra("proid", bean.getPros().get(position).getProid());
+                    context.startActivity(intent);
                 } else {
                     //非套餐类
                     Intent intent = new Intent(context, GoodsDetailInfoActivity.class);
