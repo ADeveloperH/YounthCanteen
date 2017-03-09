@@ -8,11 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.activity.MyAddressActivity;
 import com.mobile.younthcanteen.bean.AddressListBean;
+import com.mobile.younthcanteen.bean.ShoppingCartItemBean;
+import com.mobile.younthcanteen.util.ShoppingCartUtil;
+
+import java.util.List;
 
 /**
  * author：hj
@@ -29,8 +34,11 @@ public class ShappingCartFragment extends Fragment implements View.OnClickListen
     private TextView tvName;
     private TextView tvSex;
     private TextView tvTel;
+    private TextView tvNoShopping;
+    private ScrollView svCartContent;
     private final int GETADDRESS_REQUESTCODE = 11;
     private final int GETADDRESS_RESULTCODE = 12;
+    private List<ShoppingCartItemBean> shoppingCartList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,10 +66,6 @@ public class ShappingCartFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
     private void initView(View view) {
         llNoAddress = (LinearLayout) view.findViewById(R.id.ll_no_address);
@@ -71,6 +75,8 @@ public class ShappingCartFragment extends Fragment implements View.OnClickListen
         tvName = (TextView) view.findViewById(R.id.tv_name);
         tvSex = (TextView) view.findViewById(R.id.tv_sex);
         tvTel = (TextView) view.findViewById(R.id.tv_tel);
+        tvNoShopping = (TextView) view.findViewById(R.id.tv_no_shopping);
+        svCartContent = (ScrollView) view.findViewById(R.id.sv_cart_content);
 
         llNoAddress.setVisibility(View.VISIBLE);
         rlAddress.setVisibility(View.GONE);
@@ -112,6 +118,26 @@ public class ShappingCartFragment extends Fragment implements View.OnClickListen
                 tvTel.setText(resultsEntity.getTel());
                 tvSex.setText("1".equals(resultsEntity.getSex()) ? "女士" : "先生");
             }
+        }
+    }
+
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            //相当于Fragment的onResume
+            shoppingCartList = ShoppingCartUtil.getAllShoppingList();
+            if (shoppingCartList != null && shoppingCartList.size() > 0) {
+                //购物车中有物品
+                tvNoShopping.setVisibility(View.GONE);
+                svCartContent.setVisibility(View.VISIBLE);
+            } else {
+                tvNoShopping.setVisibility(View.VISIBLE);
+                svCartContent.setVisibility(View.GONE);
+            }
+        } else {
+            //相当于Fragment的onPause
         }
     }
 }

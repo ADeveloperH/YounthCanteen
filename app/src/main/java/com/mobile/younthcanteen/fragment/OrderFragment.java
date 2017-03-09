@@ -64,15 +64,20 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (LoginUtils.isLogin()) {
-            llAlLogin.setVisibility(View.VISIBLE);
-            llUnLogin.setVisibility(View.GONE);
-            initFragment();
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            //相当于Fragment的onResume
+            if (LoginUtils.isLogin()) {
+                llAlLogin.setVisibility(View.VISIBLE);
+                llUnLogin.setVisibility(View.GONE);
+                initFragment();
+            } else {
+                llAlLogin.setVisibility(View.GONE);
+                llUnLogin.setVisibility(View.VISIBLE);
+            }
         } else {
-            llAlLogin.setVisibility(View.GONE);
-            llUnLogin.setVisibility(View.VISIBLE);
+            //相当于Fragment的onPause
         }
     }
 

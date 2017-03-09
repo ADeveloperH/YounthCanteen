@@ -86,6 +86,7 @@ public class HomeListAdapter extends BaseAdapter {
                     //非套餐类
                     Intent intent = new Intent(context, GoodsDetailInfoActivity.class);
                     intent.putExtra("proid", bean.getPros().get(position).getProid());
+                    intent.putExtra("imageUrl", bean.getPros().get(position).getUrl());
                     context.startActivity(intent);
                 }
             }

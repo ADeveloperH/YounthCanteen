@@ -77,9 +77,14 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        initData();
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            //相当于Fragment的onResume
+            initData();
+        } else {
+            //相当于Fragment的onPause
+        }
     }
 
     private void initData() {
@@ -152,7 +157,7 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
             case R.id.ll_address://常用地址
-                startActivity(new Intent(mActivity,MyAddressActivity.class));
+                startActivity(new Intent(mActivity, MyAddressActivity.class));
                 break;
         }
     }

@@ -19,7 +19,7 @@ public class ShoppingCartItemBean {
     private String imgUrl;//商品图片地址
     private String proid;//商品的proid
     private String count;//商品的数量
-    private List<MateriaBean> material;//商品的数量
+    private List<MateriaBean> material;//套餐商品列表
 
     public class MateriaBean {
         private String name;//商品名称
