@@ -3,22 +3,16 @@ package com.mobile.younthcanteen.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
-import com.mobile.younthcanteen.activity.LoginActivity;
-import com.mobile.younthcanteen.adapter.OrderFragmentPagerAdapter;
-import com.mobile.younthcanteen.ui.TabPageIndicator;
-import com.mobile.younthcanteen.util.LoginUtils;
-import com.mobile.younthcanteen.util.UIUtils;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.mobile.younthcanteen.activity.MyAddressActivity;
+import com.mobile.younthcanteen.bean.AddressListBean;
 
 /**
  * author：hj
@@ -28,20 +22,21 @@ import java.util.List;
 public class ShappingCartFragment extends Fragment implements View.OnClickListener {
     private View rootView;//缓存Fragment的View
     private boolean isNeedReLoad = true;//是否需要重新加载该Fragment数据
-    private Button btnLogin;
-    private OrderFragmentPagerAdapter mAdatpter;
-    private ArrayList<Fragment> listFragmentsa = new ArrayList<Fragment>();
-    private static List<String> titleList = new ArrayList<String>();
-    private TabPageIndicator tabPageIndicator;
-    private ViewPager viewpager;
-    private LinearLayout llAlLogin;
-    private LinearLayout llUnLogin;
+    private LinearLayout llNoAddress;
+    private RelativeLayout rlAddress;
+    private TextView tvOffice;
+    private TextView tvAddress;
+    private TextView tvName;
+    private TextView tvSex;
+    private TextView tvTel;
+    private final int GETADDRESS_REQUESTCODE = 11;
+    private final int GETADDRESS_RESULTCODE = 12;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_order, null);
+            rootView = inflater.inflate(R.layout.fragment_cart, null);
         }
         //缓存的rootView需要判断是否已经被加过parent，
         //如果有parent需要从parent删除，要不然会发生这个rootview已经有parent的错误。
@@ -66,66 +61,57 @@ public class ShappingCartFragment extends Fragment implements View.OnClickListen
     @Override
     public void onResume() {
         super.onResume();
-        if (LoginUtils.isLogin()) {
-            llAlLogin.setVisibility(View.VISIBLE);
-            llUnLogin.setVisibility(View.GONE);
-            initFragment();
-        } else {
-            llAlLogin.setVisibility(View.GONE);
-            llUnLogin.setVisibility(View.VISIBLE);
-        }
     }
 
     private void initView(View view) {
-        btnLogin = (Button) view.findViewById(R.id.btn_login);
-        tabPageIndicator = (TabPageIndicator) view.findViewById(R.id.tab_page_indicator);
-        viewpager = (ViewPager) view.findViewById(R.id.viewpager);
-        llAlLogin = (LinearLayout) view.findViewById(R.id.ll_allogin);
-        llUnLogin = (LinearLayout) view.findViewById(R.id.ll_unlogin);
+        llNoAddress = (LinearLayout) view.findViewById(R.id.ll_no_address);
+        rlAddress = (RelativeLayout) view.findViewById(R.id.rl_address);
+        tvOffice = (TextView) view.findViewById(R.id.tv_office);
+        tvAddress = (TextView) view.findViewById(R.id.tv_address);
+        tvName = (TextView) view.findViewById(R.id.tv_name);
+        tvSex = (TextView) view.findViewById(R.id.tv_sex);
+        tvTel = (TextView) view.findViewById(R.id.tv_tel);
+
+        llNoAddress.setVisibility(View.VISIBLE);
+        rlAddress.setVisibility(View.GONE);
     }
 
     private void setListener() {
-        btnLogin.setOnClickListener(this);
-
+        llNoAddress.setOnClickListener(this);
+        rlAddress.setOnClickListener(this);
     }
 
     private void initFragment() {
-        if (titleList.size() > 0) {
-            titleList.clear();
-        }
-        if (listFragmentsa.size() >0) {
-            listFragmentsa.clear();
-        }
-
-        titleList.add("全部订单");
-        titleList.add("待评价");
-        listFragmentsa.add(new AllOrderFragment());
-        listFragmentsa.add(new ToBeEvaluateFragment());
-        if (mAdatpter == null) {
-            // 此处，如果不是继承的FragmentActivity,而是继承的Fragment，则参数应该传入getChildFragmentManager()
-            mAdatpter = new OrderFragmentPagerAdapter(getChildFragmentManager(),
-                    listFragmentsa, titleList);
-            viewpager.setAdapter(mAdatpter);
-            tabPageIndicator.setViewPager(viewpager);
-            tabPageIndicator.setVisibility(View.VISIBLE);
-            tabPageIndicator.setIndicatorHeight(UIUtils.dip2px(2));
-            tabPageIndicator.setIndicatorMode(TabPageIndicator.IndicatorMode.MODE_WEIGHT_NOEXPAND_NOSAME);
-            tabPageIndicator.requestLayout();
-//        tabPageIndicator.setBackgroundResource(R.drawable.viewpager_tab_indicator);
-            viewpager.setVisibility(View.VISIBLE);
-        } else {
-            mAdatpter.notifyDataSetChanged();
-        }
 
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_login://跳转到登录注册页面
-                startActivity(new Intent(getActivity(), LoginActivity.class));
+            case R.id.ll_no_address://添加地址
+            case R.id.rl_address://添加地址
+                Intent intent = new Intent(getActivity(), MyAddressActivity.class);
+                startActivityForResult(intent, GETADDRESS_REQUESTCODE);
                 break;
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == GETADDRESS_RESULTCODE) {
+            Bundle bundle = data.getExtras();
+            AddressListBean.ResultsEntity resultsEntity = (AddressListBean.ResultsEntity) bundle.getSerializable("resultBean");
+            System.out.println("resultCode::" + resultsEntity);
+            if (resultsEntity != null) {
+                llNoAddress.setVisibility(View.GONE);
+                rlAddress.setVisibility(View.VISIBLE);
+                tvAddress.setText(resultsEntity.getAddr());
+                tvOffice.setText(resultsEntity.getOffice());
+                tvName.setText(resultsEntity.getConsignee());
+                tvTel.setText(resultsEntity.getTel());
+                tvSex.setText("1".equals(resultsEntity.getSex()) ? "女士" : "先生");
+            }
+        }
+    }
 }

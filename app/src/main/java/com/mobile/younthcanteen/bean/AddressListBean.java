@@ -1,5 +1,6 @@
 package com.mobile.younthcanteen.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  * time: 2017/2/22 0022 11:35
  */
 
-public class AddressListBean {
+public class AddressListBean implements Serializable{
 
     /**
      * results : [{"addr":"520","addressid":6,"consignee":"苗苗","office":"御玺大厦","officeid":1,"sex":1,"tel":"17739775520"}]
@@ -53,7 +54,7 @@ public class AddressListBean {
         this.results = results;
     }
 
-    public static class ResultsEntity {
+    public static class ResultsEntity implements Serializable{
         private String addr;
         private String addressid;
         private String consignee;
