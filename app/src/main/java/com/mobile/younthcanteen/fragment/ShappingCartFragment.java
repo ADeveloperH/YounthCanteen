@@ -3,9 +3,11 @@ package com.mobile.younthcanteen.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -13,6 +15,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
+import com.mobile.younthcanteen.activity.GoodsDetailInfoActivity;
 import com.mobile.younthcanteen.activity.MyAddressActivity;
 import com.mobile.younthcanteen.adapter.ShoppingCartListAdapter;
 import com.mobile.younthcanteen.bean.AddressListBean;
@@ -21,6 +24,8 @@ import com.mobile.younthcanteen.ui.ListViewForScroll;
 import com.mobile.younthcanteen.util.ShoppingCartUtil;
 
 import java.util.List;
+
+import static com.mobile.younthcanteen.util.ShoppingCartUtil.getAllShoppingList;
 
 /**
  * author：hj
@@ -99,6 +104,21 @@ public class ShappingCartFragment extends Fragment implements View.OnClickListen
         rlAddress.setOnClickListener(this);
         tvModify.setOnClickListener(this);
         btnCommitOrder.setOnClickListener(this);
+        listViewForScroll.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                List<ShoppingCartItemBean> cartList = ShoppingCartUtil.getAllShoppingList();
+                ShoppingCartItemBean bean = cartList.get(position);
+                if (bean != null) {
+                    if ("0".equals(bean.getType())) {
+                        Intent intent = new Intent(getActivity(), GoodsDetailInfoActivity.class);
+                        intent.putExtra("imageUrl", bean.getImgUrl());
+                        intent.putExtra("proid", bean.getProid());
+                        startActivity(intent);
+                    }
+                }
+            }
+        });
     }
 
     private void initFragment() {
@@ -156,52 +176,74 @@ public class ShappingCartFragment extends Fragment implements View.OnClickListen
 
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (!isRefreshUI) {
+            refreshUI();
+        }
+    }
+
+    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        Log.d("hj", "isVisibleToUser::" + isVisibleToUser);
         if (isVisibleToUser) {
             //相当于Fragment的onResumen
-            shoppingCartList = ShoppingCartUtil.getAllShoppingList();
-            if (shoppingCartList != null && shoppingCartList.size() > 0) {
-                //购物车中有物品
-                tvModify.setVisibility(View.VISIBLE);
-                tvNoShopping.setVisibility(View.GONE);
-                svCartContent.setVisibility(View.VISIBLE);
-                tvModify.setText("编辑");
-                tvTotalPrice.setText("￥" + ShoppingCartUtil.getTotalPrice());
-                if (cartListAdapter == null) {
-                    cartListAdapter =
-                            new ShoppingCartListAdapter(getActivity(), shoppingCartList ,
-                                    new ShoppingCartListAdapter.CartListChangeListener() {
-                                @Override
-                                public void cartListChanged() {
-                                    //购物车的数据改变了
-                                    if (ShoppingCartUtil.shoppingCartIsNull()) {
-                                        //购物车为空
-                                        tvModify.setVisibility(View.GONE);
-                                        tvNoShopping.setVisibility(View.VISIBLE);
-                                        svCartContent.setVisibility(View.GONE);
-                                    } else {
-                                        tvModify.setVisibility(View.VISIBLE);
-                                        tvNoShopping.setVisibility(View.GONE);
-                                        svCartContent.setVisibility(View.VISIBLE);
-                                        tvTotalPrice.setText("￥" + ShoppingCartUtil.getTotalPrice());
-                                    }
-                                }
-                            });
-                    listViewForScroll.setAdapter(cartListAdapter);
-                } else {
-                    cartListAdapter.setShowDelete(false);
-                    cartListAdapter.setShoppingCartList(shoppingCartList);
-                    cartListAdapter.notifyDataSetChanged();
-                }
-            } else {
-                //购物车为空
-                tvModify.setVisibility(View.GONE);
-                tvNoShopping.setVisibility(View.VISIBLE);
-                svCartContent.setVisibility(View.GONE);
+            if (!isRefreshUI) {
+                refreshUI();
             }
         } else {
             //相当于Fragment的onPause
         }
+    }
+
+    private boolean isRefreshUI = false;
+
+    /**
+     * 处理数据逻辑
+     */
+    private void refreshUI() {
+        isRefreshUI = true;
+        shoppingCartList = getAllShoppingList();
+        if (shoppingCartList != null && shoppingCartList.size() > 0) {
+            //购物车中有物品
+            tvModify.setVisibility(View.VISIBLE);
+            tvNoShopping.setVisibility(View.GONE);
+            svCartContent.setVisibility(View.VISIBLE);
+            tvModify.setText("编辑");
+            tvTotalPrice.setText("￥" + ShoppingCartUtil.getTotalPrice());
+            if (cartListAdapter == null) {
+                cartListAdapter =
+                        new ShoppingCartListAdapter(getActivity(), shoppingCartList,
+                                new ShoppingCartListAdapter.CartListChangeListener() {
+                                    @Override
+                                    public void cartListChanged() {
+                                        //购物车的数据改变了
+                                        if (ShoppingCartUtil.shoppingCartIsNull()) {
+                                            //购物车为空
+                                            tvModify.setVisibility(View.GONE);
+                                            tvNoShopping.setVisibility(View.VISIBLE);
+                                            svCartContent.setVisibility(View.GONE);
+                                        } else {
+                                            tvModify.setVisibility(View.VISIBLE);
+                                            tvNoShopping.setVisibility(View.GONE);
+                                            svCartContent.setVisibility(View.VISIBLE);
+                                            tvTotalPrice.setText("￥" + ShoppingCartUtil.getTotalPrice());
+                                        }
+                                    }
+                                });
+                listViewForScroll.setAdapter(cartListAdapter);
+            } else {
+                cartListAdapter.setShowDelete(false);
+                cartListAdapter.setShoppingCartList(shoppingCartList);
+                cartListAdapter.notifyDataSetChanged();
+            }
+        } else {
+            //购物车为空
+            tvModify.setVisibility(View.GONE);
+            tvNoShopping.setVisibility(View.VISIBLE);
+            svCartContent.setVisibility(View.GONE);
+        }
+        isRefreshUI = false;
     }
 }

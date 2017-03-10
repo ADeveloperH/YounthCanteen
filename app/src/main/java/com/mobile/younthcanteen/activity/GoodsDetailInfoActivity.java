@@ -92,10 +92,11 @@ public class GoodsDetailInfoActivity extends Activity implements ViewPager.OnPag
     private final static int CHANGVIEWPAGERITEM = 3;
     private MyHandler mHandler = new MyHandler(this);
 
-    private int goodsCount = 0;//已添加的商品数量
     private double unitPrice = 0;//商品单价
     private String imageUrl;//首页展示的图片的地址
     private GoodsDetailInfoBean.ResultsEntity goodsInfoBean;//商品详情bean
+    private ShoppingCartItemBean curGoodsBean;
+    private int curGoodsCount = 0;
 
     @OnClick({R.id.iv_back, R.id.ll_add_to_cart, R.id.iv_cart_add,
             R.id.iv_cart_subtract, R.id.tv_clearing})
@@ -105,38 +106,53 @@ public class GoodsDetailInfoActivity extends Activity implements ViewPager.OnPag
                 finish();
                 break;
             case R.id.ll_add_to_cart://添加到购物车
+                curGoodsCount = Integer.parseInt(curGoodsBean.getCount());
+                curGoodsCount++;
+                curGoodsBean.setCount(curGoodsCount+"");
+                ShoppingCartUtil.addToCart(curGoodsBean);
+
                 llAddToCart.setVisibility(View.GONE);
                 llAddSubtract.setVisibility(View.VISIBLE);
-                goodsCount++;
-                tvCartNum.setText(goodsCount + "");
+                tvCartNum.setText(curGoodsCount + "");
                 tvRedNum.setVisibility(View.VISIBLE);
-                tvRedNum.setText(goodsCount + "");
+                tvRedNum.setText(ShoppingCartUtil.getCartListSize() + "");
                 ivCart.setImageResource(R.drawable.cart_enable);
-                tvResultPrice.setText("￥" + goodsCount * unitPrice + "");
+                tvResultPrice.setText("￥" + ShoppingCartUtil.getTotalPrice());
                 tvClearing.setVisibility(View.VISIBLE);
                 break;
             case R.id.iv_cart_add://添加购物车加号
-                goodsCount++;
-                tvCartNum.setText(goodsCount + "");
-                tvRedNum.setText(goodsCount + "");
-                tvResultPrice.setText("￥" + goodsCount * unitPrice + "");
+                curGoodsCount++;
+                curGoodsBean.setCount(curGoodsCount+"");
+                ShoppingCartUtil.addToCart(curGoodsBean);
+                tvCartNum.setText(curGoodsCount + "");
+                tvRedNum.setText(ShoppingCartUtil.getCartListSize() + "");
+                tvResultPrice.setText("￥" + ShoppingCartUtil.getTotalPrice());
                 break;
             case R.id.iv_cart_subtract://添加购物车减号
-                goodsCount--;
-                if (goodsCount == 0) {
-                    //
+                curGoodsCount--;
+                curGoodsBean.setCount(curGoodsCount + "");
+                if (curGoodsCount == 0) {
+                    //从购物车中移除
+                    ShoppingCartUtil.removeShopping(curGoodsBean.getProid());
                     llAddToCart.setVisibility(View.VISIBLE);
                     llAddSubtract.setVisibility(View.GONE);
-                    tvCartNum.setText(goodsCount + "");
-                    tvRedNum.setVisibility(View.GONE);
-                    tvRedNum.setText(goodsCount + "");
-                    ivCart.setImageResource(R.drawable.cart_unable);
-                    tvResultPrice.setText("￥" + "0");
-                    tvClearing.setVisibility(View.GONE);
+                    tvCartNum.setText("0");
+                    if (ShoppingCartUtil.shoppingCartIsNull()) {
+                        //购物车中没有商品了
+                        tvRedNum.setVisibility(View.GONE);
+                        tvRedNum.setText("0");
+                        ivCart.setImageResource(R.drawable.cart_unable);
+                        tvResultPrice.setText("￥0");
+                        tvClearing.setVisibility(View.GONE);
+                    } else {
+                        tvRedNum.setText(ShoppingCartUtil.getCartListSize() + "");
+                        tvResultPrice.setText("￥" + ShoppingCartUtil.getTotalPrice());
+                    }
                 } else {
-                    tvCartNum.setText(goodsCount + "");
-                    tvRedNum.setText(goodsCount + "");
-                    tvResultPrice.setText("￥" + goodsCount * unitPrice + "");
+                    ShoppingCartUtil.addToCart(curGoodsBean);
+                    tvCartNum.setText(curGoodsCount + "");
+                    tvRedNum.setText(ShoppingCartUtil.getCartListSize() + "");
+                    tvResultPrice.setText("￥" + ShoppingCartUtil.getTotalPrice());
                 }
                 break;
             case R.id.tv_clearing://去结算
@@ -263,18 +279,34 @@ public class GoodsDetailInfoActivity extends Activity implements ViewPager.OnPag
 
     /**
      * 回显已添加到购物车的数据
+     *
      * @param proid
      */
     private void echoData(String proid) {
-        goodsCount = ShoppingCartUtil.getShopping(proid);
-        if (goodsCount > 0) {
+        curGoodsBean = ShoppingCartUtil.getShopping(proid);
+        if (curGoodsBean != null) {
+            //购物车中存在。回显数据
+            curGoodsCount = Integer.parseInt(curGoodsBean.getCount());
             llAddToCart.setVisibility(View.GONE);
             llAddSubtract.setVisibility(View.VISIBLE);
-            tvCartNum.setText(goodsCount + "");
+            tvCartNum.setText(curGoodsBean.getCount() + "");
+        } else {
+            //创建对象。用于添加时使用
+            curGoodsBean = new ShoppingCartItemBean();
+            curGoodsBean.setCount("0");
+            curGoodsBean.setImgUrl(imageUrl);
+            curGoodsBean.setName(goodsInfoBean.getName());
+            curGoodsBean.setPrice(goodsInfoBean.getPrice());
+            curGoodsBean.setType("0");
+            curGoodsBean.setProid(goodsInfoBean.getProid());
+        }
+
+        int totalSize = ShoppingCartUtil.getCartListSize();
+        if (totalSize > 0 ) {
             tvRedNum.setVisibility(View.VISIBLE);
-            tvRedNum.setText(goodsCount + "");
+            tvRedNum.setText(totalSize + "");
             ivCart.setImageResource(R.drawable.cart_enable);
-            tvResultPrice.setText("￥" + goodsCount * unitPrice + "");
+            tvResultPrice.setText("￥" + ShoppingCartUtil.getTotalPrice());
             tvClearing.setVisibility(View.VISIBLE);
         }
     }
@@ -450,29 +482,5 @@ public class GoodsDetailInfoActivity extends Activity implements ViewPager.OnPag
             realPosition -= count;
         }
         return realPosition;
-    }
-
-
-    /**
-     * 将用户添加的数据添加到购物车的集合中
-     * 防止用户频繁点击频繁遍历
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (goodsCount > 0) {
-            //当前添加了
-            ShoppingCartItemBean cartItemBean = new ShoppingCartItemBean();
-            cartItemBean.setCount(goodsCount + "");
-            cartItemBean.setImgUrl(imageUrl);
-            cartItemBean.setName(goodsInfoBean.getName());
-            cartItemBean.setPrice(goodsInfoBean.getPrice());
-            cartItemBean.setType("0");
-            cartItemBean.setProid(goodsInfoBean.getProid());
-            ShoppingCartUtil.addToCart(cartItemBean);
-        } else {
-            //移除该商品
-            ShoppingCartUtil.removeShopping(goodsInfoBean.getProid());
-        }
     }
 }

@@ -61,18 +61,18 @@ public class ShoppingCartUtil {
     }
 
     /**
-     * 获取购物车中该商品的数量。用于回显数据
+     * 获取购物车中该商品对象。用于回显数据
      *
      * @param proid
      */
-    public static int getShopping(String proid) {
+    public static ShoppingCartItemBean getShopping(String proid) {
         for (int i = 0, length = shoppingCartList.size(); i < length; i++) {
             ShoppingCartItemBean itemInList = shoppingCartList.get(i);
             if (itemInList.getProid().equals(proid)) {
-                return Integer.parseInt(itemInList.getCount());
+                return itemInList;
             }
         }
-        return 0;
+        return null;
     }
 
     /**
@@ -109,5 +109,22 @@ public class ShoppingCartUtil {
      */
     public static boolean shoppingCartIsNull() {
         return shoppingCartList == null || shoppingCartList.size() == 0;
+    }
+
+    /**
+     * 获取购物车商品数量
+     * @return
+     */
+    public static int getCartListSize() {
+        if (shoppingCartList == null || shoppingCartList.size() <= 0) {
+            return 0;
+        } else {
+            int totalCount = 0;
+            for (int i = 0,length = shoppingCartList.size(); i < length; i++) {
+                ShoppingCartItemBean bean = shoppingCartList.get(i);
+                totalCount += (Integer.parseInt(bean.getCount()));
+            }
+            return totalCount;
+        }
     }
 }
