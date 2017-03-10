@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -13,8 +14,10 @@ import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.activity.MyAddressActivity;
+import com.mobile.younthcanteen.adapter.ShoppingCartListAdapter;
 import com.mobile.younthcanteen.bean.AddressListBean;
 import com.mobile.younthcanteen.bean.ShoppingCartItemBean;
+import com.mobile.younthcanteen.ui.ListViewForScroll;
 import com.mobile.younthcanteen.util.ShoppingCartUtil;
 
 import java.util.List;
@@ -39,6 +42,11 @@ public class ShappingCartFragment extends Fragment implements View.OnClickListen
     private final int GETADDRESS_REQUESTCODE = 11;
     private final int GETADDRESS_RESULTCODE = 12;
     private List<ShoppingCartItemBean> shoppingCartList;
+    private ListViewForScroll listViewForScroll;
+    private ShoppingCartListAdapter cartListAdapter;
+    private TextView tvModify;
+    private TextView tvTotalPrice;
+    private Button btnCommitOrder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,6 +85,10 @@ public class ShappingCartFragment extends Fragment implements View.OnClickListen
         tvTel = (TextView) view.findViewById(R.id.tv_tel);
         tvNoShopping = (TextView) view.findViewById(R.id.tv_no_shopping);
         svCartContent = (ScrollView) view.findViewById(R.id.sv_cart_content);
+        listViewForScroll = (ListViewForScroll) view.findViewById(R.id.lv_address_list);
+        tvModify = (TextView) view.findViewById(R.id.tv_modify);
+        tvTotalPrice = (TextView) view.findViewById(R.id.tv_total_price);
+        btnCommitOrder = (Button) view.findViewById(R.id.btn_commit_order);
 
         llNoAddress.setVisibility(View.VISIBLE);
         rlAddress.setVisibility(View.GONE);
@@ -85,6 +97,8 @@ public class ShappingCartFragment extends Fragment implements View.OnClickListen
     private void setListener() {
         llNoAddress.setOnClickListener(this);
         rlAddress.setOnClickListener(this);
+        tvModify.setOnClickListener(this);
+        btnCommitOrder.setOnClickListener(this);
     }
 
     private void initFragment() {
@@ -98,6 +112,25 @@ public class ShappingCartFragment extends Fragment implements View.OnClickListen
             case R.id.rl_address://添加地址
                 Intent intent = new Intent(getActivity(), MyAddressActivity.class);
                 startActivityForResult(intent, GETADDRESS_REQUESTCODE);
+                break;
+            case R.id.tv_modify://编辑完成
+                String curTxt = tvModify.getText().toString().trim();
+                if ("编辑".equals(curTxt)) {
+                    tvModify.setText("完成");
+                    if (cartListAdapter != null) {
+                        cartListAdapter.setShowDelete(true);
+                        cartListAdapter.notifyDataSetChanged();
+                    }
+                } else {
+                    tvModify.setText("编辑");
+                    if (cartListAdapter != null) {
+                        cartListAdapter.setShowDelete(false);
+                        cartListAdapter.notifyDataSetChanged();
+                    }
+                }
+                break;
+            case R.id.btn_commit_order://提交订单
+
                 break;
         }
     }
@@ -126,13 +159,44 @@ public class ShappingCartFragment extends Fragment implements View.OnClickListen
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            //相当于Fragment的onResume
+            //相当于Fragment的onResumen
             shoppingCartList = ShoppingCartUtil.getAllShoppingList();
             if (shoppingCartList != null && shoppingCartList.size() > 0) {
                 //购物车中有物品
+                tvModify.setVisibility(View.VISIBLE);
                 tvNoShopping.setVisibility(View.GONE);
                 svCartContent.setVisibility(View.VISIBLE);
+                tvModify.setText("编辑");
+                tvTotalPrice.setText("￥" + ShoppingCartUtil.getTotalPrice());
+                if (cartListAdapter == null) {
+                    cartListAdapter =
+                            new ShoppingCartListAdapter(getActivity(), shoppingCartList ,
+                                    new ShoppingCartListAdapter.CartListChangeListener() {
+                                @Override
+                                public void cartListChanged() {
+                                    //购物车的数据改变了
+                                    if (ShoppingCartUtil.shoppingCartIsNull()) {
+                                        //购物车为空
+                                        tvModify.setVisibility(View.GONE);
+                                        tvNoShopping.setVisibility(View.VISIBLE);
+                                        svCartContent.setVisibility(View.GONE);
+                                    } else {
+                                        tvModify.setVisibility(View.VISIBLE);
+                                        tvNoShopping.setVisibility(View.GONE);
+                                        svCartContent.setVisibility(View.VISIBLE);
+                                        tvTotalPrice.setText("￥" + ShoppingCartUtil.getTotalPrice());
+                                    }
+                                }
+                            });
+                    listViewForScroll.setAdapter(cartListAdapter);
+                } else {
+                    cartListAdapter.setShowDelete(false);
+                    cartListAdapter.setShoppingCartList(shoppingCartList);
+                    cartListAdapter.notifyDataSetChanged();
+                }
             } else {
+                //购物车为空
+                tvModify.setVisibility(View.GONE);
                 tvNoShopping.setVisibility(View.VISIBLE);
                 svCartContent.setVisibility(View.GONE);
             }
