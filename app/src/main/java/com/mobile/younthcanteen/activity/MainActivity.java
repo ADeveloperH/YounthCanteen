@@ -16,7 +16,7 @@ import com.mobile.younthcanteen.adapter.FragmentAdapter;
 import com.mobile.younthcanteen.fragment.CustomerFragment;
 import com.mobile.younthcanteen.fragment.HomeFragment;
 import com.mobile.younthcanteen.fragment.OrderFragment;
-import com.mobile.younthcanteen.fragment.ShappingCartFragment;
+import com.mobile.younthcanteen.fragment.ShoppingCartFragment;
 import com.mobile.younthcanteen.ui.NoScrollViewPager;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class MainActivity extends FragmentActivity {
     private HomeFragment mHomeFragment;
     private OrderFragment mOrderFragment;
     private CustomerFragment mCustomerFragment;
-    private ShappingCartFragment mShappingCartFragment;
+    private ShoppingCartFragment mShoppingCartFragment;
 
     private LinearLayout llTabContainer;
     private View[] tabImageViews;
@@ -73,11 +73,11 @@ public class MainActivity extends FragmentActivity {
 
     private void initViewPager() {
         mHomeFragment = new HomeFragment();
-        mShappingCartFragment = new ShappingCartFragment();
+        mShoppingCartFragment = new ShoppingCartFragment();
         mOrderFragment = new OrderFragment();
         mCustomerFragment = new CustomerFragment();
         mFragmentList.add(mHomeFragment);
-        mFragmentList.add(mShappingCartFragment);
+        mFragmentList.add(mShoppingCartFragment);
         mFragmentList.add(mOrderFragment);
         mFragmentList.add(mCustomerFragment);
 
