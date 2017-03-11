@@ -83,6 +83,19 @@ public class ShoppingCartListAdapter extends BaseAdapter {
             viewHolder.ivDelete.setVisibility(View.GONE);
         }
 
+        if ("0".equals(bean.getType())) {
+            //单个商品
+            viewHolder.tvMateria.setVisibility(View.INVISIBLE);
+        } else {
+            //套餐
+            String materiaStr = "";
+            List<ShoppingCartItemBean.MateriaBean> materiaList = bean.getMaterial();
+            for (int i = 0; i < materiaList.size(); i++) {
+                materiaStr += (materiaList.get(i).getName() + ",");
+            }
+            viewHolder.tvMateria.setVisibility(View.VISIBLE);
+            viewHolder.tvMateria.setText(materiaStr.substring(0, materiaStr.length() - 1));
+        }
         viewHolder.ivDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,7 +109,7 @@ public class ShoppingCartListAdapter extends BaseAdapter {
                         }
                         notifyDataSetChanged();
                     }
-                },null,true).show();
+                }, null, true).show();
             }
         });
 
@@ -153,6 +166,8 @@ public class ShoppingCartListAdapter extends BaseAdapter {
         ImageView ivCartSubtract;
         @BindView(R.id.tv_cart_num)
         TextView tvCartNum;
+        @BindView(R.id.tv_materia)
+        TextView tvMateria;
         @BindView(R.id.iv_cart_add)
         ImageView ivCartAdd;
         @BindView(R.id.ll_add_subtract)
@@ -174,7 +189,7 @@ public class ShoppingCartListAdapter extends BaseAdapter {
         isShowDelete = showDelete;
     }
 
-    public interface CartListChangeListener{
+    public interface CartListChangeListener {
         void cartListChanged();
     }
 }

@@ -30,10 +30,17 @@
             android:textSize="16dp" />
 
         <TextView
+            android:id="@+id/tv_materia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="土豆丝"
+            android:textColor="@color/grayblack"
+            android:textSize="14dp" />
+
+        <TextView
             android:id="@+id/tv_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:text="￥2元"
             android:textColor="@color/text_price_red"
             android:textSize="18dp" />
