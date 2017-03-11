@@ -96,6 +96,7 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
     private String imageUrl;
     private ShoppingCartItemBean curGoodsBean;
     private PackageGoodsInfoBean.ResultsEntity goodsInfoBean;
+    private int materiaTotalCount;//当前套餐需要的搭配原料格式
 
 
     @OnClick({R.id.iv_back, R.id.btn_add_to_cart, R.id.tv_clearing})
@@ -247,7 +248,7 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
                 PackageGoodsInfoBean.ResultsEntity.CombosEntity.MaterialEntity bean =
                         dataList.get(position);
                 //加入当前选择的商品中
-                addMateriaToPackage(bean);
+                addMateriaToPackage(bean, clickPositon);
                 PackageGoodsSelectGVAdapter adapter = (PackageGoodsSelectGVAdapter)
                         gvSelectAdd.getAdapter();
                 if (adapter != null) {
@@ -264,9 +265,10 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
     /**
      * 将当前选择的商品添加到套餐中
      *
-     * @param bean
+     * @param bean         要添加的materia项
+     * @param clickPositon 当前点击的下标
      */
-    private void addMateriaToPackage(PackageGoodsInfoBean.ResultsEntity.CombosEntity.MaterialEntity bean) {
+    private void addMateriaToPackage(PackageGoodsInfoBean.ResultsEntity.CombosEntity.MaterialEntity bean, int clickPositon) {
         List<ShoppingCartItemBean.MateriaBean> list = curGoodsBean.getMaterial();
         if (list == null) {
             list = new ArrayList<ShoppingCartItemBean.MateriaBean>();
@@ -274,22 +276,8 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
         ShoppingCartItemBean.MateriaBean materiaBean = curGoodsBean.new MateriaBean();
         materiaBean.setName(bean.getName());
         materiaBean.setProid(bean.getProid());
-        boolean isContainMateria = false;
-        for (int i = 0, length = list.size(); i < length; i++) {
-            ShoppingCartItemBean.MateriaBean itemBean = list.get(i);
-            if (materiaBean.getProid().equals(itemBean.getProid())) {
-                //商品已存在在套餐中
-                isContainMateria = true;
-                break;
-            } else {
-                isContainMateria = false;
-            }
-        }
-        if (!isContainMateria) {
-            //如果套餐中不存在该商品就添加。否则不添加
-            list.add(materiaBean);
-            curGoodsBean.setMaterial(list);
-        }
+        list.set(clickPositon,materiaBean);
+        curGoodsBean.setMaterial(list);
     }
 
     private void getData() {
@@ -375,6 +363,11 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
         curGoodsBean.setPrice(goodsInfoBean.getPrice());
         curGoodsBean.setType("1");
         curGoodsBean.setProid(goodsInfoBean.getProid());
+        List<ShoppingCartItemBean.MateriaBean> materialList = new ArrayList<>();
+        for (int i = 0; i < materiaTotalCount; i++) {
+            materialList.add(null);
+        }
+        curGoodsBean.setMaterial(materialList);
     }
 
     /**
@@ -395,11 +388,13 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
             selectList.add("1");
         }
 
-        if (vegetableCount + meatCount <= 4) {
-            gvSelectAdd.setNumColumns(vegetableCount + meatCount);
+        materiaTotalCount = vegetableCount + meatCount;
+        if (materiaTotalCount <= 4) {
+            gvSelectAdd.setNumColumns(materiaTotalCount);
         } else {
             gvSelectAdd.setNumColumns(4);
         }
+
         PackageGoodsSelectGVAdapter adapter = new PackageGoodsSelectGVAdapter(context, selectList);
         gvSelectAdd.setAdapter(adapter);
     }
