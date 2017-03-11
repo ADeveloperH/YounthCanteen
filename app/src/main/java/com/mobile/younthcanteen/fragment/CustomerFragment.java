@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +16,12 @@ import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.activity.LoginActivity;
 import com.mobile.younthcanteen.activity.MyAccountActivity;
 import com.mobile.younthcanteen.activity.MyAddressActivity;
+import com.mobile.younthcanteen.bean.UserDetailInfoBean;
+import com.mobile.younthcanteen.http.Http;
+import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
 import com.mobile.younthcanteen.http.RequestParams;
 import com.mobile.younthcanteen.util.DownLoader;
+import com.mobile.younthcanteen.util.JsonUtil;
 import com.mobile.younthcanteen.util.LoginUtils;
 import com.mobile.younthcanteen.util.NetWorkUtil;
 import com.mobile.younthcanteen.util.SharedPreferencesUtil;
@@ -71,7 +74,6 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
         if (isNeedReLoad) {
             initView(getView());
             setListener();
-//            getData()
             isNeedReLoad = false;
         }
     }
@@ -101,13 +103,13 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
     }
 
     private void refreshUI() {
-        Log.d("hj", "Customer::refreshUI");
         isRefreshUI = true;
         mActivity = getActivity();
         if (LoginUtils.isLogin()) {
             String nickName = SharedPreferencesUtil.getNickName();
             tvNickName.setText(nickName);
             ivRightArrow.setVisibility(View.VISIBLE);
+            getUserDetailInfo();
         } else {
             tvNickName.setText("登录/注册");
             ivRightArrow.setVisibility(View.GONE);
@@ -115,6 +117,48 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
             tvJiFen.setText("----");
         }
         isRefreshUI = false;
+    }
+
+    /**
+     * 获取用户的详细信息
+     */
+    private void getUserDetailInfo() {
+        RequestParams params = new RequestParams();
+        params.put("userid", SharedPreferencesUtil.getUserId());
+        params.put("token", SharedPreferencesUtil.getToken());
+        Http.post(Http.GETUSERDETAILINFO, params, new MyTextAsyncResponseHandler(getActivity(), null) {
+            @Override
+            public void onSuccess(String content) {
+                super.onSuccess(content);
+                UserDetailInfoBean bean = JsonUtil.fromJson(content, UserDetailInfoBean.class);
+                if (null != bean) {
+                    if (!Http.SUCCESS.equals(bean.getReturnCode())) {
+                        ToastUtils.showShortToast(bean.getReturnMessage());
+                        return;
+                    }
+                    UserDetailInfoBean.ResultsEntity result = bean.getResults();
+                    SharedPreferencesUtil.setNickName(result.getNick());
+                    SharedPreferencesUtil.setToken(result.getToken());
+                    SharedPreferencesUtil.setUserId(result.getUserid());
+                    SharedPreferencesUtil.setPoint(result.getPoint());
+                    SharedPreferencesUtil.setMoney(result.getMoney());
+                    tvNickName.setText(result.getNick());
+                    tvJiFen.setText(result.getPoint());
+                    tvYuE.setText(result.getMoney());
+                } else {
+                    ToastUtils.showShortToast("服务器数据异常，请稍后重试");
+                }
+
+            }
+
+            @Override
+            public void onFailure(Throwable error) {
+                super.onFailure(error);
+                ToastUtils.showShortToast("服务器异常，请稍后重试");
+
+            }
+        });
+
     }
 
     private void initView(View view) {

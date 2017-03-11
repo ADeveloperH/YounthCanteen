@@ -68,7 +68,7 @@ public class HomeGridViewAdapter extends BaseAdapter {
         HomeDataBean.CenterEntity.ProsEntity bean = prosList.get(position);
         bitmapUtil.display(viewHolder.iv, bean.getUrl());
         viewHolder.tvName.setText(bean.getName());
-        viewHolder.tvPrice.setText("价格：" + bean.getPrice() + "元");
+        viewHolder.tvPrice.setText("￥ " + bean.getPrice() + "元");
         return convertView;
     }
 

@@ -31,6 +31,7 @@ public class Http {
     public static final String DELETEADDRESS = "userAddrDel";//删除收货地址
     public static final String GETHOMEDATA = "indexPage";//获取首页数据
     public static final String GETGOODSINFO = "proDetail";//获取详情数据
+    public static final String GETUSERDETAILINFO = "userDetail";//获取用户详情数据
 
     public static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;

@@ -12,6 +12,10 @@ public class SharedPreferencesUtil {
     //记录项目中其他需要记录的字段
     public static final String Share_Preferences_Name_Private = "4GManger_Private";
 
+    public static final String POINT = "point"; //剩余积分
+
+    public static final String MONEY = "money"; //剩余余额
+
     public static final String TOKEN = "token"; //登录成功后后台会传过来一个token，这里保存起来，掉其他接口时需要
 
     public static final String KEY_ACCOUNT = "KEY_ACCOUNT";//手机号
@@ -85,6 +89,58 @@ public class SharedPreferencesUtil {
         }
         return "";
     }
+
+
+
+
+    /**
+     * 保存money
+     * @return
+     */
+    public static boolean setMoney(String money) {
+        if (getPreferencesPrivate() != null) {
+            return getPreferencesPrivate().edit().putString(MONEY, money).commit();
+        }
+        return false;
+    }
+
+    /**
+     * 获取当前money
+     *
+     * @return
+     */
+    public static String getMoney() {
+        if (getPreferencesPrivate() != null) {
+            return getPreferencesPrivate().getString(MONEY, "");
+        }
+        return "";
+    }
+
+
+    /**
+     * 保存point
+     * @return
+     */
+    public static boolean setPoint(String point) {
+        if (getPreferencesPrivate() != null) {
+            return getPreferencesPrivate().edit().putString(POINT, point).commit();
+        }
+        return false;
+    }
+
+    /**
+     * 获取当前point
+     *
+     * @return
+     */
+    public static String getPoint() {
+        if (getPreferencesPrivate() != null) {
+            return getPreferencesPrivate().getString(POINT, "");
+        }
+        return "";
+    }
+
+
 
 
     /**

@@ -41,7 +41,7 @@
                     android:id="@+id/tv_nickname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="vro12321313123"
+                    android:text=""
                     android:textColor="@color/textblack"
                     android:textSize="16dp" />
 
@@ -50,6 +50,7 @@
                     android:layout_width="10dp"
                     android:layout_height="10dp"
                     android:layout_marginLeft="2dp"
+                    android:visibility="gone"
                     android:src="@drawable/right_arrow" />
             </LinearLayout>
         </LinearLayout>
@@ -78,7 +79,7 @@
                         android:id="@+id/tv_yue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="100"
+                        android:text="----"
                         android:textColor="@color/grayblack"
                         android:textSize="18dp" />
 
@@ -137,7 +138,7 @@
                         android:id="@+id/tv_jifen"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="100"
+                        android:text="----"
                         android:textColor="@color/grayblack"
                         android:textSize="18dp" />
 
