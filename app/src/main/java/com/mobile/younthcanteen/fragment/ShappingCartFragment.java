@@ -3,11 +3,14 @@ package com.mobile.younthcanteen.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -20,8 +23,15 @@ import com.mobile.younthcanteen.activity.PackageGoodsInfoActivity;
 import com.mobile.younthcanteen.adapter.ShoppingCartListAdapter;
 import com.mobile.younthcanteen.bean.AddressListBean;
 import com.mobile.younthcanteen.bean.ShoppingCartItemBean;
+import com.mobile.younthcanteen.http.Http;
+import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
+import com.mobile.younthcanteen.http.RequestParams;
 import com.mobile.younthcanteen.ui.ListViewForScroll;
+import com.mobile.younthcanteen.util.JsonUtil;
+import com.mobile.younthcanteen.util.LoginUtils;
+import com.mobile.younthcanteen.util.SharedPreferencesUtil;
 import com.mobile.younthcanteen.util.ShoppingCartUtil;
+import com.mobile.younthcanteen.util.ToastUtils;
 
 import java.util.List;
 
@@ -52,6 +62,8 @@ public class ShappingCartFragment extends Fragment implements View.OnClickListen
     private TextView tvModify;
     private TextView tvTotalPrice;
     private Button btnCommitOrder;
+    private AddressListBean.ResultsEntity addressBean;//收货地址
+    private EditText etRemark;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,6 +106,7 @@ public class ShappingCartFragment extends Fragment implements View.OnClickListen
         tvModify = (TextView) view.findViewById(R.id.tv_modify);
         tvTotalPrice = (TextView) view.findViewById(R.id.tv_total_price);
         btnCommitOrder = (Button) view.findViewById(R.id.btn_commit_order);
+        etRemark = (EditText) view.findViewById(R.id.et_remark);
 
         llNoAddress.setVisibility(View.VISIBLE);
         rlAddress.setVisibility(View.GONE);
@@ -133,8 +146,12 @@ public class ShappingCartFragment extends Fragment implements View.OnClickListen
         switch (v.getId()) {
             case R.id.ll_no_address://添加地址
             case R.id.rl_address://添加地址
-                Intent intent = new Intent(getActivity(), MyAddressActivity.class);
-                startActivityForResult(intent, GETADDRESS_REQUESTCODE);
+                if (LoginUtils.isLogin()) {
+                    Intent intent = new Intent(getActivity(), MyAddressActivity.class);
+                    startActivityForResult(intent, GETADDRESS_REQUESTCODE);
+                } else {
+                    ToastUtils.showShortToast("请先登录");
+                }
                 break;
             case R.id.tv_modify://编辑完成
                 String curTxt = tvModify.getText().toString().trim();
@@ -153,9 +170,45 @@ public class ShappingCartFragment extends Fragment implements View.OnClickListen
                 }
                 break;
             case R.id.btn_commit_order://提交订单
-
+                commitOrder();
                 break;
         }
+    }
+
+    /**
+     * 提交订单
+     */
+   private void commitOrder() {
+       if (!LoginUtils.isLogin()) {
+           ToastUtils.showShortToast("请先登录");
+           return;
+       }
+       if (addressBean == null) {
+           ToastUtils.showShortToast("请选择收货地址");
+           return;
+       }
+       RequestParams params = new RequestParams();
+       params.put("token", SharedPreferencesUtil.getToken());
+       params.put("addrid", addressBean.getAddressid());
+       String remarkStr = etRemark.getText().toString().trim();
+       if (TextUtils.isEmpty(remarkStr)) {
+           remarkStr = "";
+       }
+       params.put("remark", remarkStr);
+       params.put("pros", JsonUtil.toJson(ShoppingCartUtil.getAllShoppingList()));
+
+       Http.post("",params,new MyTextAsyncResponseHandler(getActivity(),"提交中..."){
+           @Override
+           public void onSuccess(String content) {
+               super.onSuccess(content);
+               Log.d("hj", "content::" + content);
+           }
+
+           @Override
+           public void onFailure(Throwable error) {
+               super.onFailure(error);
+           }
+       });
     }
 
     @Override
@@ -163,16 +216,16 @@ public class ShappingCartFragment extends Fragment implements View.OnClickListen
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == GETADDRESS_RESULTCODE) {
             Bundle bundle = data.getExtras();
-            AddressListBean.ResultsEntity resultsEntity = (AddressListBean.ResultsEntity) bundle.getSerializable("resultBean");
-            System.out.println("resultCode::" + resultsEntity);
-            if (resultsEntity != null) {
+            addressBean = (AddressListBean.ResultsEntity) bundle.getSerializable("resultBean");
+            System.out.println("resultCode::" + addressBean);
+            if (addressBean != null) {
                 llNoAddress.setVisibility(View.GONE);
                 rlAddress.setVisibility(View.VISIBLE);
-                tvAddress.setText(resultsEntity.getAddr());
-                tvOffice.setText(resultsEntity.getOffice());
-                tvName.setText(resultsEntity.getConsignee());
-                tvTel.setText(resultsEntity.getTel());
-                tvSex.setText("1".equals(resultsEntity.getSex()) ? "女士" : "先生");
+                tvAddress.setText(addressBean.getAddr());
+                tvOffice.setText(addressBean.getOffice());
+                tvName.setText(addressBean.getConsignee());
+                tvTel.setText(addressBean.getTel());
+                tvSex.setText("1".equals(addressBean.getSex()) ? "女士" : "先生");
             }
         }
     }

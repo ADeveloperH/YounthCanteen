@@ -176,8 +176,37 @@
             <com.mobile.younthcanteen.ui.ListViewForScroll
                 android:id="@+id/lv_address_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="备注"
+                    android:textColor="@color/textblack"
+                    android:textSize="16dp" />
+
+                <EditText
+                    android:id="@+id/et_remark"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="请输入备注信息"
+                    android:textSize="14dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:background="@color/gray_bg"
+                android:layout_height="1px"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp"

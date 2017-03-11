@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,22 +64,42 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+
+    private boolean isRefreshUI = false;
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!isRefreshUI) {
+            refreshUI();
+        }
+    }
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             //相当于Fragment的onResume
-            if (LoginUtils.isLogin()) {
-                llAlLogin.setVisibility(View.VISIBLE);
-                llUnLogin.setVisibility(View.GONE);
-                initFragment();
-            } else {
-                llAlLogin.setVisibility(View.GONE);
-                llUnLogin.setVisibility(View.VISIBLE);
+            if (!isRefreshUI) {
+                refreshUI();
             }
         } else {
             //相当于Fragment的onPause
         }
+
+    }
+
+    private void refreshUI() {
+        isRefreshUI = true;
+        Log.d("hj", "refreshUI");
+        if (LoginUtils.isLogin()) {
+            llAlLogin.setVisibility(View.VISIBLE);
+            llUnLogin.setVisibility(View.GONE);
+            initFragment();
+        } else {
+            llAlLogin.setVisibility(View.GONE);
+            llUnLogin.setVisibility(View.VISIBLE);
+        }
+        isRefreshUI = false;
     }
 
     private void initView(View view) {
