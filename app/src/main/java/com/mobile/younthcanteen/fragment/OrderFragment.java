@@ -79,7 +79,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             //相当于Fragment的onResume
-            if (!isRefreshUI) {
+            if (!isNeedReLoad && !isRefreshUI) {
                 refreshUI();
             }
         } else {

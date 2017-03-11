@@ -244,7 +244,7 @@ public class ShappingCartFragment extends Fragment implements View.OnClickListen
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             //相当于Fragment的onResumen
-            if (!isRefreshUI) {
+            if (!isNeedReLoad && !isRefreshUI) {
                 refreshUI();
             }
         } else {

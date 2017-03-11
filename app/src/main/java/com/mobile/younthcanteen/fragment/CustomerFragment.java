@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,8 +72,17 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
             initView(getView());
             setListener();
 //            getData()
-// ;
             isNeedReLoad = false;
+        }
+    }
+
+    private boolean isRefreshUI = false;//是否在刷新UI
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!isRefreshUI) {
+            refreshUI();
         }
     }
 
@@ -81,13 +91,18 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             //相当于Fragment的onResume
-            initData();
+            if (!isNeedReLoad && !isRefreshUI) {
+                //当前view已进行初始化且未刷新UI
+                refreshUI();
+            }
         } else {
             //相当于Fragment的onPause
         }
     }
 
-    private void initData() {
+    private void refreshUI() {
+        Log.d("hj", "Customer::refreshUI");
+        isRefreshUI = true;
         mActivity = getActivity();
         if (LoginUtils.isLogin()) {
             String nickName = SharedPreferencesUtil.getNickName();
@@ -99,6 +114,7 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
             tvYuE.setText("----");
             tvJiFen.setText("----");
         }
+        isRefreshUI = false;
     }
 
     private void initView(View view) {
