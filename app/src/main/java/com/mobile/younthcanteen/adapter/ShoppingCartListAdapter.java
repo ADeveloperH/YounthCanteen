@@ -106,8 +106,12 @@ public class ShoppingCartListAdapter extends BaseAdapter {
                 int goodsCount = Integer.parseInt(bean.getCount());
                 goodsCount++;
                 viewHolder.tvCartNum.setText(goodsCount + "");
-                bean.setCount(goodsCount+"");
-                ShoppingCartUtil.addToCart(bean);
+                if ("0".equals(bean.getType())) {
+                    bean.setCount(goodsCount + "");
+                    ShoppingCartUtil.addGoodsToCart(bean);
+                } else {
+                    ShoppingCartUtil.addPackageToCart(bean);
+                }
                 if (cartListChangeListener != null) {
                     cartListChangeListener.cartListChanged();
                 }
@@ -121,8 +125,13 @@ public class ShoppingCartListAdapter extends BaseAdapter {
                 goodsCount--;
                 if (goodsCount > 0) {
                     viewHolder.tvCartNum.setText(goodsCount + "");
-                    bean.setCount(goodsCount+"");
-                    ShoppingCartUtil.addToCart(bean);
+                    if ("0".equals(bean.getType())) {
+                        bean.setCount(goodsCount + "");
+                        ShoppingCartUtil.addGoodsToCart(bean);
+                    } else {
+                        //套餐
+                        ShoppingCartUtil.reducePackageToCart(bean);
+                    }
                     if (cartListChangeListener != null) {
                         cartListChangeListener.cartListChanged();
                     }

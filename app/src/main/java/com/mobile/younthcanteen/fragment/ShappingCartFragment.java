@@ -3,7 +3,6 @@ package com.mobile.younthcanteen.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.activity.GoodsDetailInfoActivity;
 import com.mobile.younthcanteen.activity.MyAddressActivity;
+import com.mobile.younthcanteen.activity.PackageGoodsInfoActivity;
 import com.mobile.younthcanteen.adapter.ShoppingCartListAdapter;
 import com.mobile.younthcanteen.bean.AddressListBean;
 import com.mobile.younthcanteen.bean.ShoppingCartItemBean;
@@ -110,12 +110,15 @@ public class ShappingCartFragment extends Fragment implements View.OnClickListen
                 List<ShoppingCartItemBean> cartList = ShoppingCartUtil.getAllShoppingList();
                 ShoppingCartItemBean bean = cartList.get(position);
                 if (bean != null) {
+                    Intent intent = new Intent();
                     if ("0".equals(bean.getType())) {
-                        Intent intent = new Intent(getActivity(), GoodsDetailInfoActivity.class);
-                        intent.putExtra("imageUrl", bean.getImgUrl());
-                        intent.putExtra("proid", bean.getProid());
-                        startActivity(intent);
+                        intent.setClass(getActivity(), GoodsDetailInfoActivity.class);
+                    } else {
+                        intent.setClass(getActivity(), PackageGoodsInfoActivity.class);
                     }
+                    intent.putExtra("imageUrl", bean.getImgUrl());
+                    intent.putExtra("proid", bean.getProid());
+                    startActivity(intent);
                 }
             }
         });
@@ -186,7 +189,6 @@ public class ShappingCartFragment extends Fragment implements View.OnClickListen
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Log.d("hj", "isVisibleToUser::" + isVisibleToUser);
         if (isVisibleToUser) {
             //相当于Fragment的onResumen
             if (!isRefreshUI) {

@@ -87,12 +87,28 @@ public class PackageGoodsSelectGVAdapter extends BaseAdapter {
             //用户已添加过菜
             viewHolder.llRoot.setBackgroundResource(R.drawable.login_btn_enable);
         }
-        Log.d("hj", "clickPosition::" + clickPosition + "::position::" + position);
         viewHolder.tvAdd.setTag(dataList.get(position));
         viewHolder.tvAdd.setText(nameList.get(position));
         return convertView;
     }
 
+    /**
+     * 清除已选择的状态
+     */
+    public void clearState() {
+        clickPosition = -1;
+        nameList.clear();
+        int count = (dataList == null ? 0 : dataList.size());
+        for (int i = 0; i < count; i++) {
+            //初始值都为
+            if ("0".equals(dataList.get(i))) {
+                //素菜
+                nameList.add(VEGETABLE);
+            } else {
+                nameList.add(MEAT);
+            }
+        }
+    }
 
     /**
      * 添加菜名

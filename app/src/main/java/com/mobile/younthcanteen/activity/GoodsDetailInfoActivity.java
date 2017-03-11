@@ -109,13 +109,13 @@ public class GoodsDetailInfoActivity extends Activity implements ViewPager.OnPag
                 curGoodsCount = Integer.parseInt(curGoodsBean.getCount());
                 curGoodsCount++;
                 curGoodsBean.setCount(curGoodsCount+"");
-                ShoppingCartUtil.addToCart(curGoodsBean);
+                ShoppingCartUtil.addGoodsToCart(curGoodsBean);
 
                 llAddToCart.setVisibility(View.GONE);
                 llAddSubtract.setVisibility(View.VISIBLE);
                 tvCartNum.setText(curGoodsCount + "");
                 tvRedNum.setVisibility(View.VISIBLE);
-                tvRedNum.setText(ShoppingCartUtil.getCartListSize() + "");
+                tvRedNum.setText(ShoppingCartUtil.getCartCount() + "");
                 ivCart.setImageResource(R.drawable.cart_enable);
                 tvResultPrice.setText("￥" + ShoppingCartUtil.getTotalPrice());
                 tvClearing.setVisibility(View.VISIBLE);
@@ -123,9 +123,9 @@ public class GoodsDetailInfoActivity extends Activity implements ViewPager.OnPag
             case R.id.iv_cart_add://添加购物车加号
                 curGoodsCount++;
                 curGoodsBean.setCount(curGoodsCount+"");
-                ShoppingCartUtil.addToCart(curGoodsBean);
+                ShoppingCartUtil.addGoodsToCart(curGoodsBean);
                 tvCartNum.setText(curGoodsCount + "");
-                tvRedNum.setText(ShoppingCartUtil.getCartListSize() + "");
+                tvRedNum.setText(ShoppingCartUtil.getCartCount() + "");
                 tvResultPrice.setText("￥" + ShoppingCartUtil.getTotalPrice());
                 break;
             case R.id.iv_cart_subtract://添加购物车减号
@@ -145,13 +145,13 @@ public class GoodsDetailInfoActivity extends Activity implements ViewPager.OnPag
                         tvResultPrice.setText("￥0");
                         tvClearing.setVisibility(View.GONE);
                     } else {
-                        tvRedNum.setText(ShoppingCartUtil.getCartListSize() + "");
+                        tvRedNum.setText(ShoppingCartUtil.getCartCount() + "");
                         tvResultPrice.setText("￥" + ShoppingCartUtil.getTotalPrice());
                     }
                 } else {
-                    ShoppingCartUtil.addToCart(curGoodsBean);
+                    ShoppingCartUtil.addGoodsToCart(curGoodsBean);
                     tvCartNum.setText(curGoodsCount + "");
-                    tvRedNum.setText(ShoppingCartUtil.getCartListSize() + "");
+                    tvRedNum.setText(ShoppingCartUtil.getCartCount() + "");
                     tvResultPrice.setText("￥" + ShoppingCartUtil.getTotalPrice());
                 }
                 break;
@@ -301,7 +301,7 @@ public class GoodsDetailInfoActivity extends Activity implements ViewPager.OnPag
             curGoodsBean.setProid(goodsInfoBean.getProid());
         }
 
-        int totalSize = ShoppingCartUtil.getCartListSize();
+        int totalSize = ShoppingCartUtil.getCartCount();
         if (totalSize > 0 ) {
             tvRedNum.setVisibility(View.VISIBLE);
             tvRedNum.setText(totalSize + "");

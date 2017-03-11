@@ -67,7 +67,7 @@ public class HomeListAdapter extends BaseAdapter {
         HomeGridViewAdapter adapter = (HomeGridViewAdapter) viewHolder.gvHome.getAdapter();
         if (adapter == null) {
 //            Log.d("hj", "ListView:adapter == null:" + position);
-            adapter = new HomeGridViewAdapter(viewHolder.gvHome,context, bean.getPros());
+            adapter = new HomeGridViewAdapter(viewHolder.gvHome, context, bean.getPros());
         } else {
 //            Log.d("hj", "ListView:adapter != null:" + position);
             adapter.setProsList(bean.getPros());
@@ -77,18 +77,17 @@ public class HomeListAdapter extends BaseAdapter {
         viewHolder.gvHome.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent();
                 if ("1".equals(bean.getTypeid())) {
                     //套餐类
-                    Intent intent = new Intent(context, PackageGoodsInfoActivity.class);
-                    intent.putExtra("proid", bean.getPros().get(position).getProid());
-                    context.startActivity(intent);
+                    intent.setClass(context, PackageGoodsInfoActivity.class);
                 } else {
                     //非套餐类
-                    Intent intent = new Intent(context, GoodsDetailInfoActivity.class);
-                    intent.putExtra("proid", bean.getPros().get(position).getProid());
-                    intent.putExtra("imageUrl", bean.getPros().get(position).getUrl());
-                    context.startActivity(intent);
+                    intent.setClass(context, GoodsDetailInfoActivity.class);
                 }
+                intent.putExtra("proid", bean.getPros().get(position).getProid());
+                intent.putExtra("imageUrl", bean.getPros().get(position).getUrl());
+                context.startActivity(intent);
             }
         });
         return convertView;

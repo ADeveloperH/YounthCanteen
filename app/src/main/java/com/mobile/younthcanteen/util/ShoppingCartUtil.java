@@ -15,35 +15,143 @@ public class ShoppingCartUtil {
     private static List<ShoppingCartItemBean> shoppingCartList = new ArrayList<ShoppingCartItemBean>();
 
 
-    /**
-     * 添加到购物车
-     *
+    /***
+     *  添加商品到购物车
      * @param bean
      */
-    public static void addToCart(ShoppingCartItemBean bean) {
+    public static void addGoodsToCart(ShoppingCartItemBean bean) {
         if (shoppingCartList != null && shoppingCartList.size() > 0) {
             int index = -1;
-            for (int i = 0, length = shoppingCartList.size(); i < length; i++) {
-                ShoppingCartItemBean itemInList = shoppingCartList.get(i);
-                if (itemInList.getProid().equals(bean.getProid())) {
-                    //购物车中已经有该商品了.
-                    index = i;
-                    break;
+            if ("0".equals(bean.getType())) {
+                //单个商品。判断Proid可以确定是否已存在购物车
+                for (int i = 0, length = shoppingCartList.size(); i < length; i++) {
+                    ShoppingCartItemBean itemInList = shoppingCartList.get(i);
+                    if (itemInList.getProid().equals(bean.getProid())) {
+                        //购物车中已经有该商品了.
+                        index = i;
+                        break;
+                    }
                 }
-            }
+                if (index != -1) {
+                    //购物车中已经有了
+                    shoppingCartList.set(index, bean);
+                } else {
+                    shoppingCartList.add(bean);
+                }
 
-            if (index != -1) {
-                //购物车中已经有了
-                shoppingCartList.set(index, bean);
-            } else {
-                shoppingCartList.add(bean);
             }
         } else {
             //购物车中还没有商品.直接添加进集合
             shoppingCartList.add(bean);
         }
-
     }
+
+
+    /**
+     * 添加套餐到购物车
+     * @param bean
+     */
+    public static void addPackageToCart(ShoppingCartItemBean bean) {
+        if (shoppingCartList != null && shoppingCartList.size() > 0) {
+            int index = -1;
+            if ("1".equals(bean.getType())) {
+                //套餐。还需判断materia的所有Proid
+                for (int i = 0, length = shoppingCartList.size(); i < length; i++) {
+                    ShoppingCartItemBean itemInList = shoppingCartList.get(i);
+                    if (itemInList.getProid().equals(bean.getProid())) {
+                        //购物车中已经有该套餐了.需要判断添加的materia是否完全一致
+                        List<ShoppingCartItemBean.MateriaBean> materiaListInItem =
+                                itemInList.getMaterial();
+                        List<ShoppingCartItemBean.MateriaBean> materiaListInBean =
+                                bean.getMaterial();
+                        if (isMateriaListSame(materiaListInItem, materiaListInBean)) {
+                            index = i;
+                        }
+                    }
+                }
+
+                if (index != -1) {
+                    //购物车中已经添加了该套餐。将其数量加一。
+                    int count = Integer.parseInt(shoppingCartList.get(index).getCount());
+                    shoppingCartList.get(index).setCount((count + 1) + "");
+                } else {
+                    shoppingCartList.add(bean);
+                }
+            }
+        } else {
+            //购物车中还没有商品.直接添加进集合
+            shoppingCartList.add(bean);
+        }
+    }
+
+    /**
+     * 将套餐bean的数量减1.
+     * @param bean
+     */
+    public static void reducePackageToCart(ShoppingCartItemBean bean) {
+        if (shoppingCartList != null && shoppingCartList.size() > 0) {
+            int index = -1;
+            if ("1".equals(bean.getType())) {
+                //套餐。还需判断materia的所有Proid
+                for (int i = 0, length = shoppingCartList.size(); i < length; i++) {
+                    ShoppingCartItemBean itemInList = shoppingCartList.get(i);
+                    if (itemInList.getProid().equals(bean.getProid())) {
+                        //购物车中已经有该套餐了.需要判断添加的materia是否完全一致
+                        List<ShoppingCartItemBean.MateriaBean> materiaListInItem =
+                                itemInList.getMaterial();
+                        List<ShoppingCartItemBean.MateriaBean> materiaListInBean =
+                                bean.getMaterial();
+                        if (isMateriaListSame(materiaListInItem, materiaListInBean)) {
+                            index = i;
+                        }
+                    }
+                }
+                if (index != -1) {
+                    //购物车中已经有该套餐。将其数量减一。
+                    int count = Integer.parseInt(shoppingCartList.get(index).getCount());
+                    shoppingCartList.get(index).setCount((count - 1) + "");
+                }
+            }
+        }
+    }
+
+    /**
+     * 判断两个集合的materiaList是否相同。
+     *
+     * @param materiaList1
+     * @param materiaList2
+     * @return
+     */
+    private static boolean isMateriaListSame(List<ShoppingCartItemBean.MateriaBean> materiaList1,
+                                             List<ShoppingCartItemBean.MateriaBean> materiaList2) {
+        if (materiaList1 == null || materiaList1.size() == 0 ||
+                materiaList2 == null || materiaList2.size() == 0) {
+            return false;
+        }
+        if (materiaList2.size() != materiaList1.size()) {
+            return false;
+        }
+
+        List<String> proidList1 = new ArrayList<String>();
+        for (int i = 0; i < materiaList1.size(); i++) {
+            proidList1.add(materiaList1.get(i).getProid());
+        }
+
+        List<String> proidList2 = new ArrayList<String>();
+        for (int i = 0; i < materiaList2.size(); i++) {
+            proidList2.add(materiaList2.get(i).getProid());
+        }
+
+        boolean isSame = true;
+        for (int i = 0; i < proidList1.size(); i++) {
+            if (!proidList2.contains(proidList1.get(i))) {
+                isSame = false;
+                break;
+            }
+        }
+        return isSame;
+    }
+
 
     /**
      * 从购物车集合中移除该商品
@@ -87,6 +195,7 @@ public class ShoppingCartUtil {
 
     /**
      * 获取总价格
+     *
      * @return
      */
     public static int getTotalPrice() {
@@ -94,7 +203,7 @@ public class ShoppingCartUtil {
             return 0;
         } else {
             int totalPrice = 0;
-            for (int i = 0,length = shoppingCartList.size(); i < length; i++) {
+            for (int i = 0, length = shoppingCartList.size(); i < length; i++) {
                 ShoppingCartItemBean bean = shoppingCartList.get(i);
                 totalPrice += (Integer.parseInt(bean.getPrice()) * Integer.parseInt(bean.getCount()));
             }
@@ -105,6 +214,7 @@ public class ShoppingCartUtil {
 
     /**
      * 购物车是否为空
+     *
      * @return
      */
     public static boolean shoppingCartIsNull() {
@@ -113,14 +223,15 @@ public class ShoppingCartUtil {
 
     /**
      * 获取购物车商品数量
+     *
      * @return
      */
-    public static int getCartListSize() {
+    public static int getCartCount() {
         if (shoppingCartList == null || shoppingCartList.size() <= 0) {
             return 0;
         } else {
             int totalCount = 0;
-            for (int i = 0,length = shoppingCartList.size(); i < length; i++) {
+            for (int i = 0, length = shoppingCartList.size(); i < length; i++) {
                 ShoppingCartItemBean bean = shoppingCartList.get(i);
                 totalCount += (Integer.parseInt(bean.getCount()));
             }

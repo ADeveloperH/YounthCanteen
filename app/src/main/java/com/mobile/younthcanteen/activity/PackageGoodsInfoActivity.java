@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
@@ -23,6 +24,7 @@ import com.mobile.younthcanteen.adapter.GoodsInfoPagerAdapter;
 import com.mobile.younthcanteen.adapter.PackageGoodsGVAdapter;
 import com.mobile.younthcanteen.adapter.PackageGoodsSelectGVAdapter;
 import com.mobile.younthcanteen.bean.PackageGoodsInfoBean;
+import com.mobile.younthcanteen.bean.ShoppingCartItemBean;
 import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
 import com.mobile.younthcanteen.http.RequestParams;
@@ -30,6 +32,7 @@ import com.mobile.younthcanteen.ui.GridViewForScroll;
 import com.mobile.younthcanteen.util.BitmapUtil;
 import com.mobile.younthcanteen.util.FileUtil;
 import com.mobile.younthcanteen.util.JsonUtil;
+import com.mobile.younthcanteen.util.ShoppingCartUtil;
 import com.mobile.younthcanteen.util.ToastUtils;
 import com.mobile.younthcanteen.util.UIUtils;
 
@@ -69,6 +72,16 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
     Button btnAddToCart;
     @BindView(R.id.iv_back)
     ImageView ivBack;
+    @BindView(R.id.tv_clearing)
+    TextView tvClearing;
+    @BindView(R.id.iv_cart)
+    ImageView ivCart;
+    @BindView(R.id.tv_red_num)
+    TextView tvRedNum;
+    @BindView(R.id.tv_result_price)
+    TextView tvResultPrice;
+    @BindView(R.id.sv_root)
+    ScrollView svRoot;
     private Context context;
     private List<String> viewPagerDataList;
     private ArrayList<ImageView> imageList;
@@ -80,9 +93,12 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
     private List<PackageGoodsInfoBean.ResultsEntity.CombosEntity.MaterialEntity> meatDataList;//荤菜的列表
     private PackageGoodsGVAdapter vegetableAdapter;
     private PackageGoodsGVAdapter meatAdapter;
+    private String imageUrl;
+    private ShoppingCartItemBean curGoodsBean;
+    private PackageGoodsInfoBean.ResultsEntity goodsInfoBean;
 
 
-    @OnClick({R.id.iv_back,R.id.btn_add_to_cart})
+    @OnClick({R.id.iv_back, R.id.btn_add_to_cart, R.id.tv_clearing})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back://返回按钮
@@ -93,14 +109,41 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
                         gvSelectAdd.getAdapter();
                 if (adapter != null) {
                     if (adapter.isSelectFinish()) {
-                        ToastUtils.showShortToast("该功能正在开发中...");
+                        addPackageToCart(adapter);
+                        ToastUtils.showShortToast("添加成功");
                     } else {
                         ToastUtils.showShortToast("请求选择完整的套餐搭配。");
                     }
 
                 }
                 break;
+            case R.id.tv_clearing://去结算
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("tabIndex", 1);
+                startActivity(intent);
+                finish();
+                break;
         }
+    }
+
+
+    /**
+     * 将当前商品添加到购物车
+     *
+     * @param adapter
+     */
+    private void addPackageToCart(PackageGoodsSelectGVAdapter adapter) {
+        ShoppingCartUtil.addPackageToCart(curGoodsBean);
+        //清除选中状态。重置初始值
+        initCurGoodsBean();
+        adapter.clearState();
+        adapter.notifyDataSetChanged();
+        //刷新购物车状态
+        tvRedNum.setVisibility(View.VISIBLE);
+        tvRedNum.setText(ShoppingCartUtil.getCartCount() + "");
+        ivCart.setImageResource(R.drawable.cart_enable);
+        tvResultPrice.setText("￥" + ShoppingCartUtil.getTotalPrice());
+        tvClearing.setVisibility(View.VISIBLE);
     }
 
     private static class MyHandler extends Handler {
@@ -174,6 +217,7 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
      * @param clickPositon 当前点击的选择框的位置
      */
     private void showCheckDialog(String selectFlag, final int clickPositon) {
+        //当前弹框中显示的列表
         final List<PackageGoodsInfoBean.ResultsEntity.CombosEntity.MaterialEntity> dataList;
         final Dialog dialog = new Dialog(context, R.style.Theme_CustomDialog_buy);
         View contentView = UIUtils.inflate(R.layout.dialog_packagegoodsinfo_layout);
@@ -200,10 +244,14 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                PackageGoodsInfoBean.ResultsEntity.CombosEntity.MaterialEntity bean =
+                        dataList.get(position);
+                //加入当前选择的商品中
+                addMateriaToPackage(bean);
                 PackageGoodsSelectGVAdapter adapter = (PackageGoodsSelectGVAdapter)
                         gvSelectAdd.getAdapter();
                 if (adapter != null) {
-                    adapter.select(dataList.get(position).getName(), clickPositon);
+                    adapter.select(bean.getName(), clickPositon);
                     adapter.notifyDataSetChanged();
                 }
                 if (dialog != null && dialog.isShowing()) {
@@ -213,12 +261,44 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
         });
     }
 
+    /**
+     * 将当前选择的商品添加到套餐中
+     *
+     * @param bean
+     */
+    private void addMateriaToPackage(PackageGoodsInfoBean.ResultsEntity.CombosEntity.MaterialEntity bean) {
+        List<ShoppingCartItemBean.MateriaBean> list = curGoodsBean.getMaterial();
+        if (list == null) {
+            list = new ArrayList<ShoppingCartItemBean.MateriaBean>();
+        }
+        ShoppingCartItemBean.MateriaBean materiaBean = curGoodsBean.new MateriaBean();
+        materiaBean.setName(bean.getName());
+        materiaBean.setProid(bean.getProid());
+        boolean isContainMateria = false;
+        for (int i = 0, length = list.size(); i < length; i++) {
+            ShoppingCartItemBean.MateriaBean itemBean = list.get(i);
+            if (materiaBean.getProid().equals(itemBean.getProid())) {
+                //商品已存在在套餐中
+                isContainMateria = true;
+                break;
+            } else {
+                isContainMateria = false;
+            }
+        }
+        if (!isContainMateria) {
+            //如果套餐中不存在该商品就添加。否则不添加
+            list.add(materiaBean);
+            curGoodsBean.setMaterial(list);
+        }
+    }
+
     private void getData() {
         Intent intent = getIntent();
         if (intent == null || !intent.hasExtra("proid")) {
             finish();
             return;
         }
+        imageUrl = intent.getStringExtra("imageUrl");
         String proid = intent.getStringExtra("proid");
         RequestParams params = new RequestParams();
         params.put("proid", proid);
@@ -232,7 +312,8 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
                     ToastUtils.showShortToast("服务器数据异常，请稍后重试");
                 } else {
                     if (Http.SUCCESS.equals(bean.getReturnCode())) {
-                        showDetailInfo(bean);
+                        goodsInfoBean = bean.getResults();
+                        showDetailInfo(goodsInfoBean);
                     } else {
                         ToastUtils.showShortToast(bean.getReturnMessage());
                     }
@@ -253,17 +334,47 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
      *
      * @param bean
      */
-    private void showDetailInfo(PackageGoodsInfoBean bean) {
-        tvName.setText(bean.getResults().getName());
-        double unitPrice = Double.parseDouble(bean.getResults().getPrice());
+    private void showDetailInfo(PackageGoodsInfoBean.ResultsEntity bean) {
+        tvName.setText(bean.getName());
+        double unitPrice = Double.parseDouble(bean.getPrice());
         tvPrice.setText("￥" + unitPrice + "元");
-        String goodsDes = TextUtils.isEmpty(bean.getResults().getDescribe()) ? ""
-                : bean.getResults().getDescribe();
+        String goodsDes = TextUtils.isEmpty(bean.getDescribe()) ? ""
+                : bean.getDescribe();
         tvDesc.setText(goodsDes);
-        viewPagerDataList = bean.getResults().getUrl();
+        viewPagerDataList = bean.getUrl();
         initViewPagerData();
         initSelect(bean);
         initGoodsList(bean);
+        showCart();
+    }
+
+    /**
+     * 显示购物车的数据
+     */
+    private void showCart() {
+        //创建对象。用于添加时使用
+        initCurGoodsBean();
+        int totalSize = ShoppingCartUtil.getCartCount();
+        if (totalSize > 0) {
+            tvRedNum.setVisibility(View.VISIBLE);
+            tvRedNum.setText(totalSize + "");
+            ivCart.setImageResource(R.drawable.cart_enable);
+            tvResultPrice.setText("￥" + ShoppingCartUtil.getTotalPrice());
+            tvClearing.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * 新建ShoppingCartItemBean
+     */
+    private void initCurGoodsBean() {
+        curGoodsBean = new ShoppingCartItemBean();
+        curGoodsBean.setCount("1");
+        curGoodsBean.setImgUrl(imageUrl);
+        curGoodsBean.setName(goodsInfoBean.getName());
+        curGoodsBean.setPrice(goodsInfoBean.getPrice());
+        curGoodsBean.setType("1");
+        curGoodsBean.setProid(goodsInfoBean.getProid());
     }
 
     /**
@@ -271,15 +382,15 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
      *
      * @param bean
      */
-    private void initSelect(PackageGoodsInfoBean bean) {
+    private void initSelect(PackageGoodsInfoBean.ResultsEntity bean) {
         List<String> selectList = new ArrayList<String>();
         //素菜个数.用0标示
-        int vegetableCount = Integer.parseInt(bean.getResults().getCombos().get(0).getCount());
+        int vegetableCount = Integer.parseInt(bean.getCombos().get(0).getCount());
         for (int i = 0; i < vegetableCount; i++) {
             selectList.add("0");
         }
         //荤菜的个数。用1标示
-        int meatCount = Integer.parseInt(bean.getResults().getCombos().get(1).getCount());
+        int meatCount = Integer.parseInt(bean.getCombos().get(1).getCount());
         for (int i = 0; i < meatCount; i++) {
             selectList.add("1");
         }
@@ -299,12 +410,12 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
      *
      * @param bean
      */
-    private void initGoodsList(PackageGoodsInfoBean bean) {
-        vegetableDataList = bean.getResults().getCombos().get(0).getMaterial();
+    private void initGoodsList(PackageGoodsInfoBean.ResultsEntity bean) {
+        vegetableDataList = bean.getCombos().get(0).getMaterial();
         vegetableAdapter = new PackageGoodsGVAdapter(context, vegetableDataList);
 //        gvVegetable.setAdapter(vegetableAdapter);
 
-        meatDataList = bean.getResults().getCombos().get(1).getMaterial();
+        meatDataList = bean.getCombos().get(1).getMaterial();
         meatAdapter = new PackageGoodsGVAdapter(context, meatDataList);
 //        gvMeat.setAdapter(meatAdapter);
     }
