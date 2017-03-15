@@ -122,6 +122,13 @@
             android:screenOrientation="portrait" />
 
 
+        <!-- 支付密码修改页面 -->
+        <activity
+            android:name=".activity.ModifyPayPwdActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+
         <!-- 下载apk -->
         <service android:name=".service.DownLoadService" />
 

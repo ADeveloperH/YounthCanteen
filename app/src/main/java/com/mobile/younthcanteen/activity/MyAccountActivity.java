@@ -45,6 +45,7 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
     private Button btnLogout;
     private String nickNameStr;
     private SelectPicPopupWindow menuWindow;
+    private LinearLayout llPayPwd;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,6 +69,7 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
         llUser = (LinearLayout) findViewById(R.id.ll_user_icon);
         llNickName = (LinearLayout) findViewById(R.id.ll_nick_name);
         llPwd = (LinearLayout) findViewById(R.id.ll_pwd);
+        llPayPwd = (LinearLayout) findViewById(R.id.ll_pay_pwd);
         llPhoneNumber = (LinearLayout) findViewById(R.id.ll_phonenumber);
         ivUserIcon = (ImageView) findViewById(R.id.iv_usericon);
         tvNickName = (TextView) findViewById(R.id.tv_nickname);
@@ -90,6 +92,7 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
         btnLogout.setOnClickListener(this);
         llPwd.setOnClickListener(this);
         llUser.setOnClickListener(this);
+        llPayPwd.setOnClickListener(this);
     }
 
     @Override
@@ -113,6 +116,9 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.ll_pwd://修改密码
                 startActivity(new Intent(act, ModifyPwdActivity.class));
+                break;
+            case R.id.ll_pay_pwd://修改支付密码
+                startActivity(new Intent(act, ModifyPayPwdActivity.class));
                 break;
             case R.id.ll_user_icon://修改头像
                 menuWindow = new SelectPicPopupWindow(act, this);//实例化SelectPicPopupWindow
