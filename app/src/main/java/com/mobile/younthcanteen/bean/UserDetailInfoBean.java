@@ -17,18 +17,19 @@ public class UserDetailInfoBean {
      * grade : 少年
      * imgs : []
      * imgtype :
+     * ispaypassset : false
      * money : 0
      * nick : zz_13373931172
      * phone : 13373931172
      * point : 0
      * tjaccount :
-     * token : aa2bb8e8a57e6dd6
+     * token : 3293a90de39c6c78
      * userid : 6
      */
 
     private ResultsEntity results;
     /**
-     * results : {"account":"","birthday":"","email":"","grade":"少年","imgs":[],"imgtype":"","money":0,"nick":"zz_13373931172","phone":"13373931172","point":0,"tjaccount":"","token":"aa2bb8e8a57e6dd6","userid":6}
+     * results : {"account":"","birthday":"","email":"","grade":"少年","imgs":[],"imgtype":"","ispaypassset":false,"money":0,"nick":"zz_13373931172","phone":"13373931172","point":0,"tjaccount":"","token":"3293a90de39c6c78","userid":6}
      * returnCode : 0
      * returnMessage : 成功
      */
@@ -66,6 +67,7 @@ public class UserDetailInfoBean {
         private String email;
         private String grade;
         private String imgtype;
+        private boolean ispaypassset;
         private String money;
         private String nick;
         private String phone;
@@ -113,6 +115,14 @@ public class UserDetailInfoBean {
 
         public void setImgtype(String imgtype) {
             this.imgtype = imgtype;
+        }
+
+        public boolean isIspaypassset() {
+            return ispaypassset;
+        }
+
+        public void setIspaypassset(boolean ispaypassset) {
+            this.ispaypassset = ispaypassset;
         }
 
         public String getMoney() {

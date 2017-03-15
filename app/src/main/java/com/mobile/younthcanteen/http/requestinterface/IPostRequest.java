@@ -2,11 +2,14 @@ package com.mobile.younthcanteen.http.requestinterface;
 
 import java.util.Map;
 
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.HeaderMap;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Url;
@@ -51,6 +54,13 @@ public interface IPostRequest {
     @POST("{url}")
     Call<ResponseBody>getDataByPost(@Path(value = "url",encoded = true) String url,
                                     @FieldMap Map<String, String> queryMap);
+
+
+    @Headers({"Content-Type: text/plain"})//需要添加头
+    @POST("{url}")
+    Call<ResponseBody> getDataByPostJson(@Path(value = "url",encoded = true) String url,
+                                         @Body RequestBody route);//传入的参数为RequestBody
+
 
     /**
      * 带参数的post请求

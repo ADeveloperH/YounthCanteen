@@ -142,6 +142,7 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
                     SharedPreferencesUtil.setUserId(result.getUserid());
                     SharedPreferencesUtil.setPoint(result.getPoint());
                     SharedPreferencesUtil.setMoney(result.getMoney());
+                    SharedPreferencesUtil.setIsSetPayPwd(result.isIspaypassset());
                     tvNickName.setText(result.getNick());
                     tvJiFen.setText(result.getPoint());
                     tvYuE.setText(result.getMoney());

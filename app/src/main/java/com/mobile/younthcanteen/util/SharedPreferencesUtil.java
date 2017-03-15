@@ -18,6 +18,8 @@ public class SharedPreferencesUtil {
 
     public static final String TOKEN = "token"; //登录成功后后台会传过来一个token，这里保存起来，掉其他接口时需要
 
+    public static final String ISPAYPWDSET = "ispaypwdset"; //是否设置过支付密码
+
     public static final String KEY_ACCOUNT = "KEY_ACCOUNT";//手机号
 
     public static final String KEY_USERID = "KEY_USERID";//userid
@@ -94,6 +96,33 @@ public class SharedPreferencesUtil {
 
 
     /**
+     * 保存当前账号是否设置了支付密码
+     * @return
+     */
+    public static boolean setIsSetPayPwd(boolean isSetPwd) {
+        if (getPreferencesPrivate() != null) {
+            return getPreferencesPrivate().edit().putBoolean(ISPAYPWDSET, isSetPwd).commit();
+        }
+        return false;
+    }
+
+
+    /**
+     * 获取当前账号是否设置了支付密码
+     *
+     * @return
+     */
+    public static boolean getIsSetPayPwd() {
+        if (getPreferencesPrivate() != null) {
+            return getPreferencesPrivate().getBoolean(ISPAYPWDSET, false);
+        }
+        return false;
+    }
+
+
+
+
+    /**
      * 保存money
      * @return
      */
@@ -103,6 +132,8 @@ public class SharedPreferencesUtil {
         }
         return false;
     }
+
+
 
     /**
      * 获取当前money

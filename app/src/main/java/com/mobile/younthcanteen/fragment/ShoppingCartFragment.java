@@ -3,6 +3,8 @@ package com.mobile.younthcanteen.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +16,22 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.activity.GoodsDetailInfoActivity;
 import com.mobile.younthcanteen.activity.MyAddressActivity;
 import com.mobile.younthcanteen.activity.PackageGoodsInfoActivity;
 import com.mobile.younthcanteen.adapter.ShoppingCartListAdapter;
 import com.mobile.younthcanteen.bean.AddressListBean;
+import com.mobile.younthcanteen.bean.OrderBean;
 import com.mobile.younthcanteen.bean.ShoppingCartItemBean;
+import com.mobile.younthcanteen.http.Http;
+import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
 import com.mobile.younthcanteen.ui.ListViewForScroll;
+import com.mobile.younthcanteen.util.JsonUtil;
 import com.mobile.younthcanteen.util.LoginUtils;
+import com.mobile.younthcanteen.util.SharedPreferencesUtil;
 import com.mobile.younthcanteen.util.ShoppingCartUtil;
 import com.mobile.younthcanteen.util.ToastUtils;
 
@@ -180,29 +189,37 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
            ToastUtils.showShortToast("请选择收货地址");
            return;
        }
-       ToastUtils.showShortToast("功能正在开发中...");
+       String remarkStr = etRemark.getText().toString().trim();
+       if (TextUtils.isEmpty(remarkStr)) {
+           remarkStr = "";
+       }
+       Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+       OrderBean orderBean = new OrderBean();
+       orderBean.setToken(SharedPreferencesUtil.getToken());
+       orderBean.setAddrid(addressBean.getAddressid());
+       orderBean.setRemark(remarkStr);
+       orderBean.setPros(JsonUtil.toJson(ShoppingCartUtil.getAllShoppingList()));
+
 //       RequestParams params = new RequestParams();
 //       params.put("token", SharedPreferencesUtil.getToken());
 //       params.put("addrid", addressBean.getAddressid());
-//       String remarkStr = etRemark.getText().toString().trim();
-//       if (TextUtils.isEmpty(remarkStr)) {
-//           remarkStr = "";
-//       }
 //       params.put("remark", remarkStr);
 //       params.put("pros", JsonUtil.toJson(ShoppingCartUtil.getAllShoppingList()));
-//
-//       Http.post("",params,new MyTextAsyncResponseHandler(getActivity(),"提交中..."){
-//           @Override
-//           public void onSuccess(String content) {
-//               super.onSuccess(content);
-//               Log.d("hj", "content::" + content);
-//           }
-//
-//           @Override
-//           public void onFailure(Throwable error) {
-//               super.onFailure(error);
-//           }
-//       });
+
+//       String json = JsonUtil.toJson(orderBean).replaceAll("\\\\","");
+       Log.d("hj", "json::" + orderBean.toJson());
+       Http.postJson(Http.ORDERADD,orderBean.toJson(),new MyTextAsyncResponseHandler(getActivity(),"提交中..."){
+           @Override
+           public void onSuccess(String content) {
+               super.onSuccess(content);
+               Log.d("hj", "content::" + content);
+           }
+
+           @Override
+           public void onFailure(Throwable error) {
+               super.onFailure(error);
+           }
+       });
     }
 
     @Override

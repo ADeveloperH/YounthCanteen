@@ -32,6 +32,7 @@ public class Http {
     public static final String GETHOMEDATA = "indexPage";//获取首页数据
     public static final String GETGOODSINFO = "proDetail";//获取详情数据
     public static final String GETUSERDETAILINFO = "userDetail";//获取用户详情数据
+    public static final String ORDERADD = "orderAdd";//添加订单
 
     public static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;
@@ -135,6 +136,26 @@ public class Http {
                     .getDataByPost(url, params).enqueue(responseHandler);
         }
     }
+
+    /**
+     * 相对地址POST异步请求
+     *
+     * @param url
+     * @param json
+     * @param responseHandler
+     */
+    public static void postJson(String url, String json, Callback<ResponseBody> responseHandler) {
+        if (TextUtils.isEmpty(url)) {
+            Log.e("Http", "请求地址不能为空");
+        } else {
+            //带参数
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json;charset=utf-8"),
+                    json);
+            ApiRequestFactory.INSTANCE.getiPostRequest().
+                    getDataByPostJson(url, body).enqueue(responseHandler);
+        }
+    }
+
 
     /**
      * 相对地址POST异步请求
