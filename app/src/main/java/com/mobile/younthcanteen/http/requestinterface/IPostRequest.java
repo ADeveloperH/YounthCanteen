@@ -56,7 +56,7 @@ public interface IPostRequest {
                                     @FieldMap Map<String, String> queryMap);
 
 
-    @Headers({"Content-Type: text/plain"})//需要添加头
+    @Headers({"Content-Type:application/json"})//需要添加头
     @POST("{url}")
     Call<ResponseBody> getDataByPostJson(@Path(value = "url",encoded = true) String url,
                                          @Body RequestBody route);//传入的参数为RequestBody

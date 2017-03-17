@@ -51,7 +51,7 @@ public class OrderBean {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("{");
         if (!TextUtils.isEmpty(token)) {
-            stringBuilder.append(" \"token\": ").append(token).append(",");
+            stringBuilder.append(" \"token\": \"").append(token).append("\",");
         }
         if (!TextUtils.isEmpty(addrid)) {
             stringBuilder.append(" \"addrid\": ").append(addrid).append(",");
@@ -60,7 +60,7 @@ public class OrderBean {
             stringBuilder.append(" \"pros\": ").append(pros).append(",");
         }
         if (!TextUtils.isEmpty(remark)) {
-            stringBuilder.append(" \"remark\": ").append(remark).append(",");
+            stringBuilder.append(" \"remark\": \"").append(remark).append("\"  ,");
         }
         if (stringBuilder.lastIndexOf(",") != -1) {
             //删除多加的一个,

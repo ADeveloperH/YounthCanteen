@@ -1,7 +1,5 @@
 package com.mobile.younthcanteen.bean;
 
-import java.util.List;
-
 /**
  * author：hj
  * time: 2017/3/11 0011 19:17
@@ -75,7 +73,7 @@ public class UserDetailInfoBean {
         private String tjaccount;
         private String token;
         private String userid;
-        private List<?> imgs;
+        private String imgs;
 
         public String getAccount() {
             return account;
@@ -181,11 +179,12 @@ public class UserDetailInfoBean {
             this.userid = userid;
         }
 
-        public List<?> getImgs() {
+
+        public String getImgs() {
             return imgs;
         }
 
-        public void setImgs(List<?> imgs) {
+        public void setImgs(String imgs) {
             this.imgs = imgs;
         }
     }
