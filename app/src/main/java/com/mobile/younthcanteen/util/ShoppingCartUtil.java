@@ -238,4 +238,15 @@ public class ShoppingCartUtil {
             return totalCount;
         }
     }
+
+
+    /**
+     * 清空购物车
+     */
+    public static void clearCart() {
+        if (shoppingCartList != null && shoppingCartList.size() > 0) {
+            shoppingCartList.clear();
+        }
+
+    }
 }

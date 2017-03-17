@@ -9,14 +9,24 @@ package com.mobile.younthcanteen.bean;
 public class CommitOrderResult {
 
     /**
-     * orderno : 170315210448000000265863
+     * money : 116
+     * orderno : 170316231706000000020595
      * returnCode : 0
      * returnMessage : 订单提交成功
      */
 
+    private String money;
     private String orderno;
     private String returnCode;
     private String returnMessage;
+
+    public String getMoney() {
+        return money;
+    }
+
+    public void setMoney(String money) {
+        this.money = money;
+    }
 
     public String getOrderno() {
         return orderno;

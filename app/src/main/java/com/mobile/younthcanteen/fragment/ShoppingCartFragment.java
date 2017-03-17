@@ -210,6 +210,7 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
                    Intent intent = new Intent();
                    intent.setClass(getActivity(), PayActivity.class);
                    intent.putExtra("orderno", result.getOrderno());
+                   intent.putExtra("money", result.getMoney());
                    startActivity(intent);
                }
            }

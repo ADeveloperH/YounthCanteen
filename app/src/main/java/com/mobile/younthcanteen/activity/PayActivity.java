@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -17,6 +18,7 @@ import com.mobile.younthcanteen.ui.pwdinput.InputPwdView;
 import com.mobile.younthcanteen.ui.pwdinput.MyInputPwdUtil;
 import com.mobile.younthcanteen.util.JsonUtil;
 import com.mobile.younthcanteen.util.SharedPreferencesUtil;
+import com.mobile.younthcanteen.util.ShoppingCartUtil;
 import com.mobile.younthcanteen.util.ToastUtils;
 
 import butterknife.BindView;
@@ -42,9 +44,12 @@ public class PayActivity extends BaseActivity {
     ImageView ivRbZfb;
     @BindView(R.id.rl_zfb)
     RelativeLayout rlZfb;
+    @BindView(R.id.btn_pay)
+    Button btnPay;
     private String orderno;//订单号
     private MyInputPwdUtil myInputPwdUtil;
     private int curSelect = 0;//当前选择的支付方式
+    private double needMoney;//需要的钱数
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +67,8 @@ public class PayActivity extends BaseActivity {
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("orderno")) {
             orderno = intent.getStringExtra("orderno");
+            needMoney = Double.parseDouble(intent.getStringExtra("money"));
+            btnPay.setText("确认支付￥" + needMoney);
         }
 
         setChecked(0);
@@ -73,7 +80,7 @@ public class PayActivity extends BaseActivity {
         myInputPwdUtil.setListener(new InputPwdView.InputPwdListener() {
             @Override
             public void hide() {
-                myInputPwdUtil.hide();
+                hiddenInputPwd();
             }
 
             @Override
@@ -129,21 +136,23 @@ public class PayActivity extends BaseActivity {
             case R.id.btn_pay://立即支付
                 if (curSelect == 0) {
                     //余额支付
-                    double money = Double.parseDouble(SharedPreferencesUtil.getMoney());
-//                    if () {
-//                    }
-                    if (SharedPreferencesUtil.getIsSetPayPwd()) {
-                        //如果设置密码需要传入密码
-                        if (myInputPwdUtil != null) {
-                            myInputPwdUtil.show();
-                        } else {
-                            initPwdInput();
-                            myInputPwdUtil.show();
-                        }
+                    double remainMoney = Double.parseDouble(SharedPreferencesUtil.getMoney());
+                    if (remainMoney < needMoney) {
+                        //剩余余额不足
+                        ToastUtils.showShortToast("您当前余额不足，选择其它支付方式");
                     } else {
-                        payOrder(null);
+                        if (SharedPreferencesUtil.getIsSetPayPwd()) {
+                            //如果设置密码需要传入密码
+                            if (myInputPwdUtil != null) {
+                                myInputPwdUtil.show();
+                            } else {
+                                initPwdInput();
+                                myInputPwdUtil.show();
+                            }
+                        } else {
+                            payOrder(null);
+                        }
                     }
-
                 } else {
                     payOrder(null);
                 }
@@ -157,6 +166,7 @@ public class PayActivity extends BaseActivity {
      * @param pwd 用余额支付时输入的密码
      */
     private void payOrder(String pwd) {
+        hiddenInputPwd();
         RequestParams params = new RequestParams();
         params.put("orderno", orderno);
         params.put("token", SharedPreferencesUtil.getToken());
@@ -173,9 +183,12 @@ public class PayActivity extends BaseActivity {
                 if (null != bean) {
                     ToastUtils.showLongToast(bean.getReturnMessage());
                     if (Http.SUCCESS.equals(bean.getReturnCode())) {
-                        if (myInputPwdUtil != null) {
-                            myInputPwdUtil.hide();
-                        }
+                        //支付订单成功后清空购物车
+                        ShoppingCartUtil.clearCart();
+                        Intent intent = new Intent(context, MainActivity.class);
+                        intent.putExtra("tabIndex", 2);
+                        startActivity(intent);
+                        finish();
                     }
                 } else {
                     ToastUtils.showLongToast("服务器异常，请稍后重试");
@@ -187,5 +200,14 @@ public class PayActivity extends BaseActivity {
                 super.onFailure(error);
             }
         });
+    }
+
+    /**
+     * 隐藏密码输入框
+     */
+    private void hiddenInputPwd() {
+        if (myInputPwdUtil != null) {
+            myInputPwdUtil.hide();
+        }
     }
 }
