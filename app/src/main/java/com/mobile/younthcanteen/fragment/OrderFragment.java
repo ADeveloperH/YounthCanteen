@@ -59,7 +59,6 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
         if (isNeedReLoad) {
             initView(getView());
             setListener();
-//            getData();
             isNeedReLoad = false;
         }
     }
@@ -123,10 +122,10 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
             listFragmentsa.clear();
         }
 
-        titleList.add("全部订单");
-        titleList.add("待评价");
-        listFragmentsa.add(new AllOrderFragment());
-        listFragmentsa.add(new ToBeEvaluateFragment());
+        titleList.add("已付款");
+        titleList.add("未付款");
+        listFragmentsa.add(new PaidFragment());
+        listFragmentsa.add(new NoPayFragment());
         if (mAdatpter == null) {
             // 此处，如果不是继承的FragmentActivity,而是继承的Fragment，则参数应该传入getChildFragmentManager()
             mAdatpter = new OrderFragmentPagerAdapter(getChildFragmentManager(),

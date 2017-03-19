@@ -18,7 +18,6 @@ import com.mobile.younthcanteen.ui.pwdinput.InputPwdView;
 import com.mobile.younthcanteen.ui.pwdinput.MyInputPwdUtil;
 import com.mobile.younthcanteen.util.JsonUtil;
 import com.mobile.younthcanteen.util.SharedPreferencesUtil;
-import com.mobile.younthcanteen.util.ShoppingCartUtil;
 import com.mobile.younthcanteen.util.ToastUtils;
 
 import butterknife.BindView;
@@ -136,22 +135,23 @@ public class PayActivity extends BaseActivity {
             case R.id.btn_pay://立即支付
                 if (curSelect == 0) {
                     //余额支付
-                    double remainMoney = Double.parseDouble(SharedPreferencesUtil.getMoney());
-                    if (remainMoney < needMoney) {
-                        //剩余余额不足
-                        ToastUtils.showShortToast("您当前余额不足，选择其它支付方式");
-                    } else {
-                        if (SharedPreferencesUtil.getIsSetPayPwd()) {
-                            //如果设置密码需要传入密码
-                            if (myInputPwdUtil != null) {
-                                myInputPwdUtil.show();
-                            } else {
-                                initPwdInput();
-                                myInputPwdUtil.show();
-                            }
+//                    double remainMoney = Double.parseDouble(SharedPreferencesUtil.getMoney());
+//                    if (remainMoney < needMoney) {
+//                        //剩余余额不足
+//                        ToastUtils.showShortToast("您当前余额不足，选择其它支付方式");
+//                    } else {
+//
+//                    }
+                    if (SharedPreferencesUtil.getIsSetPayPwd()) {
+                        //如果设置密码需要传入密码
+                        if (myInputPwdUtil != null) {
+                            myInputPwdUtil.show();
                         } else {
-                            payOrder(null);
+                            initPwdInput();
+                            myInputPwdUtil.show();
                         }
+                    } else {
+                        payOrder(null);
                     }
                 } else {
                     payOrder(null);
@@ -183,8 +183,6 @@ public class PayActivity extends BaseActivity {
                 if (null != bean) {
                     ToastUtils.showLongToast(bean.getReturnMessage());
                     if (Http.SUCCESS.equals(bean.getReturnCode())) {
-                        //支付订单成功后清空购物车
-                        ShoppingCartUtil.clearCart();
                         Intent intent = new Intent(context, MainActivity.class);
                         intent.putExtra("tabIndex", 2);
                         startActivity(intent);

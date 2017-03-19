@@ -35,6 +35,7 @@ public class Http {
     public static final String ORDERADD = "orderAdd";//添加订单
     public static final String PAYORDER = "orderPay";//支付订单
     public static final String SETPAYPWD = "userPayPasswrodUp";//设置支付密码
+    public static final String GETORDERLIST = "orderList";//获取订单列表
 
     public static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;

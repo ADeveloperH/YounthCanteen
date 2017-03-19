@@ -8,7 +8,7 @@ import android.text.TextUtils;
  */
 
 
-public class OrderBean {
+public class AddOrderBean {
     private String token;
     private String addrid;
     private String pros;

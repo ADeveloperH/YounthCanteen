@@ -23,7 +23,7 @@ import com.mobile.younthcanteen.activity.PayActivity;
 import com.mobile.younthcanteen.adapter.ShoppingCartListAdapter;
 import com.mobile.younthcanteen.bean.AddressListBean;
 import com.mobile.younthcanteen.bean.CommitOrderResult;
-import com.mobile.younthcanteen.bean.OrderBean;
+import com.mobile.younthcanteen.bean.AddOrderBean;
 import com.mobile.younthcanteen.bean.ShoppingCartItemBean;
 import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
@@ -179,47 +179,49 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
     /**
      * 提交订单
      */
-   private void commitOrder() {
-       if (!LoginUtils.isLogin()) {
-           ToastUtils.showShortToast("请先登录");
-           return;
-       }
-       if (addressBean == null) {
-           ToastUtils.showShortToast("请选择收货地址");
-           return;
-       }
-       String remarkStr = etRemark.getText().toString().trim();
-       if (TextUtils.isEmpty(remarkStr)) {
-           remarkStr = "";
-       }
-       OrderBean orderBean = new OrderBean();
-       orderBean.setToken(SharedPreferencesUtil.getToken());
-       orderBean.setAddrid(addressBean.getAddressid());
-       orderBean.setRemark(remarkStr);
-       orderBean.setPros(JsonUtil.toJson(ShoppingCartUtil.getAllShoppingList()));
-       Http.postJson(Http.ORDERADD,orderBean.toJson(),new MyTextAsyncResponseHandler(getActivity(),"提交中..."){
-           @Override
-           public void onSuccess(String content) {
-               super.onSuccess(content);
-               CommitOrderResult result = JsonUtil.fromJson(content, CommitOrderResult.class);
-               if (null != result) {
-                   if (!Http.SUCCESS.equals(result.getReturnCode())) {
-                       ToastUtils.showShortToast(result.getReturnMessage());
-                       return;
-                   }
-                   Intent intent = new Intent();
-                   intent.setClass(getActivity(), PayActivity.class);
-                   intent.putExtra("orderno", result.getOrderno());
-                   intent.putExtra("money", result.getMoney());
-                   startActivity(intent);
-               }
-           }
+    private void commitOrder() {
+        if (!LoginUtils.isLogin()) {
+            ToastUtils.showShortToast("请先登录");
+            return;
+        }
+        if (addressBean == null) {
+            ToastUtils.showShortToast("请选择收货地址");
+            return;
+        }
+        String remarkStr = etRemark.getText().toString().trim();
+        if (TextUtils.isEmpty(remarkStr)) {
+            remarkStr = "";
+        }
+        AddOrderBean addOrderBean = new AddOrderBean();
+        addOrderBean.setToken(SharedPreferencesUtil.getToken());
+        addOrderBean.setAddrid(addressBean.getAddressid());
+        addOrderBean.setRemark(remarkStr);
+        addOrderBean.setPros(JsonUtil.toJson(ShoppingCartUtil.getAllShoppingList()));
+        Http.postJson(Http.ORDERADD, addOrderBean.toJson(), new MyTextAsyncResponseHandler(getActivity(), "提交中...") {
+            @Override
+            public void onSuccess(String content) {
+                super.onSuccess(content);
+                CommitOrderResult result = JsonUtil.fromJson(content, CommitOrderResult.class);
+                if (null != result) {
+                    ToastUtils.showShortToast(result.getReturnMessage());
+                    if (!Http.SUCCESS.equals(result.getReturnCode())) {
+                        return;
+                    }
+                    //添加订单成功后清空购物车
+                    ShoppingCartUtil.clearCart();
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(), PayActivity.class);
+                    intent.putExtra("orderno", result.getOrderno());
+                    intent.putExtra("money", result.getMoney());
+                    startActivity(intent);
+                }
+            }
 
-           @Override
-           public void onFailure(Throwable error) {
-               super.onFailure(error);
-           }
-       });
+            @Override
+            public void onFailure(Throwable error) {
+                super.onFailure(error);
+            }
+        });
     }
 
     @Override
