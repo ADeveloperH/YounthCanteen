@@ -56,29 +56,29 @@
             android:layout_below="@id/ll_out"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:text="五香烤肠"
-                android:textColor="@color/textblack"
-                android:textSize="18dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="五香烤肠"
+                    android:textColor="@color/textblack"
+                    android:textSize="18dp" />
 
                 <TextView
                     android:id="@+id/tv_price"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_marginLeft="5dp"
                     android:text="￥2元"
                     android:textColor="@color/text_price_red"
                     android:textSize="20dp" />
@@ -154,12 +154,26 @@
                 android:layout_marginTop="15dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="商品信息"
-                    android:textColor="@color/grayblack"
-                    android:textSize="16dp" />
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/home_verrical_line_yellow" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="商品详情："
+                        android:textColor="@color/grayblack"
+                        android:textSize="16dp" />
+                </LinearLayout>
+
 
                 <TextView
                     android:id="@+id/tv_goods_info"

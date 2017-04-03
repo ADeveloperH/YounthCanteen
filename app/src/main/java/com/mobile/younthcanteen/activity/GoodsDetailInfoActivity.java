@@ -214,7 +214,7 @@ public class GoodsDetailInfoActivity extends Activity implements ViewPager.OnPag
     }
 
     private void init() {
-        svRoot.setZoomView(rlContainer);
+//        svRoot.setZoomView(rlContainer);
 //        viewpager.getLayoutParams();
     }
 
