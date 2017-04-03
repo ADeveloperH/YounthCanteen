@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -21,9 +20,9 @@ import com.mobile.younthcanteen.activity.MyAddressActivity;
 import com.mobile.younthcanteen.activity.PackageGoodsInfoActivity;
 import com.mobile.younthcanteen.activity.PayActivity;
 import com.mobile.younthcanteen.adapter.ShoppingCartListAdapter;
+import com.mobile.younthcanteen.bean.AddOrderBean;
 import com.mobile.younthcanteen.bean.AddressListBean;
 import com.mobile.younthcanteen.bean.CommitOrderResult;
-import com.mobile.younthcanteen.bean.AddOrderBean;
 import com.mobile.younthcanteen.bean.ShoppingCartItemBean;
 import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
@@ -64,7 +63,9 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
     private TextView tvTotalPrice;
     private Button btnCommitOrder;
     private AddressListBean.ResultsEntity addressBean;//收货地址
-    private EditText etRemark;
+    private TextView tvRemark;
+    private String remarkDefault = "口味、偏好等要求";
+    private LinearLayout llRemark;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,6 +96,7 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
 
     private void initView(View view) {
         llNoAddress = (LinearLayout) view.findViewById(R.id.ll_no_address);
+        llRemark = (LinearLayout) view.findViewById(R.id.ll_remark);
         rlAddress = (RelativeLayout) view.findViewById(R.id.rl_address);
         tvOffice = (TextView) view.findViewById(R.id.tv_office);
         tvAddress = (TextView) view.findViewById(R.id.tv_address);
@@ -107,7 +109,7 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
         tvModify = (TextView) view.findViewById(R.id.tv_modify);
         tvTotalPrice = (TextView) view.findViewById(R.id.tv_total_price);
         btnCommitOrder = (Button) view.findViewById(R.id.btn_commit_order);
-        etRemark = (EditText) view.findViewById(R.id.et_remark);
+        tvRemark = (TextView) view.findViewById(R.id.tv_remark);
 
         llNoAddress.setVisibility(View.VISIBLE);
         rlAddress.setVisibility(View.GONE);
@@ -118,6 +120,7 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
         rlAddress.setOnClickListener(this);
         tvModify.setOnClickListener(this);
         btnCommitOrder.setOnClickListener(this);
+        llRemark.setOnClickListener(this);
         listViewForScroll.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -138,9 +141,6 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
         });
     }
 
-    private void initFragment() {
-
-    }
 
     @Override
     public void onClick(View v) {
@@ -173,6 +173,9 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
             case R.id.btn_commit_order://提交订单
                 commitOrder();
                 break;
+            case R.id.ll_remark://备注
+//                commitOrder();
+                break;
         }
     }
 
@@ -188,8 +191,8 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
             ToastUtils.showShortToast("请选择收货地址");
             return;
         }
-        String remarkStr = etRemark.getText().toString().trim();
-        if (TextUtils.isEmpty(remarkStr)) {
+        String remarkStr = tvRemark.getText().toString().trim();
+        if (TextUtils.isEmpty(remarkStr) || remarkStr.equals(remarkDefault)) {
             remarkStr = "";
         }
         AddOrderBean addOrderBean = new AddOrderBean();
@@ -209,6 +212,8 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
                     }
                     //添加订单成功后清空购物车
                     ShoppingCartUtil.clearCart();
+                    tvRemark.setText(remarkDefault);
+
                     Intent intent = new Intent();
                     intent.setClass(getActivity(), PayActivity.class);
                     intent.putExtra("orderno", result.getOrderno());

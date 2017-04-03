@@ -179,10 +179,12 @@
                 android:layout_height="match_parent" />
 
             <LinearLayout
+                android:id="@+id/ll_remark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:orientation="horizontal"
+                android:gravity="center_vertical"
                 android:padding="10dp">
 
                 <TextView
@@ -193,14 +195,21 @@
                     android:textColor="@color/textblack"
                     android:textSize="16dp" />
 
-                <EditText
-                    android:id="@+id/et_remark"
+                <TextView
+                    android:id="@+id/tv_remark"
                     android:layout_width="0dp"
+                    android:gravity="right|center_vertical"
                     android:layout_height="wrap_content"
                     android:background="@null"
-                    android:hint="请输入备注信息"
+                    android:layout_marginRight="5dp"
+                    android:textColor="@color/grayblack"
+                    android:text="口味、偏好等要求"
                     android:textSize="14dp"
                     android:layout_weight="1" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/right_arrow"/>
             </LinearLayout>
 
             <View
