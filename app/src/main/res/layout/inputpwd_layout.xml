@@ -54,7 +54,7 @@
         android:layout_marginTop="10dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="15dp"
-
+        android:visibility="gone"
         />
     <GridView
         android:id="@+id/MyPwdInput_list"

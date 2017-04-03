@@ -1,5 +1,7 @@
 package com.mobile.younthcanteen.http;
 
+import com.mobile.younthcanteen.http.encrypt.RSAEncrypt;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -9,7 +11,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import com.mobile.younthcanteen.http.encrypt.RSAEncrypt;
 
 /**
  * Created by Administrator on 2016/8/24 0024.
@@ -31,7 +32,8 @@ public abstract class MyCallback implements Callback<ResponseBody> {
             //请求成功.解密数据
             try {
                 String myurl = response.raw().request().url().toString();
-                decryptResult(response.body().string(), myurl);
+//                decryptResult(response.body().string(), myurl);
+                onSuccess(response.body().string());
             } catch (IOException e) {
                 e.printStackTrace();
                 onFailure(e);

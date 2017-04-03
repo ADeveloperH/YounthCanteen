@@ -36,6 +36,9 @@ public class Http {
     public static final String PAYORDER = "orderPay";//支付订单
     public static final String SETPAYPWD = "userPayPasswrodUp";//设置支付密码
     public static final String GETORDERLIST = "orderList";//获取订单列表
+    public static final String COMMITORDERBYALIPAY = "signatures";//通过支付宝提交订单
+    public static final String COMMITALIPAYRESULT = "alipayResultCheck";//提交支付结果
+
 
     public static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;

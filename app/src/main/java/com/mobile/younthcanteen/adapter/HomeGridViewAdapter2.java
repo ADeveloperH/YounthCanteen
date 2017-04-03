@@ -23,15 +23,16 @@ import butterknife.ButterKnife;
 /**
  * author：hj
  * time: 2017/2/22 0022 23:16
+ * 面食、饮料的Adapter
  */
 
-public class HomeGridViewAdapter extends BaseAdapter {
+public class HomeGridViewAdapter2 extends BaseAdapter {
     private static GridViewForScroll gridview;
     private BitmapUtil bitmapUtil;
     private Context context;
     private List<HomeDataBean.CenterEntity.ProsEntity> prosList;
 
-    public HomeGridViewAdapter(GridViewForScroll gridview, Context context, List<HomeDataBean.CenterEntity.ProsEntity> prosList) {
+    public HomeGridViewAdapter2(GridViewForScroll gridview, Context context, List<HomeDataBean.CenterEntity.ProsEntity> prosList) {
         this.gridview = gridview;
         this.context = context;
         this.prosList = prosList;
@@ -58,7 +59,7 @@ public class HomeGridViewAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
-            convertView = UIUtils.inflate(R.layout.item_homegridview);
+            convertView = UIUtils.inflate(R.layout.item_homegridview2);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {

@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
@@ -13,6 +15,7 @@ import com.mobile.younthcanteen.activity.GoodsDetailInfoActivity;
 import com.mobile.younthcanteen.activity.PackageGoodsInfoActivity;
 import com.mobile.younthcanteen.bean.HomeDataBean;
 import com.mobile.younthcanteen.ui.GridViewForScroll;
+import com.mobile.younthcanteen.util.ToastUtils;
 import com.mobile.younthcanteen.util.UIUtils;
 
 import java.util.List;
@@ -52,28 +55,49 @@ public class HomeListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
-//        Log.d("hj", "ListView:getView:" + position);
         if (convertView == null) {
-//            Log.d("hj", "ListView:convertView == null:" + position);
             convertView = UIUtils.inflate(R.layout.item_homelistview);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {
-//            Log.d("hj", "ListView:convertView != null:" + position);
             viewHolder = (ViewHolder) convertView.getTag();
         }
         final HomeDataBean.CenterEntity bean = centerList.get(position);
         viewHolder.tvTypeName.setText(bean.getTypename());
-        HomeGridViewAdapter adapter = (HomeGridViewAdapter) viewHolder.gvHome.getAdapter();
-        if (adapter == null) {
-//            Log.d("hj", "ListView:adapter == null:" + position);
-            adapter = new HomeGridViewAdapter(viewHolder.gvHome, context, bean.getPros());
+        //1套餐 2炒菜 3面食 4饮料
+        String typeId = bean.getTypeid();
+        ListAdapter adapter = viewHolder.gvHome.getAdapter();
+        if ("1".equals(typeId) || "2".equals(typeId)) {
+            //一行只显示一个
+            viewHolder.gvHome.setNumColumns(1);
+            if (adapter != null && (adapter instanceof  HomeGridViewAdapter1)) {
+                HomeGridViewAdapter1 adapter1 = (HomeGridViewAdapter1)adapter;
+                adapter1.setProsList(bean.getPros());
+                adapter1.notifyDataSetChanged();
+            } else {
+                adapter = new HomeGridViewAdapter1(viewHolder.gvHome, context, bean.getPros());
+            }
+            viewHolder.gvHome.setAdapter(adapter);
         } else {
-//            Log.d("hj", "ListView:adapter != null:" + position);
-            adapter.setProsList(bean.getPros());
-            adapter.notifyDataSetChanged();
+            viewHolder.gvHome.setNumColumns(2);
+            if (adapter != null && (adapter instanceof  HomeGridViewAdapter2)) {
+                HomeGridViewAdapter2 adapter2 = (HomeGridViewAdapter2)adapter;
+                adapter2.setProsList(bean.getPros());
+                adapter2.notifyDataSetChanged();
+            } else {
+                adapter = new HomeGridViewAdapter2(viewHolder.gvHome, context, bean.getPros());
+            }
+            viewHolder.gvHome.setAdapter(adapter);
         }
-        viewHolder.gvHome.setAdapter(adapter);
+
+
+
+        viewHolder.llTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToastUtils.showShortToast("点击了:" + bean.getTypename());
+            }
+        });
         viewHolder.gvHome.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -96,6 +120,8 @@ public class HomeListAdapter extends BaseAdapter {
     static class ViewHolder {
         @BindView(R.id.tv_type_name)
         TextView tvTypeName;
+        @BindView(R.id.ll_title)
+        LinearLayout llTitle;
         @BindView(R.id.gv_home)
         GridViewForScroll gvHome;
 

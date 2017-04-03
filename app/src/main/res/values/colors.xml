@@ -9,13 +9,16 @@
     <color name="textblack">#333333</color>
     <color name="grayblack">#666666</color>
     <color name="divideline">#666666</color>
-    <color name="myyellow">#ffd161</color>
-    <color name="gray_bg">#efefef</color>
+    <color name="myyellow">#fd9800</color>
+    <color name="gray_bg">#eeeeee</color>
     <color name="text_price_red">#ff4038</color>
     <color name="bottom_black_bg">#404040</color>
     <color name="cart_num_red_bg">#fa4e44</color>
     <color name="gray_select_border">#999999</color>
     <color name="myInputPwdBase_blue">#0887ee</color>
     <color name="myInputPwdBase_gray">#f0f0f6</color>
+    <color name="home_txt_red">#ff224c</color>
+    <color name="home_verrical_line_yellow">#cc6309</color>
+    <color name="home_btn_red">#ec2900</color>
 
 </resources>

@@ -11,6 +11,6 @@
         android:background="@color/white"
         android:overScrollMode="never"
         android:dividerHeight="0dp"
-        android:divider="@null"
+        android:divider="@color/transparent"
         android:scrollbars="none" />
 </LinearLayout>

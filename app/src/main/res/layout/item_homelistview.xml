@@ -5,40 +5,61 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center"
+        android:layout_height="10dp"
+        android:background="@color/gray_bg" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/divideline" />
+
+    <LinearLayout
+        android:id="@+id/ll_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <View
-            android:layout_width="50dp"
-            android:layout_height="1dp"
-            android:background="@color/textblack" />
+            android:layout_width="5dp"
+            android:layout_height="match_parent"
+            android:background="@color/home_verrical_line_yellow" />
 
         <TextView
             android:id="@+id/tv_type_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
             android:text="优惠专区"
             android:textColor="@color/textblack"
             android:textSize="16dp"
             android:textStyle="bold" />
 
-        <View
-            android:layout_width="50dp"
-            android:layout_height="1dp"
-            android:background="@color/textblack" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/right_arrow_black" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/divideline" />
 
     <com.mobile.younthcanteen.ui.GridViewForScroll
         android:id="@+id/gv_home"
         android:layout_width="match_parent"
-        android:verticalSpacing="10dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:numColumns="2"/>
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:horizontalSpacing="15dp"
+        android:listSelector="@color/transparent"
+        android:numColumns="2"
+        android:verticalSpacing="5dp" />
 
 </LinearLayout>
