@@ -2,6 +2,7 @@ package com.mobile.younthcanteen.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -41,17 +42,13 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
     private TextView tvNickName;
     private LinearLayout llYuE;
     private LinearLayout llJiFen;
-    private TextView tvYuE;
-    private TextView tvJiFen;
-    private LinearLayout llPingJia;
-    private LinearLayout llShouCang;
     private LinearLayout llAddress;
     private LinearLayout llYaoQing;
     private LinearLayout llFanKui;
-    private LinearLayout llKeFu;
     private LinearLayout llUpdate;
     private ImageView ivRightArrow;
     private Activity mActivity;
+    private TextView tvServicePhone;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -113,8 +110,6 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
         } else {
             tvNickName.setText("登录/注册");
             ivRightArrow.setVisibility(View.GONE);
-            tvYuE.setText("----");
-            tvJiFen.setText("----");
         }
         isRefreshUI = false;
     }
@@ -144,8 +139,6 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
                     SharedPreferencesUtil.setMoney(result.getMoney());
                     SharedPreferencesUtil.setIsSetPayPwd(result.isIspaypassset());
                     tvNickName.setText(result.getNick());
-                    tvJiFen.setText(result.getPoint());
-                    tvYuE.setText(result.getMoney());
                 } else {
                     ToastUtils.showShortToast("服务器数据异常，请稍后重试");
                 }
@@ -167,18 +160,14 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
         ivUserIcon = (ImageView) view.findViewById(R.id.iv_usericon);
         ivRightArrow = (ImageView) view.findViewById(R.id.iv_right_arrow);
         tvNickName = (TextView) view.findViewById(R.id.tv_nickname);
+        tvServicePhone = (TextView) view.findViewById(R.id.tv_service_phone);
 
         llYuE = (LinearLayout) view.findViewById(R.id.ll_yue);
         llJiFen = (LinearLayout) view.findViewById(R.id.ll_jifen);
-        tvYuE = (TextView) view.findViewById(R.id.tv_yue);
-        tvJiFen = (TextView) view.findViewById(R.id.tv_jifen);
 
-        llPingJia = (LinearLayout) view.findViewById(R.id.ll_pingjia);
-        llShouCang = (LinearLayout) view.findViewById(R.id.ll_shoucang);
         llAddress = (LinearLayout) view.findViewById(R.id.ll_address);
         llYaoQing = (LinearLayout) view.findViewById(R.id.ll_yaoqing);
         llFanKui = (LinearLayout) view.findViewById(R.id.ll_fankui);
-        llKeFu = (LinearLayout) view.findViewById(R.id.ll_kefu);
         llUpdate = (LinearLayout) view.findViewById(R.id.ll_update);
     }
 
@@ -188,7 +177,7 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
         ivUserIcon.setOnClickListener(this);
         llUpdate.setOnClickListener(this);
         llAddress.setOnClickListener(this);
-        llPingJia.setOnClickListener(this);
+        tvServicePhone.setOnClickListener(this);
     }
 
     @Override
@@ -221,7 +210,10 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
             case R.id.ll_address://常用地址
                 startActivity(new Intent(mActivity, MyAddressActivity.class));
                 break;
-            case R.id.ll_pingjia:
+            case R.id.tv_service_phone://拨打电话
+                String phone = tvServicePhone.getText().toString().trim();
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
+                startActivity(intent);
                 break;
         }
     }
