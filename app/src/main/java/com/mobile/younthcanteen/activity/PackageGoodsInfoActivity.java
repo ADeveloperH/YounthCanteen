@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
@@ -57,8 +56,6 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
     LinearLayout llPointGroup;
     @BindView(R.id.rl_container)
     RelativeLayout rlContainer;
-    @BindView(R.id.ll_out)
-    LinearLayout llOut;
     @BindView(R.id.tv_name)
     TextView tvName;
     @BindView(R.id.tv_price)
@@ -79,8 +76,6 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
     TextView tvRedNum;
     @BindView(R.id.tv_result_price)
     TextView tvResultPrice;
-    @BindView(R.id.sv_root)
-    ScrollView svRoot;
     private Context context;
     private List<String> viewPagerDataList;
     private ArrayList<ImageView> imageList;

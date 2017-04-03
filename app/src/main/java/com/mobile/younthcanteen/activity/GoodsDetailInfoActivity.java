@@ -22,7 +22,6 @@ import com.mobile.younthcanteen.bean.ShoppingCartItemBean;
 import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
 import com.mobile.younthcanteen.http.RequestParams;
-import com.mobile.younthcanteen.ui.ZoomScrollView;
 import com.mobile.younthcanteen.util.BitmapUtil;
 import com.mobile.younthcanteen.util.FileUtil;
 import com.mobile.younthcanteen.util.JsonUtil;
@@ -62,12 +61,8 @@ public class GoodsDetailInfoActivity extends Activity implements ViewPager.OnPag
     ImageView ivBanner;
     @BindView(R.id.ll_point_group)
     LinearLayout llPointGroup;
-    @BindView(R.id.sv_root)
-    ZoomScrollView svRoot;
     @BindView(R.id.rl_container)
     RelativeLayout rlContainer;
-    @BindView(R.id.ll_out)
-    LinearLayout llOut;
     @BindView(R.id.iv_cart_add)
     ImageView ivCartAdd;
     @BindView(R.id.tv_cart_num)

@@ -1,22 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.mobile.younthcanteen.ui.ZoomScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/sv_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/tv_clearing"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/goods_info_bottom_height"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@color/myyellow"
+        android:gravity="center"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="去结算"
+        android:textColor="@color/textblack"
+        android:textSize="16dp"
+        android:visibility="gone" />
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/goods_info_bottom_height"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@id/tv_clearing"
+        android:background="@color/bottom_black_bg" />
+
+    <ImageView
+        android:id="@+id/iv_cart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/cart_unable" />
+
+    <TextView
+        android:id="@+id/tv_red_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/iv_cart"
+        android:layout_alignTop="@id/iv_cart"
+        android:background="@drawable/point_red"
+        android:gravity="center"
+        android:text="0"
+        android:textColor="@color/white"
+        android:textSize="16dp"
+        android:visibility="gone" />
+
+
+    <TextView
+        android:id="@+id/tv_result_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@id/iv_cart"
+        android:layout_weight="1"
+        android:text="￥0"
+        android:textColor="@color/white"
+        android:textSize="20dp" />
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:layout_above="@id/iv_cart"
+        android:overScrollMode="never">
 
         <LinearLayout
-            android:id="@+id/ll_out"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/rl_container"
@@ -48,208 +105,152 @@
                     android:visibility="gone" />
 
             </RelativeLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/ll_out"
-            android:orientation="vertical">
-
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="15dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tv_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="五香烤肠"
-                    android:textColor="@color/textblack"
-                    android:textSize="18dp" />
-
-                <TextView
-                    android:id="@+id/tv_price"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="5dp"
-                    android:text="￥2元"
-                    android:textColor="@color/text_price_red"
-                    android:textSize="20dp" />
-
-                <LinearLayout
-                    android:id="@+id/ll_add_to_cart"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:background="@drawable/oval_yelow_bg"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/shopping_cart_icon" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="加入购物车"
-                        android:textSize="16dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ll_add_subtract"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-
-                    <ImageView
-                        android:id="@+id/iv_cart_subtract"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/subtract_btn_selector" />
-
-                    <TextView
-                        android:id="@+id/tv_cart_num"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:text="3"
-                        android:textColor="@color/textblack"
-                        android:textSize="16dp" />
-
-                    <ImageView
-                        android:id="@+id/iv_cart_add"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/add_btn_selector" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginTop="15dp"
-                android:background="@color/divideline" />
-
-            <LinearLayout
-                android:id="@+id/ll_goods_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="15dp"
+                android:layout_height="match_parent"
+                android:layout_below="@id/rl_container"
                 android:orientation="vertical">
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="15dp"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <View
-                        android:layout_width="5dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/home_verrical_line_yellow" />
-
                     <TextView
+                        android:id="@+id/tv_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="五香烤肠"
+                        android:textColor="@color/textblack"
+                        android:textSize="18dp" />
+
+                    <TextView
+                        android:id="@+id/tv_price"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:text="商品详情："
-                        android:textColor="@color/grayblack"
-                        android:textSize="16dp" />
+                        android:layout_weight="1"
+                        android:text="￥2元"
+                        android:textColor="@color/text_price_red"
+                        android:textSize="20dp" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_add_to_cart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/oval_yelow_bg"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/shopping_cart_icon" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="加入购物车"
+                            android:textSize="16dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_add_subtract"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/iv_cart_subtract"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/subtract_btn_selector" />
+
+                        <TextView
+                            android:id="@+id/tv_cart_num"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+                            android:text="3"
+                            android:textColor="@color/textblack"
+                            android:textSize="16dp" />
+
+                        <ImageView
+                            android:id="@+id/iv_cart_add"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/add_btn_selector" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/divideline" />
 
-                <TextView
-                    android:id="@+id/tv_goods_info"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/ll_goods_info"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="套餐含：发的发的发的发大发大发发大法师打发大幅度发"
-                    android:textColor="@color/textblack"
-                    android:textSize="16dp" />
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="5dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/home_verrical_line_yellow" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="商品详情："
+                            android:textColor="@color/grayblack"
+                            android:textSize="16dp" />
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:id="@+id/tv_goods_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="套餐含：发的发的发的发大发大发发大法师打发大幅度发"
+                        android:textColor="@color/textblack"
+                        android:textSize="14dp" />
+                </LinearLayout>
             </LinearLayout>
+
+
         </LinearLayout>
+    </ScrollView>
 
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/goods_back" />
-
-        <TextView
-            android:id="@+id/tv_clearing"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/goods_info_bottom_height"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:background="@color/myyellow"
-            android:gravity="center"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:text="去结算"
-            android:textColor="@color/textblack"
-            android:textSize="16dp"
-            android:visibility="gone" />
-
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/goods_info_bottom_height"
-            android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@id/tv_clearing"
-            android:background="@color/bottom_black_bg" />
-
-        <ImageView
-            android:id="@+id/iv_cart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/cart_unable" />
-
-        <TextView
-            android:id="@+id/tv_red_num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignRight="@id/iv_cart"
-            android:layout_alignTop="@id/iv_cart"
-            android:background="@drawable/point_red"
-            android:gravity="center"
-            android:text="0"
-            android:textColor="@color/white"
-            android:textSize="16dp"
-            android:visibility="gone" />
-
-
-        <TextView
-            android:id="@+id/tv_result_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@id/iv_cart"
-            android:layout_weight="1"
-            android:text="￥0"
-            android:textColor="@color/white"
-            android:textSize="20dp" />
-    </RelativeLayout>
-</com.mobile.younthcanteen.ui.ZoomScrollView>
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/goods_back" />
+</RelativeLayout>
