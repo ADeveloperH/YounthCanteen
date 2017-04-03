@@ -65,8 +65,9 @@ public class HomeListAdapter extends BaseAdapter {
         final HomeDataBean.CenterEntity bean = centerList.get(position);
         viewHolder.tvTypeName.setText(bean.getTypename());
         //1套餐 2炒菜 3面食 4饮料
-        String typeId = bean.getTypeid();
+        final String typeId = bean.getTypeid();
         ListAdapter adapter = viewHolder.gvHome.getAdapter();
+
         if ("1".equals(typeId) || "2".equals(typeId)) {
             //一行只显示一个
             viewHolder.gvHome.setNumColumns(1);
@@ -90,8 +91,6 @@ public class HomeListAdapter extends BaseAdapter {
             viewHolder.gvHome.setAdapter(adapter);
         }
 
-
-
         viewHolder.llTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,7 +101,7 @@ public class HomeListAdapter extends BaseAdapter {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
-                if ("1".equals(bean.getTypeid())) {
+                if ("1".equals(typeId)) {
                     //套餐类
                     intent.setClass(context, PackageGoodsInfoActivity.class);
                 } else {

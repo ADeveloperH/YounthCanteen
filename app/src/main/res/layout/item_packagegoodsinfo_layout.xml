@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/login_btn_enable"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_yellow_border"
     android:gravity="center"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         android:text="土豆丝"
-        android:textColor="@color/textblack"
+        android:textColor="@color/home_txt_red"
         android:textSize="16dp" />
 </LinearLayout>

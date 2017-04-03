@@ -59,7 +59,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -76,12 +79,92 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="right|center_vertical"
+                    android:layout_marginLeft="8dp"
+                    android:gravity="left|center_vertical"
                     android:text="￥2元"
                     android:textColor="@color/text_price_red"
                     android:textSize="20dp" />
+
+                <RelativeLayout
+                    android:id="@+id/rl_add_to_cart"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/circle_yellow_bg">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:gravity="center"
+                        android:text="添加\n购物车"
+                        android:textColor="@color/textblack"
+                        android:textSize="13dp" />
+                </RelativeLayout>
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/divideline" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="@color/home_verrical_line_yellow" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="选择菜品："
+                    android:textColor="@color/textblack"
+                    android:textSize="16dp" />
+            </LinearLayout>
+
+            <com.mobile.younthcanteen.ui.GridViewForScroll
+                android:id="@+id/gv_select_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:horizontalSpacing="10dp"
+                android:listSelector="@color/transparent"
+                android:numColumns="4"
+                android:padding="10dp"
+                android:verticalSpacing="10dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/divideline" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="@color/home_verrical_line_yellow" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="商品详情："
+                    android:textColor="@color/textblack"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_desc"
@@ -89,54 +172,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
                 android:text="发放邓丽君安静了的房间丽君安静了的房间老接口老接口丽君安静了的房间老接口"
                 android:textColor="@color/grayblack"
                 android:textSize="16dp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginTop="15dp"
-                android:background="@color/divideline" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="点击框框选择菜品："
-                android:layout_marginTop="15dp"
-                android:textColor="@color/textblack"
-                android:textSize="16dp" />
-
-            <com.mobile.younthcanteen.ui.GridViewForScroll
-                android:id="@+id/gv_select_add"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:horizontalSpacing="10dp"
-                android:listSelector="@color/transparent"
-                android:numColumns="4"
-                android:padding="10dp"
-                android:verticalSpacing="10dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/btn_add_to_cart"
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/login_btn_enable"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:text="添加到购物车"
-                    android:textColor="@color/textblack" />
-            </LinearLayout>
         </LinearLayout>
 
         <ImageView

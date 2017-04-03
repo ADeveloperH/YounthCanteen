@@ -12,7 +12,6 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -68,8 +67,8 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
     TextView tvDesc;
     @BindView(R.id.gv_select_add)
     GridViewForScroll gvSelectAdd;
-    @BindView(R.id.btn_add_to_cart)
-    Button btnAddToCart;
+    @BindView(R.id.rl_add_to_cart)
+    RelativeLayout btnAddToCart;
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_clearing)
@@ -99,13 +98,13 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
     private int materiaTotalCount;//当前套餐需要的搭配原料格式
 
 
-    @OnClick({R.id.iv_back, R.id.btn_add_to_cart, R.id.tv_clearing})
+    @OnClick({R.id.iv_back, R.id.rl_add_to_cart, R.id.tv_clearing})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back://返回按钮
                 finish();
                 break;
-            case R.id.btn_add_to_cart://添加到购物车按钮
+            case R.id.rl_add_to_cart://添加到购物车按钮
                 PackageGoodsSelectGVAdapter adapter = (PackageGoodsSelectGVAdapter)
                         gvSelectAdd.getAdapter();
                 if (adapter != null) {
@@ -113,7 +112,7 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
                         addPackageToCart(adapter);
                         ToastUtils.showShortToast("添加成功");
                     } else {
-                        ToastUtils.showShortToast("请求选择完整的套餐搭配。");
+                        ToastUtils.showShortToast("请选择完整的套餐搭配。");
                     }
 
                 }
@@ -223,22 +222,23 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
         final Dialog dialog = new Dialog(context, R.style.Theme_CustomDialog_buy);
         View contentView = UIUtils.inflate(R.layout.dialog_packagegoodsinfo_layout);
         dialog.setContentView(contentView);
+        ImageView ivClose = (ImageView) contentView.findViewById(R.id.iv_close);
         GridViewForScroll gv = (GridViewForScroll) contentView.findViewById(R.id.gv);
         if ("0".equals(selectFlag)) {
             dataList = vegetableDataList;
-            if (vegetableDataList.size() <= 4) {
-                gv.setNumColumns(vegetableDataList.size());
-            } else {
-                gv.setNumColumns(4);
-            }
+//            if (vegetableDataList.size() <= 4) {
+//                gv.setNumColumns(vegetableDataList.size());
+//            } else {
+//                gv.setNumColumns(4);
+//            }
             gv.setAdapter(vegetableAdapter);
         } else {
             dataList = meatDataList;
-            if (meatDataList.size() <= 4) {
-                gv.setNumColumns(meatDataList.size());
-            } else {
-                gv.setNumColumns(4);
-            }
+//            if (meatDataList.size() <= 4) {
+//                gv.setNumColumns(meatDataList.size());
+//            } else {
+//                gv.setNumColumns(4);
+//            }
             gv.setAdapter(meatAdapter);
         }
         dialog.show();
@@ -255,6 +255,15 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
                     adapter.select(bean.getName(), clickPositon);
                     adapter.notifyDataSetChanged();
                 }
+                if (dialog != null && dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        ivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 if (dialog != null && dialog.isShowing()) {
                     dialog.dismiss();
                 }
@@ -389,11 +398,11 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
         }
 
         materiaTotalCount = vegetableCount + meatCount;
-        if (materiaTotalCount <= 4) {
-            gvSelectAdd.setNumColumns(materiaTotalCount);
-        } else {
-            gvSelectAdd.setNumColumns(4);
-        }
+//        if (materiaTotalCount <= 4) {
+//            gvSelectAdd.setNumColumns(materiaTotalCount);
+//        } else {
+//            gvSelectAdd.setNumColumns(4);
+//        }
 
         PackageGoodsSelectGVAdapter adapter = new PackageGoodsSelectGVAdapter(context, selectList);
         gvSelectAdd.setAdapter(adapter);
