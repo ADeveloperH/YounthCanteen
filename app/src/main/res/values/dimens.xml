@@ -6,4 +6,7 @@
     <dimen name="title_height">50dp</dimen>
 
     <dimen name="goods_info_bottom_height">60dp</dimen>
+
+
+    <dimen name="vertical_yellow_line_width">5dp</dimen>
 </resources>

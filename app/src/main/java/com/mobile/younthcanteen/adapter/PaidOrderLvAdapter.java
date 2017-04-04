@@ -84,6 +84,10 @@ public class PaidOrderLvAdapter extends BaseAdapter {
         this.results = results;
     }
 
+    public List<OrderResultBean.ResultsEntity> getResults() {
+        return results;
+    }
+
     static class ViewHolder {
         @BindView(R.id.iv)
         ImageView iv;

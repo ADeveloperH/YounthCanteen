@@ -1,5 +1,6 @@
 package com.mobile.younthcanteen.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
  */
 
 
-public class OrderResultBean {
+public class OrderResultBean implements Serializable{
 
     /**
      * id : 15
@@ -77,7 +78,7 @@ public class OrderResultBean {
         this.results = results;
     }
 
-    public static class ResultsEntity {
+    public static class ResultsEntity implements Serializable{
         private String addTime;
         private String address;
         private String allMoney;
@@ -271,7 +272,7 @@ public class OrderResultBean {
             this.pros = pros;
         }
 
-        public static class ProsEntity {
+        public static class ProsEntity implements Serializable{
             private String choices;
             private String combo;
             private String counts;

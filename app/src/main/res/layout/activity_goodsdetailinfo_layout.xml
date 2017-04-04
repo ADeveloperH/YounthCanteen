@@ -217,7 +217,7 @@
                         android:orientation="horizontal">
 
                         <View
-                            android:layout_width="5dp"
+                            android:layout_width="@dimen/vertical_yellow_line_width"
                             android:layout_height="match_parent"
                             android:background="@color/home_verrical_line_yellow" />
 

@@ -139,6 +139,13 @@
             android:screenOrientation="portrait" />
 
 
+        <!-- 订单详情页面 -->
+        <activity
+            android:name=".activity.OrderDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+
         <!-- 下载apk -->
         <service android:name=".service.DownLoadService" />
 
