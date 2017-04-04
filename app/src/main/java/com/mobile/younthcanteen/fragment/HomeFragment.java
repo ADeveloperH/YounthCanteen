@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.activity.CheckOfficeActivity;
+import com.mobile.younthcanteen.activity.MoreGoodsActivity;
 import com.mobile.younthcanteen.adapter.HomeFragmentPagerAdapter;
 import com.mobile.younthcanteen.adapter.HomeListAdapter;
 import com.mobile.younthcanteen.bean.HomeDataBean;
@@ -59,6 +60,10 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     private TextView tvOfficeName;
     private final int CHECKOFFICE_REQUEST_CODE = 10;
     private final int CHECKOFFICE_RESULT_CODE = 11;
+    private LinearLayout llTaoCan;
+    private LinearLayout llChaoCai;
+    private LinearLayout llMianShi;
+    private LinearLayout llYinLiao ;
 
     private static class MyHandler extends Handler {
         private WeakReference<HomeFragment> homeFragmentWeakReference;
@@ -139,6 +144,12 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         llPointGroup = (LinearLayout) view.findViewById(R.id.ll_point_group);
         tvOfficeName = (TextView) view.findViewById(R.id.tv_office_name);
+
+        llTaoCan = (LinearLayout) view.findViewById(R.id.ll_taocan);
+        llChaoCai = (LinearLayout) view.findViewById(R.id.ll_chaocai);
+        llMianShi = (LinearLayout) view.findViewById(R.id.ll_mianshi);
+        llYinLiao = (LinearLayout) view.findViewById(R.id.ll_yinliao);
+
     }
 
     /**
@@ -160,6 +171,38 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             @Override
             public void onClick(View v) {
                 startActivityForResult(new Intent(getActivity(),CheckOfficeActivity.class),CHECKOFFICE_REQUEST_CODE);
+            }
+        });
+        llTaoCan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MoreGoodsActivity.class);
+                intent.putExtra("tabIndex", 0);
+                startActivity(intent);
+            }
+        });
+        llChaoCai.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MoreGoodsActivity.class);
+                intent.putExtra("tabIndex", 1);
+                startActivity(intent);
+            }
+        });
+        llMianShi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MoreGoodsActivity.class);
+                intent.putExtra("tabIndex", 2);
+                startActivity(intent);
+            }
+        });
+        llYinLiao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MoreGoodsActivity.class);
+                intent.putExtra("tabIndex", 3);
+                startActivity(intent);
             }
         });
         lvHome.setOnRefreshListener(new HomeRefreshListView.OnListViewRefreshListener() {

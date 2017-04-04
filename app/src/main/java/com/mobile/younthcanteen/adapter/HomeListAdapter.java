@@ -12,10 +12,10 @@ import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.activity.GoodsDetailInfoActivity;
+import com.mobile.younthcanteen.activity.MoreGoodsActivity;
 import com.mobile.younthcanteen.activity.PackageGoodsInfoActivity;
 import com.mobile.younthcanteen.bean.HomeDataBean;
 import com.mobile.younthcanteen.ui.GridViewForScroll;
-import com.mobile.younthcanteen.util.ToastUtils;
 import com.mobile.younthcanteen.util.UIUtils;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public class HomeListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
             convertView = UIUtils.inflate(R.layout.item_homelistview);
@@ -94,7 +94,9 @@ public class HomeListAdapter extends BaseAdapter {
         viewHolder.llTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtils.showShortToast("点击了:" + bean.getTypename());
+                Intent intent = new Intent(context, MoreGoodsActivity.class);
+                intent.putExtra("tabIndex", position);
+                context.startActivity(intent);
             }
         });
         viewHolder.gvHome.setOnItemClickListener(new AdapterView.OnItemClickListener() {

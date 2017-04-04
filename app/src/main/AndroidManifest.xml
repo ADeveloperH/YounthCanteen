@@ -164,6 +164,12 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
+        <!-- 更多套餐页面 -->
+        <activity
+            android:name=".activity.MoreGoodsActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
 
         <!-- 下载apk -->
         <service android:name=".service.DownLoadService" />
