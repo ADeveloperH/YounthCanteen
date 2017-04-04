@@ -46,7 +46,6 @@
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
         <!-- 登录 -->
         <activity
@@ -143,6 +142,13 @@
         <activity
             android:name=".activity.OrderDetailActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+        <!-- 添加备注页面 -->
+        <activity
+            android:name=".activity.AddRemarkActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
 
 

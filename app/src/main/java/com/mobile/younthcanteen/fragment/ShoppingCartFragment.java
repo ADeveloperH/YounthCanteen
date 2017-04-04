@@ -15,6 +15,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
+import com.mobile.younthcanteen.activity.AddRemarkActivity;
 import com.mobile.younthcanteen.activity.GoodsDetailInfoActivity;
 import com.mobile.younthcanteen.activity.MyAddressActivity;
 import com.mobile.younthcanteen.activity.PackageGoodsInfoActivity;
@@ -56,6 +57,8 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
     private ScrollView svCartContent;
     private final int GETADDRESS_REQUESTCODE = 11;
     private final int GETADDRESS_RESULTCODE = 12;
+    private final int GETREMARK_REQUESTCODE = 13;
+    private final int GETREMARK_RESULTCODE = 14;
     private List<ShoppingCartItemBean> shoppingCartList;
     private ListViewForScroll listViewForScroll;
     private ShoppingCartListAdapter cartListAdapter;
@@ -174,7 +177,8 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
                 commitOrder();
                 break;
             case R.id.ll_remark://备注
-//                commitOrder();
+                Intent intent = new Intent(getActivity(), AddRemarkActivity.class);
+                startActivityForResult(intent, GETREMARK_REQUESTCODE);
                 break;
         }
     }
@@ -233,6 +237,7 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == GETADDRESS_RESULTCODE) {
+            //选择地址
             Bundle bundle = data.getExtras();
             addressBean = (AddressListBean.ResultsEntity) bundle.getSerializable("resultBean");
             System.out.println("resultCode::" + addressBean);
@@ -244,6 +249,13 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
                 tvName.setText(addressBean.getConsignee());
                 tvTel.setText(addressBean.getTel());
                 tvSex.setText("1".equals(addressBean.getSex()) ? "女士" : "先生");
+            }
+        }else if (resultCode == GETREMARK_RESULTCODE) {
+            //添加备注
+
+            String remark = data.getStringExtra("remark");
+            if (!TextUtils.isEmpty(remark)) {
+                tvRemark.setText(remark);
             }
         }
     }

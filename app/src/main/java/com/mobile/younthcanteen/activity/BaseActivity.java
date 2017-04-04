@@ -71,6 +71,13 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    public void setClickSubTitleListener(View.OnClickListener onClickListener) {
+        TextView tvSubTitle = (TextView) findViewById(R.id.tv_subtitle);
+        if (null != tvSubTitle) {
+            tvSubTitle.setOnClickListener(onClickListener);
+        }
+    }
+
     public String getSubTitle() {
         TextView tvSubTitle = (TextView) findViewById(R.id.tv_subtitle);
         return tvSubTitle.getText().toString().trim();
