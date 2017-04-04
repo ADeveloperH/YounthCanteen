@@ -124,6 +124,21 @@
             android:screenOrientation="portrait" />
 
 
+
+        <!-- 余额页面 -->
+        <activity
+            android:name=".activity.BalanceActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+
+        <!-- 余额明细页面 -->
+        <activity
+            android:name=".activity.ConsumeDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+
         <!-- 下载apk -->
         <service android:name=".service.DownLoadService" />
 

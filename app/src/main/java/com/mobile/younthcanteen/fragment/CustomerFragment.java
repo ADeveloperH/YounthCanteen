@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.younthcanteen.R;
+import com.mobile.younthcanteen.activity.BalanceActivity;
 import com.mobile.younthcanteen.activity.LoginActivity;
 import com.mobile.younthcanteen.activity.MyAccountActivity;
 import com.mobile.younthcanteen.activity.MyAddressActivity;
@@ -178,6 +179,7 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
         llUpdate.setOnClickListener(this);
         llAddress.setOnClickListener(this);
         tvServicePhone.setOnClickListener(this);
+        llYuE.setOnClickListener(this);
     }
 
     @Override
@@ -214,6 +216,9 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
                 String phone = tvServicePhone.getText().toString().trim();
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
                 startActivity(intent);
+                break;
+            case R.id.ll_yue://余额页面
+                startActivity(new Intent(getActivity(), BalanceActivity.class));
                 break;
         }
     }

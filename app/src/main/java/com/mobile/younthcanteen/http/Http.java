@@ -38,6 +38,7 @@ public class Http {
     public static final String GETORDERLIST = "orderList";//获取订单列表
     public static final String COMMITORDERBYALIPAY = "signatures";//通过支付宝提交订单
     public static final String COMMITALIPAYRESULT = "alipayResultCheck";//提交支付结果
+    public static final String GETCONSUMEDETAIL = "moneyList";//获取消费明细
 
 
     public static String getAbsoluteUrl(String relativeUrl) {
