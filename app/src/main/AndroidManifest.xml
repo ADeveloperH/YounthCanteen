@@ -158,6 +158,12 @@
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
 
+        <!-- 选择具体地址页面 -->
+        <activity
+            android:name=".activity.CheckOfficeActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
 
         <!-- 下载apk -->
         <service android:name=".service.DownLoadService" />

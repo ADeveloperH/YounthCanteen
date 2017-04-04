@@ -1,6 +1,7 @@
 package com.mobile.younthcanteen.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,11 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
+import com.mobile.younthcanteen.activity.CheckOfficeActivity;
 import com.mobile.younthcanteen.adapter.HomeFragmentPagerAdapter;
 import com.mobile.younthcanteen.adapter.HomeListAdapter;
 import com.mobile.younthcanteen.bean.HomeDataBean;
+import com.mobile.younthcanteen.bean.OfficeAddressBean;
 import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
 import com.mobile.younthcanteen.http.RequestParams;
@@ -52,6 +56,9 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     private List<HomeDataBean.TopEntity> viewPagerDataList;// 轮播图的数据集合
     private MyHandler mHandler = new MyHandler(this);
     private HomeListAdapter adapter;
+    private TextView tvOfficeName;
+    private final int CHECKOFFICE_REQUEST_CODE = 10;
+    private final int CHECKOFFICE_RESULT_CODE = 11;
 
     private static class MyHandler extends Handler {
         private WeakReference<HomeFragment> homeFragmentWeakReference;
@@ -119,6 +126,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             initView(getView());
 //            initData();
             setListener();
+            getAddList();
             getData();
             isNeedReLoad = false;
         }
@@ -130,6 +138,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         ivBanner = (ImageView) view.findViewById(R.id.iv_banner);
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         llPointGroup = (LinearLayout) view.findViewById(R.id.ll_point_group);
+        tvOfficeName = (TextView) view.findViewById(R.id.tv_office_name);
     }
 
     /**
@@ -147,6 +156,12 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
     private void setListener() {
         viewPager.setOnPageChangeListener(this);
+        tvOfficeName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(getActivity(),CheckOfficeActivity.class),CHECKOFFICE_REQUEST_CODE);
+            }
+        });
         lvHome.setOnRefreshListener(new HomeRefreshListView.OnListViewRefreshListener() {
 
             @Override
@@ -154,6 +169,43 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                 getData();
             }
         });
+    }
+
+    /**
+     * 获取写字楼列表数据
+     */
+    private void getAddList() {
+        RequestParams params = new RequestParams();
+        params.put("zoneid", "0");
+        Http.post(Http.GETOFFICELIST, params, new MyTextAsyncResponseHandler(getActivity(), "获取中...") {
+            @Override
+            public void onSuccess(String content) {
+                super.onSuccess(content);
+                OfficeAddressBean bean = JsonUtil.fromJson(content, OfficeAddressBean.class);
+                if (null != bean) {
+                    if (!Http.SUCCESS.equals(bean.getReturnCode())) {
+                        ToastUtils.showShortToast(bean.getReturnMessage());
+                        return;
+                    }
+                    List<OfficeAddressBean.ResultsEntity> officeDataList = bean.getResults();
+                    if (officeDataList == null || officeDataList.size() == 0) {
+                        ToastUtils.showShortToast("当前无可配送地址");
+                    } else {
+                        //默认展示第一个
+                        tvOfficeName.setText(officeDataList.get(0).getOffice().get(0).getOfficename());
+                    }
+                } else {
+                    ToastUtils.showShortToast("服务器异常，请稍后重试");
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable error) {
+                super.onFailure(error);
+                ToastUtils.showShortToast("服务器异常，请稍后重试");
+            }
+        });
+
     }
 
     private void getData() {
@@ -391,5 +443,15 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             realPosition -= count;
         }
         return realPosition;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == CHECKOFFICE_RESULT_CODE) {
+            if (data != null) {
+                tvOfficeName.setText(data.getStringExtra("officename"));
+            }
+        }
     }
 }

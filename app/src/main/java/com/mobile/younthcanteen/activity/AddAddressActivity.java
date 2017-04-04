@@ -1,18 +1,14 @@
 package com.mobile.younthcanteen.activity;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -28,9 +24,7 @@ import com.mobile.younthcanteen.util.DialogUtil;
 import com.mobile.younthcanteen.util.JsonUtil;
 import com.mobile.younthcanteen.util.SharedPreferencesUtil;
 import com.mobile.younthcanteen.util.ToastUtils;
-import com.mobile.younthcanteen.util.UIUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -67,6 +61,8 @@ public class AddAddressActivity extends BaseActivity {
     private String choiceOfficeId;
     private Intent intent;
     private String addressid = "0";//默认新增
+    private final int CHECKOFFICE_REQUEST_CODE = 10;
+    private final int CHECKOFFICE_RESULT_CODE = 11;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,7 +77,6 @@ public class AddAddressActivity extends BaseActivity {
             setTitle(intent.getStringExtra("title"));
             initData();
         }
-        getAddList();
     }
 
     private void initData() {
@@ -109,50 +104,14 @@ public class AddAddressActivity extends BaseActivity {
         btnAdd.setText("提交修改");
     }
 
-    /**
-     * 获取写字楼列表数据
-     */
-    private void getAddList() {
-        RequestParams params = new RequestParams();
-        params.put("zoneid", "0");
-        Http.post(Http.GETOFFICELIST, params, new MyTextAsyncResponseHandler(act, "获取地址中...") {
-            @Override
-            public void onSuccess(String content) {
-                super.onSuccess(content);
-                OfficeAddressBean bean = JsonUtil.fromJson(content, OfficeAddressBean.class);
-                if (null != bean) {
-                    if (!Http.SUCCESS.equals(bean.getReturnCode())) {
-                        ToastUtils.showShortToast(bean.getReturnMessage());
-                        return;
-                    }
-                    officeDataList = bean.getResults();
-                    if (officeDataList == null || officeDataList.size() == 0) {
-                        ToastUtils.showShortToast("当前无可配送地址");
-                    }
-                } else {
-                    ToastUtils.showShortToast("服务器异常，请稍后重试");
-                }
-            }
 
-            @Override
-            public void onFailure(Throwable error) {
-                super.onFailure(error);
-                ToastUtils.showShortToast("服务器异常，请稍后重试");
-            }
-        });
-
-    }
 
 
     @OnClick({R.id.ll_address, R.id.btn_add ,R.id.titlebar_back})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_address://选择地址
-                if (officeDataList == null || officeDataList.size() == 0) {
-                    getAddList();
-                } else {
-                    showCheckAddDialog();
-                }
+                startActivityForResult(new Intent(act,CheckOfficeActivity.class),CHECKOFFICE_REQUEST_CODE);
                 break;
             case R.id.btn_add://添加
                 commit();
@@ -216,36 +175,16 @@ public class AddAddressActivity extends BaseActivity {
         });
     }
 
-    /**
-     * 显示选择地址的对话框
-     */
-    private void showCheckAddDialog() {
-        final List<String> dataList = new ArrayList<>();
-        for (int i = 0; i < officeDataList.size(); i++) {
-            dataList.add(officeDataList.get(i).getOfficename());
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(act);
-        final AlertDialog alertDialog = builder.create();
-        View view = UIUtils.inflate(R.layout.dialog_choiceadd);
-        alertDialog.setView(view);
-        alertDialog.setTitle("选择收货地址");
-        alertDialog.show();
 
-        ListView lv = (ListView) view.findViewById(R.id.lv);
-        lv.setAdapter(new ArrayAdapter<String>(act,
-                android.R.layout.simple_expandable_list_item_1,
-                dataList));
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String choiceAddress = dataList.get(position);
-                if (!TextUtils.isEmpty(choiceAddress)) {
-                    choiceOfficeId = officeDataList.get(position).getOfficeid();
-                    tvAddress.setText(choiceAddress);
-                    alertDialog.dismiss();
-                }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == CHECKOFFICE_RESULT_CODE) {
+            if (data != null) {
+                choiceOfficeId = data.getStringExtra("officeid");
+                tvAddress.setText(data.getStringExtra("officename"));
             }
-        });
+        }
     }
 
     @Override

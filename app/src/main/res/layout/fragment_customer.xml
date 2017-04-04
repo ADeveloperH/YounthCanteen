@@ -124,6 +124,11 @@
                 android:src="@drawable/right_arrow" />
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/divideline" />
+
         <LinearLayout
             android:id="@+id/ll_address"
             android:layout_width="match_parent"
@@ -274,9 +279,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:padding="10dp"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -299,8 +304,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
             android:gravity="center"
+            android:padding="10dp"
             android:text="服务时间:9:00-23:00"
             android:textColor="@color/grayblack"
             android:textSize="16dp" />

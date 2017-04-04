@@ -9,8 +9,9 @@ import java.util.List;
 
 public class OfficeAddressBean {
 
+
     /**
-     * results : [{"officeid":1,"officename":"御玺大厦"}]
+     * results : [{"business":"郑汴路商圈","businessid":1,"office":[{"officeid":1,"officename":"御玺大厦"},{"officeid":2,"officename":"写字楼22"}]}]
      * returnCode : 0
      * returnMessage : 获取成功
      */
@@ -18,8 +19,9 @@ public class OfficeAddressBean {
     private String returnCode;
     private String returnMessage;
     /**
-     * officeid : 1
-     * officename : 御玺大厦
+     * business : 郑汴路商圈
+     * businessid : 1
+     * office : [{"officeid":1,"officename":"御玺大厦"},{"officeid":2,"officename":"写字楼22"}]
      */
 
     private List<ResultsEntity> results;
@@ -49,23 +51,58 @@ public class OfficeAddressBean {
     }
 
     public static class ResultsEntity {
-        private String officeid;
-        private String officename;
+        private String business;
+        private String businessid;
+        /**
+         * officeid : 1
+         * officename : 御玺大厦
+         */
 
-        public String getOfficeid() {
-            return officeid;
+        private List<OfficeEntity> office;
+
+        public String getBusiness() {
+            return business;
         }
 
-        public void setOfficeid(String officeid) {
-            this.officeid = officeid;
+        public void setBusiness(String business) {
+            this.business = business;
         }
 
-        public String getOfficename() {
-            return officename;
+        public String getBusinessid() {
+            return businessid;
         }
 
-        public void setOfficename(String officename) {
-            this.officename = officename;
+        public void setBusinessid(String businessid) {
+            this.businessid = businessid;
+        }
+
+        public List<OfficeEntity> getOffice() {
+            return office;
+        }
+
+        public void setOffice(List<OfficeEntity> office) {
+            this.office = office;
+        }
+
+        public static class OfficeEntity {
+            private String officeid;
+            private String officename;
+
+            public String getOfficeid() {
+                return officeid;
+            }
+
+            public void setOfficeid(String officeid) {
+                this.officeid = officeid;
+            }
+
+            public String getOfficename() {
+                return officename;
+            }
+
+            public void setOfficename(String officename) {
+                this.officename = officename;
+            }
         }
     }
 }
