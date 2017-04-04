@@ -151,6 +151,13 @@
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
 
+        <!-- 账户充值页面 -->
+        <activity
+            android:name=".activity.AccountRechargeActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait" />
+
 
         <!-- 下载apk -->
         <service android:name=".service.DownLoadService" />

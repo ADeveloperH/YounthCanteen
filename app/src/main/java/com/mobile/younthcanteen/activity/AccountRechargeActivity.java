@@ -1,7 +1,6 @@
 package com.mobile.younthcanteen.activity;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -22,8 +22,6 @@ import com.mobile.younthcanteen.bean.SimpleResultBean;
 import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
 import com.mobile.younthcanteen.http.RequestParams;
-import com.mobile.younthcanteen.ui.pwdinput.InputPwdView;
-import com.mobile.younthcanteen.ui.pwdinput.MyInputPwdUtil;
 import com.mobile.younthcanteen.util.JsonUtil;
 import com.mobile.younthcanteen.util.SharedPreferencesUtil;
 import com.mobile.younthcanteen.util.ToastUtils;
@@ -36,151 +34,97 @@ import butterknife.OnClick;
 
 /**
  * author：hj
- * time: 2017/3/15 0015 21:09
+ * time: 2017/4/4 0004 17:16
+ * 账户充值
  */
 
 
-public class PayActivity extends BaseActivity {
-    @BindView(R.id.iv_rb_yue)
-    ImageView ivRbYue;
-    @BindView(R.id.rl_yue)
-    RelativeLayout rlYue;
-    @BindView(R.id.iv_rb_weixin)
-    ImageView ivRbWeixin;
-    @BindView(R.id.rl_weixin)
-    RelativeLayout rlWeixin;
+public class AccountRechargeActivity extends BaseActivity {
     @BindView(R.id.iv_rb_zfb)
     ImageView ivRbZfb;
     @BindView(R.id.rl_zfb)
     RelativeLayout rlZfb;
-    @BindView(R.id.btn_pay)
-    Button btnPay;
-    private String orderno;//订单号
-    private MyInputPwdUtil myInputPwdUtil;
-    private int curSelect = 0;//当前选择的支付方式
-    private double needMoney;//需要的钱数
+    @BindView(R.id.iv_rb_weixin)
+    ImageView ivRbWeixin;
+    @BindView(R.id.rl_weixin)
+    RelativeLayout rlWeixin;
+    @BindView(R.id.et_money)
+    EditText etMoney;
+    @BindView(R.id.btn_ok)
+    Button btnOk;
+    private int curSelect = 1;//当前选择的支付方式
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle("支付订单");
+        setTitle("账户充值");
         checkLogin(true);
         setTitleBackVisible(true);
-        setContentView(R.layout.activity_pay_layout);
+        setSubTitle("限额300元");
+        setContentView(R.layout.activity_account_recharge_layout);
         ButterKnife.bind(this);
-        initData();
-        initPwdInput();
+
+        setChecked(1);
     }
 
-    private void initData() {
-        Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("orderno")) {
-            orderno = intent.getStringExtra("orderno");
-            needMoney = Double.parseDouble(intent.getStringExtra("money"));
-            btnPay.setText("确认支付￥" + needMoney);
-        }
-
-        setChecked(0);
-    }
-
-    private void initPwdInput() {
-        myInputPwdUtil = new MyInputPwdUtil(this);
-        myInputPwdUtil.getMyInputDialogBuilder().setAnimStyle(R.style.dialog_anim);
-        myInputPwdUtil.setListener(new InputPwdView.InputPwdListener() {
-            @Override
-            public void hide() {
-                hiddenInputPwd();
-            }
-
-            @Override
-            public void forgetPwd() {
-            }
-
-            @Override
-            public void finishPwd(String pwd) {
-                payOrder(pwd);
-            }
-        });
-    }
 
     /**
      * 设置选择的支付方式
      *
-     * @param i 0 余额支付  1 支付宝支付  2 微信支付
+     * @param i 1 支付宝支付  2 微信支付
      */
     private void setChecked(int i) {
         curSelect = i;
         switch (i) {
             case 0:
-                ivRbYue.setImageResource(R.drawable.rb_bg_checked);
                 ivRbWeixin.setImageResource(R.drawable.rb_bg_normal);
                 ivRbZfb.setImageResource(R.drawable.rb_bg_normal);
                 break;
             case 1:
                 ivRbZfb.setImageResource(R.drawable.rb_bg_checked);
-                ivRbYue.setImageResource(R.drawable.rb_bg_normal);
                 ivRbWeixin.setImageResource(R.drawable.rb_bg_normal);
                 break;
             case 2:
                 ivRbWeixin.setImageResource(R.drawable.rb_bg_checked);
-                ivRbYue.setImageResource(R.drawable.rb_bg_normal);
                 ivRbZfb.setImageResource(R.drawable.rb_bg_normal);
                 break;
         }
     }
 
-    @OnClick({R.id.rl_yue, R.id.rl_weixin, R.id.rl_zfb, R.id.btn_pay})
+
+    @OnClick({R.id.rl_zfb, R.id.rl_weixin, R.id.btn_ok})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.rl_yue:
-                setChecked(0);
-                break;
             case R.id.rl_zfb:
                 setChecked(1);
                 break;
             case R.id.rl_weixin:
                 setChecked(2);
                 break;
-
-            case R.id.btn_pay://立即支付
-                if (curSelect == 0) {
-                    //余额支付
-//                    double remainMoney = Double.parseDouble(SharedPreferencesUtil.getMoney());
-//                    if (remainMoney < needMoney) {
-//                        //剩余余额不足
-//                        ToastUtils.showShortToast("您当前余额不足，选择其它支付方式");
-//                    } else {
-//
-//                    }
-                    if (SharedPreferencesUtil.getIsSetPayPwd()) {
-                        //如果设置密码需要传入密码
-                        if (myInputPwdUtil != null) {
-                            myInputPwdUtil.show();
-                        } else {
-                            initPwdInput();
-                            myInputPwdUtil.show();
-                        }
-                    } else {
-                        payOrder(null);
-                    }
-                } else if (curSelect == 1) {
-                    payOrderByAlipay();
+            case R.id.btn_ok:
+                String money = etMoney.getText().toString().trim();
+                if (TextUtils.isEmpty(money)) {
+                    ToastUtils.showShortToast("请输入金额");
                 } else {
-                    ToastUtils.showShortToast("暂不支持微信支付");
+                    if (curSelect == 1) {
+                        payOrderByAlipay(money);
+                    } else {
+                        ToastUtils.showShortToast("暂不支持微信支付");
+                    }
                 }
                 break;
         }
     }
 
-
     /**
      * 通过支付宝提交订单
+     * @param money
      */
-    private void payOrderByAlipay() {
+    private void payOrderByAlipay(String money) {
         RequestParams params = new RequestParams();
-        params.put("orderno", orderno);
+        params.put("money", money);
         params.put("token", SharedPreferencesUtil.getToken());
-        Http.post(Http.COMMITORDERBYALIPAY, params, new MyTextAsyncResponseHandler(act, "提交中...") {
+        Http.post(Http.SIGNATURERECHARGE, params, new MyTextAsyncResponseHandler(act, "提交中...") {
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
@@ -224,7 +168,7 @@ public class PayActivity extends BaseActivity {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
 //                        Toast.makeText(act, "支付成功", Toast.LENGTH_SHORT).show();
                         Log.d("okhttp", "reslutl:::::" + payResult.toString());
-                        validataPayResult(resultStatus,payResult.getMemo(),payResult.getResult());
+                        validataPayResult(resultStatus, payResult.getMemo(), payResult.getResult());
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         Toast.makeText(act, "支付失败", Toast.LENGTH_SHORT).show();
@@ -234,19 +178,21 @@ public class PayActivity extends BaseActivity {
                 default:
                     break;
             }
-        };
+        }
+
+        ;
     };
 
 
     /**
      * 验证支付宝支付的结果
      */
-    private void validataPayResult(String resultStatus,String memo,String result) {
+    private void validataPayResult(String resultStatus, String memo, String result) {
         RequestParams params = new RequestParams();
         params.put("memo", memo);
         params.put("resultStatus", resultStatus);
         params.put("result", result);
-        Http.post(Http.COMMITALIPAYRESULT,params,new MyTextAsyncResponseHandler(act,null){
+        Http.post(Http.COMMITALIPAYRESULT, params, new MyTextAsyncResponseHandler(act, null) {
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
@@ -271,6 +217,7 @@ public class PayActivity extends BaseActivity {
 
     /**
      * 使用加签后的账单调起支付宝
+     *
      * @param orderInfo
      */
     private void awakeAlipay(final String orderInfo) {
@@ -290,54 +237,5 @@ public class PayActivity extends BaseActivity {
 
         Thread payThread = new Thread(payRunnable);
         payThread.start();
-    }
-
-    /**
-     * 支付订单
-     *
-     * @param pwd 用余额支付时输入的密码
-     */
-    private void payOrder(String pwd) {
-        hiddenInputPwd();
-        RequestParams params = new RequestParams();
-        params.put("orderno", orderno);
-        params.put("token", SharedPreferencesUtil.getToken());
-        params.put("type", curSelect + "");
-        if (!TextUtils.isEmpty(pwd)) {
-            params.put("paypass", pwd);
-
-        }
-        Http.post(Http.PAYORDER, params, new MyTextAsyncResponseHandler(act, "提交中...") {
-            @Override
-            public void onSuccess(String content) {
-                super.onSuccess(content);
-                SimpleResultBean bean = JsonUtil.fromJson(content, SimpleResultBean.class);
-                if (null != bean) {
-                    ToastUtils.showLongToast(bean.getReturnMessage());
-                    if (Http.SUCCESS.equals(bean.getReturnCode())) {
-                        Intent intent = new Intent(context, MainActivity.class);
-                        intent.putExtra("tabIndex", 2);
-                        startActivity(intent);
-                        finish();
-                    }
-                } else {
-                    ToastUtils.showLongToast("服务器异常，请稍后重试");
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable error) {
-                super.onFailure(error);
-            }
-        });
-    }
-
-    /**
-     * 隐藏密码输入框
-     */
-    private void hiddenInputPwd() {
-        if (myInputPwdUtil != null) {
-            myInputPwdUtil.hide();
-        }
     }
 }

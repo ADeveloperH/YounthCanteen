@@ -3,7 +3,6 @@ package com.mobile.younthcanteen.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,18 +44,24 @@ public class BalanceActivity extends BaseActivity {
         setContentView(R.layout.activity_balance_layout);
         ButterKnife.bind(this);
 
-        initData();
+//        initData();
     }
 
-    private void initData() {
-        String money = SharedPreferencesUtil.getMoney();
-        if (TextUtils.isEmpty(money)) {
-            //余额请求失败
-            getUserDetailInfo();
-        } else {
-            tvYue.setText(money);
-        }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getUserDetailInfo();
     }
+
+//    private void initData() {
+//        String money = SharedPreferencesUtil.getMoney();
+//        if (TextUtils.isEmpty(money)) {
+//            //余额请求失败
+//            getUserDetailInfo();
+//        } else {
+//            tvYue.setText(money);
+//        }
+//    }
 
     /**
      * 获取用户的详细信息
@@ -104,6 +109,7 @@ public class BalanceActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_recharge://充值
+                startActivity(new Intent(act,AccountRechargeActivity.class));
                 break;
             case R.id.ll_consume_detail://消费明细
                 startActivity(new Intent(act,ConsumeDetailActivity.class));
