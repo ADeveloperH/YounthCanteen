@@ -32,7 +32,7 @@ import java.util.TimerTask;
  * time: 2017/2/8 0008 16:26
  */
 
-public class FindPwdActivity extends Activity implements View.OnClickListener {
+public class FindPwdActivity extends BaseActivity implements View.OnClickListener {
     private EditText etPhone;
     private EditText etPassword;
     private EditText etRePassword;
@@ -85,6 +85,8 @@ public class FindPwdActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("找回密码");
+        setTitleBackVisible(true);
         setContentView(R.layout.activity_findpwd_layout);
 
         AppManager.getAppManager().addActivity(this);

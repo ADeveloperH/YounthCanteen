@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="登录"
-            android:textColor="@color/textblack"
+            android:textColor="@color/white"
             android:textSize="16dp" />
 
         <View
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="注册"
-            android:textColor="@color/textblack"
+            android:textColor="@color/white"
             android:textSize="16dp" />
     </LinearLayout>
 
@@ -44,11 +44,10 @@
         android:orientation="horizontal"
         android:padding="15dp">
 
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="手机号"
-            android:textColor="@color/textblack" />
+            android:src="@drawable/icon_phone" />
 
         <EditText
             android:id="@+id/et_account"
@@ -83,11 +82,10 @@
         android:orientation="horizontal"
         android:padding="15dp">
 
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="密码"
-            android:textColor="@color/textblack" />
+            android:src="@drawable/icon_pwd" />
 
         <EditText
             android:id="@+id/et_password"
@@ -112,7 +110,7 @@
             android:id="@+id/iv_isshowpwd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/passport_ic_hide_password" />
+            android:src="@drawable/passport_ic_show_password" />
     </LinearLayout>
 
     <View

@@ -5,25 +5,6 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/title_height"
-        android:background="@color/myyellow"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="找回密码"
-            android:textColor="@color/black"
-            android:textSize="16dp" />
-
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,11 +13,10 @@
         android:orientation="horizontal"
         android:padding="15dp">
 
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="手机号"
-            android:textColor="@color/textblack" />
+            android:src="@drawable/icon_phone" />
 
         <EditText
             android:id="@+id/et_phone"
@@ -64,11 +44,10 @@
         android:orientation="horizontal"
         android:padding="15dp">
 
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="密码"
-            android:textColor="@color/textblack" />
+            android:src="@drawable/icon_pwd" />
 
         <EditText
             android:id="@+id/et_password"
@@ -96,11 +75,10 @@
         android:orientation="horizontal"
         android:padding="15dp">
 
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="确认密码"
-            android:textColor="@color/textblack" />
+            android:src="@drawable/icon_pwd" />
 
         <EditText
             android:id="@+id/et_repassword"
@@ -128,11 +106,10 @@
         android:orientation="horizontal"
         android:padding="15dp">
 
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="短信验证码"
-            android:textColor="@color/textblack" />
+            android:src="@drawable/icon_sms_code" />
 
         <EditText
             android:id="@+id/et_code"

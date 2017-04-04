@@ -12,6 +12,8 @@ import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import com.mobile.younthcanteen.AppManager;
@@ -35,13 +37,14 @@ import java.util.TimerTask;
  * time: 2017/2/7 0007 23:12
  */
 
-public class RegisterActivity extends Activity implements View.OnClickListener {
+public class RegisterActivity extends BaseActivity implements View.OnClickListener {
     private EditText etPhone;
     private EditText etPassword;
     private EditText etRePassword;
     private EditText etCode;
     private Button btnGetCode;
     private Button btnRegister;
+    private CheckBox checkBox;
     private Activity act;
     private boolean isTiming = false;//是否正在倒计时
     private TextWatcher watcherCanReg = new TextWatcher() {
@@ -62,7 +65,9 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
             String codeStr = etCode.getText().toString().trim();
             String rePwdStr = etRePassword.getText().toString().trim();
             if (!TextUtils.isEmpty(pwdStr) && !TextUtils.isEmpty(rePwdStr)
-                    && !TextUtils.isEmpty(codeStr) && DataCheckUtils.isValidatePhone(phoneNumStr)) {
+                    && !TextUtils.isEmpty(codeStr)
+                    && DataCheckUtils.isValidatePhone(phoneNumStr)
+                    && checkBox.isChecked()) {
                 //输入数据合法
                 btnRegister.setEnabled(true);
                 btnRegister.setBackgroundResource(R.drawable.login_btn_enable);
@@ -89,6 +94,8 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("注册");
+        setTitleBackVisible(true);
         setContentView(R.layout.activity_register_layout);
 
         act = this;
@@ -104,6 +111,8 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         etCode = (EditText) findViewById(R.id.et_code);
         btnGetCode = (Button) findViewById(R.id.btn_getcode);
         btnRegister = (Button) findViewById(R.id.btn_register);
+
+        checkBox = (CheckBox) findViewById(R.id.checkbox);
     }
 
     private void setListener() {
@@ -114,6 +123,29 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
         btnGetCode.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
+
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String phoneNumStr = etPhone.getText().toString().trim();
+                String pwdStr = etPassword.getText().toString().trim();
+                String codeStr = etCode.getText().toString().trim();
+                String rePwdStr = etRePassword.getText().toString().trim();
+                if (!TextUtils.isEmpty(pwdStr) && !TextUtils.isEmpty(rePwdStr)
+                        && !TextUtils.isEmpty(codeStr)
+                        && DataCheckUtils.isValidatePhone(phoneNumStr)
+                        && isChecked) {
+                    //输入数据合法
+                    btnRegister.setEnabled(true);
+                    btnRegister.setBackgroundResource(R.drawable.login_btn_enable);
+                    btnRegister.setTextColor(Color.parseColor("#000000"));
+                } else {
+                    btnRegister.setEnabled(false);
+                    btnRegister.setBackgroundResource(R.drawable.login_btn_unable);
+                    btnRegister.setTextColor(Color.parseColor("#ffffff"));
+                }
+            }
+        });
     }
 
     @Override
