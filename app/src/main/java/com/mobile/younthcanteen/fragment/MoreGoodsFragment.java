@@ -8,44 +8,37 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.GridView;
 
 import com.mobile.younthcanteen.R;
-import com.mobile.younthcanteen.activity.MainActivity;
-import com.mobile.younthcanteen.activity.OrderDetailActivity;
-import com.mobile.younthcanteen.adapter.PaidOrderLvAdapter;
-import com.mobile.younthcanteen.bean.OrderResultBean;
+import com.mobile.younthcanteen.activity.GoodsDetailInfoActivity;
+import com.mobile.younthcanteen.activity.PackageGoodsInfoActivity;
+import com.mobile.younthcanteen.adapter.MoreGoodsGridViewAdapter;
+import com.mobile.younthcanteen.bean.MoreGoodsResultBean;
 import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
 import com.mobile.younthcanteen.http.RequestParams;
 import com.mobile.younthcanteen.util.JsonUtil;
-import com.mobile.younthcanteen.util.SharedPreferencesUtil;
 import com.mobile.younthcanteen.util.ToastUtils;
-
-import java.util.List;
 
 /**
  * author：hj
  * time: 2017/2/7 0007 15:15
- * 已付款
  */
 
-public class MoreGoodsFragment extends Fragment implements View.OnClickListener {
+public class MoreGoodsFragment extends Fragment{
     private View rootView;//缓存Fragment的View
     private boolean isNeedReLoad = true;//是否需要重新加载该Fragment数据
-    private Button btnOrder;
     private Context context;
-    private LinearLayout llNoOrder;
-    private ListView lvPaidOrder;
-    private PaidOrderLvAdapter paidOrderLvAdapter;
+    private GridView gridView;
+    private String typeId;
+    private MoreGoodsResultBean bean;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_paid_layout, null);
+            rootView = inflater.inflate(R.layout.fragment_moregoods_layout, null);
         }
         //缓存的rootView需要判断是否已经被加过parent，
         //如果有parent需要从parent删除，要不然会发生这个rootview已经有parent的错误。
@@ -100,20 +93,22 @@ public class MoreGoodsFragment extends Fragment implements View.OnClickListener 
      * 获取订单数据
      */
     private void getOrderData() {
+
         RequestParams params = new RequestParams();
-        params.put("token", SharedPreferencesUtil.getToken());
-        params.put("status", "10");
-        Http.post(Http.GETORDERLIST, params, new MyTextAsyncResponseHandler(context, null) {
+        params.put("type", typeId);
+        Http.post(Http.GETMOREGOODS, params, new MyTextAsyncResponseHandler(context, null) {
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
-                OrderResultBean bean = JsonUtil.fromJson(content, OrderResultBean.class);
+                bean = JsonUtil.fromJson(content, MoreGoodsResultBean.class);
                 if (null != bean) {
                     if (!Http.SUCCESS.equals(bean.getReturnCode())) {
                         ToastUtils.showShortToast(bean.getReturnMessage());
                         return;
                     }
-                    showOrder(bean.getResults());
+                    MoreGoodsGridViewAdapter adapter = new MoreGoodsGridViewAdapter(gridView,getActivity(),
+                            bean.getCenter().get(0).getPros());
+                    gridView.setAdapter(adapter);
                 } else {
                     ToastUtils.showShortToast("服务器异常，请稍后重试");
                 }
@@ -127,27 +122,6 @@ public class MoreGoodsFragment extends Fragment implements View.OnClickListener 
         });
     }
 
-    /**
-     * 显示订单界面
-     *
-     * @param results
-     */
-    private void showOrder(List<OrderResultBean.ResultsEntity> results) {
-        if (results == null || results.size() <= 0) {
-            llNoOrder.setVisibility(View.VISIBLE);
-            lvPaidOrder.setVisibility(View.GONE);
-        } else {
-            llNoOrder.setVisibility(View.GONE);
-            lvPaidOrder.setVisibility(View.VISIBLE);
-            if (paidOrderLvAdapter == null) {
-                paidOrderLvAdapter = new PaidOrderLvAdapter(context, results);
-                lvPaidOrder.setAdapter(paidOrderLvAdapter);
-            } else {
-                paidOrderLvAdapter.setResults(results);
-                paidOrderLvAdapter.notifyDataSetChanged();
-            }
-        }
-    }
 
 
     @Override
@@ -157,40 +131,29 @@ public class MoreGoodsFragment extends Fragment implements View.OnClickListener 
     }
 
     private void initView(View view) {
-        btnOrder = (Button) view.findViewById(R.id.btn_order);
-        llNoOrder = (LinearLayout) view.findViewById(R.id.ll_no_order);
-        lvPaidOrder = (ListView) view.findViewById(R.id.lv_paid_order);
+        gridView = (GridView) view.findViewById(R.id.gv);
+
+        typeId = getArguments().getString("typeid","1");
 
     }
 
     private void setListener() {
-        btnOrder.setOnClickListener(this);
-        lvPaidOrder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (paidOrderLvAdapter != null ) {
-                    List<OrderResultBean.ResultsEntity> listData = paidOrderLvAdapter.getResults();
-                    if (listData != null && listData.size() > 0) {
-                        OrderResultBean.ResultsEntity bean = listData.get(position);
-                        Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("orderInfo",bean);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    }
+                Intent intent = new Intent();
+                if ("1".equals(typeId)) {
+                    //套餐类
+                    intent.setClass(context, PackageGoodsInfoActivity.class);
+                } else {
+                    //非套餐类
+                    intent.setClass(context, GoodsDetailInfoActivity.class);
                 }
+                intent.putExtra("proid", bean.getCenter().get(0).getPros().get(position).getProid());
+                intent.putExtra("imageUrl", bean.getCenter().get(0).getPros().get(position).getUrl());
+                context.startActivity(intent);
             }
         });
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_order://立即下单
-                Intent intent = new Intent(context, MainActivity.class);
-                intent.putExtra("tabIndex", 0);
-                startActivity(intent);
-                break;
-        }
     }
 }

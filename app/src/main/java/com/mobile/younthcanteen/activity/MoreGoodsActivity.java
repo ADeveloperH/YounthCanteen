@@ -9,8 +9,10 @@ import android.view.View;
 
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.adapter.MoreGoodsPagerAdapter;
+import com.mobile.younthcanteen.bean.GoodsTypeBean;
 import com.mobile.younthcanteen.fragment.MoreGoodsFragment;
 import com.mobile.younthcanteen.ui.TabPageIndicator;
+import com.mobile.younthcanteen.util.SharedPreferencesUtil;
 import com.mobile.younthcanteen.util.UIUtils;
 
 import java.util.ArrayList;
@@ -46,36 +48,36 @@ public class MoreGoodsActivity extends BaseActivity {
     }
 
     private void initFragment() {
-        titleList.add("营养套餐");
-        titleList.add("精品炒菜");
-        titleList.add("特色面食");
-        titleList.add("果汁饮料");
+        List<GoodsTypeBean> goodsTypeBeanList = SharedPreferencesUtil.getGoodsTypeFromSP();
+        GoodsTypeBean bean;
+        if (goodsTypeBeanList != null && goodsTypeBeanList.size() >0) {
+            for (int i = 0,length= goodsTypeBeanList.size(); i < length; i++) {
+                bean = goodsTypeBeanList.get(i);
+                titleList.add(bean.getTypename());
+                MoreGoodsFragment fragment = new MoreGoodsFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("typeid", bean.getTypeid());
+                fragment.setArguments(bundle);
+                listFragmentsa.add(fragment);
+            }
 
-        for (int i = 0; i < titleList.size(); i++) {
-            MoreGoodsFragment fragment = new MoreGoodsFragment();
-            Bundle bundle = new Bundle();
-            bundle.putInt("index", i);
-            fragment.setArguments(bundle);
-            listFragmentsa.add(fragment);
-        }
-
-        MoreGoodsPagerAdapter mAdatpter = new MoreGoodsPagerAdapter(getSupportFragmentManager(),
-                listFragmentsa, titleList);
-        viewpager.setAdapter(mAdatpter);
-        tabPageIndicator.setViewPager(viewpager);
-        tabPageIndicator.setVisibility(View.VISIBLE);
-        tabPageIndicator.setIndicatorHeight(UIUtils.dip2px(2));
-        tabPageIndicator.setIndicatorMode(TabPageIndicator.IndicatorMode.MODE_WEIGHT_NOEXPAND_NOSAME);
-        tabPageIndicator.requestLayout();
+            MoreGoodsPagerAdapter mAdatpter = new MoreGoodsPagerAdapter(getSupportFragmentManager(),
+                    listFragmentsa, titleList);
+            viewpager.setAdapter(mAdatpter);
+            tabPageIndicator.setViewPager(viewpager);
+            tabPageIndicator.setVisibility(View.VISIBLE);
+            tabPageIndicator.setIndicatorHeight(UIUtils.dip2px(2));
+            tabPageIndicator.setIndicatorMode(TabPageIndicator.IndicatorMode.MODE_WEIGHT_NOEXPAND_NOSAME);
+            tabPageIndicator.requestLayout();
 //        tabPageIndicator.setBackgroundResource(R.drawable.viewpager_tab_indicator);
-        viewpager.setVisibility(View.VISIBLE);
+            viewpager.setVisibility(View.VISIBLE);
 
-        Intent intent = getIntent();
-        if (intent != null) {
-            tabIndex = intent.getIntExtra("tabIndex", 0);
-            viewpager.setCurrentItem(tabIndex,false);
+            Intent intent = getIntent();
+            if (intent != null) {
+                tabIndex = intent.getIntExtra("tabIndex", 0);
+                viewpager.setCurrentItem(tabIndex,false);
+            }
         }
-
     }
 
 

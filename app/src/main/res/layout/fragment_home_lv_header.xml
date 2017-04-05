@@ -114,7 +114,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/a_cai" />
+                android:src="@drawable/home_taocan_icon" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -136,7 +136,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/a_cai" />
+                android:src="@drawable/home_chaocai_icon" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -158,7 +158,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/a_cai" />
+                android:src="@drawable/home_mianshi_icon" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -180,7 +180,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/a_cai" />
+                android:src="@drawable/home_yingliao_icon" />
 
             <TextView
                 android:layout_width="wrap_content"

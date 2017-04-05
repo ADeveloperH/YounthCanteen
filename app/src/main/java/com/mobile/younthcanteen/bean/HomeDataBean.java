@@ -112,6 +112,7 @@ public class HomeDataBean {
 
         public static class ProsEntity {
             private String name;
+            private String intro;
             private String price;
             private String proid;
             private String url;
@@ -146,6 +147,14 @@ public class HomeDataBean {
 
             public void setUrl(String url) {
                 this.url = url;
+            }
+
+            public String getIntro() {
+                return intro;
+            }
+
+            public void setIntro(String intro) {
+                this.intro = intro;
             }
         }
     }

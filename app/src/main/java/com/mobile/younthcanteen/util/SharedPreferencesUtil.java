@@ -5,8 +5,13 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mobile.younthcanteen.activity.CanteenApplication;
 import com.mobile.younthcanteen.bean.DownLoadBean;
+import com.mobile.younthcanteen.bean.GoodsTypeBean;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SharedPreferencesUtil {
     //记录项目中其他需要记录的字段
@@ -25,6 +30,8 @@ public class SharedPreferencesUtil {
     public static final String KEY_USERID = "KEY_USERID";//userid
     public static final String KEY_NICKNAME = "KEY_NICKNAME";//nickname
     public static final String KEY_DOWNLODEMSG = "downlodemsg"; //已下载安装包的信息
+
+    public static final String KEY_HOME_TYPE_LIST = "hometypelist"; //商品类别信息
 
     private static Context mcontext;
     static {
@@ -253,6 +260,46 @@ public class SharedPreferencesUtil {
         }
         return null;
     }
+
+
+    /**
+     * 保存商品类别列表的相关数据
+     *
+     * @param infos
+     * @return
+     */
+    public static boolean saveGoodsType2SP(List<GoodsTypeBean> infos) {
+        if (getPreferencesPrivate() != null) {
+            Gson gson = new Gson();
+            return getPreferencesPrivate().edit().putString(KEY_HOME_TYPE_LIST,
+                    gson.toJson(infos)).commit();
+        }
+        return false;
+    }
+
+    /**
+     * 获取商品类别的相关信息
+     *
+     * @return
+     */
+    public static List<GoodsTypeBean> getGoodsTypeFromSP() {
+        Gson gson = new Gson();
+        List<GoodsTypeBean> infos = null;
+        if (getPreferencesPrivate() != null) {
+            String saveStr = getPreferencesPrivate().getString(KEY_HOME_TYPE_LIST, "");
+            //读出以前保存的集合
+            if (TextUtils.isEmpty(saveStr)) {
+                //如果以前没有相关的信息
+                infos = new ArrayList<GoodsTypeBean>();
+            } else {
+                //如果以前sp中存储的有相关信息
+                infos = gson.fromJson(saveStr, new TypeToken<List<GoodsTypeBean>>() {
+                }.getType());
+            }
+        }
+        return infos;
+    }
+
 
 //==============================getPreferencesLogin	END=========================================//
 

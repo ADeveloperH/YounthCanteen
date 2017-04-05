@@ -20,6 +20,7 @@ import com.mobile.younthcanteen.activity.CheckOfficeActivity;
 import com.mobile.younthcanteen.activity.MoreGoodsActivity;
 import com.mobile.younthcanteen.adapter.HomeFragmentPagerAdapter;
 import com.mobile.younthcanteen.adapter.HomeListAdapter;
+import com.mobile.younthcanteen.bean.GoodsTypeBean;
 import com.mobile.younthcanteen.bean.HomeDataBean;
 import com.mobile.younthcanteen.bean.OfficeAddressBean;
 import com.mobile.younthcanteen.http.Http;
@@ -29,6 +30,7 @@ import com.mobile.younthcanteen.ui.HomeRefreshListView;
 import com.mobile.younthcanteen.util.BitmapUtil;
 import com.mobile.younthcanteen.util.FileUtil;
 import com.mobile.younthcanteen.util.JsonUtil;
+import com.mobile.younthcanteen.util.SharedPreferencesUtil;
 import com.mobile.younthcanteen.util.ToastUtils;
 import com.mobile.younthcanteen.util.UIUtils;
 
@@ -63,7 +65,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     private LinearLayout llTaoCan;
     private LinearLayout llChaoCai;
     private LinearLayout llMianShi;
-    private LinearLayout llYinLiao ;
+    private LinearLayout llYinLiao;
 
     private static class MyHandler extends Handler {
         private WeakReference<HomeFragment> homeFragmentWeakReference;
@@ -170,7 +172,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         tvOfficeName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(getActivity(),CheckOfficeActivity.class),CHECKOFFICE_REQUEST_CODE);
+                startActivityForResult(new Intent(getActivity(), CheckOfficeActivity.class), CHECKOFFICE_REQUEST_CODE);
             }
         });
         llTaoCan.setOnClickListener(new View.OnClickListener() {
@@ -264,7 +266,8 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                         showListView(homeDataBean.getCenter());
                         viewPagerDataList = homeDataBean.getTop();
                         initViewPagerData();
-
+                        //保存类别数据
+                        saveTypeData(homeDataBean.getCenter());
                     }
                     ToastUtils.showShortToast(homeDataBean.getReturnMessage());
 
@@ -288,6 +291,25 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                 }
             }
         });
+    }
+
+
+    /**
+     * 保存类别数据
+     *
+     * @param center
+     */
+    private void saveTypeData(List<HomeDataBean.CenterEntity> center) {
+        List<GoodsTypeBean> goodsTypeList = new ArrayList<GoodsTypeBean>();
+        if (center != null && center.size() > 0) {
+            for (int i = 0, length = center.size(); i < length; i++) {
+                GoodsTypeBean bean = new GoodsTypeBean();
+                bean.setTypeid(center.get(i).getTypeid());
+                bean.setTypename(center.get(i).getTypename());
+                goodsTypeList.add(bean);
+            }
+            SharedPreferencesUtil.saveGoodsType2SP(goodsTypeList);
+        }
     }
 
     /**

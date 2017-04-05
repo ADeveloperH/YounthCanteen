@@ -5,12 +5,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
-import com.mobile.younthcanteen.bean.HomeDataBean;
-import com.mobile.younthcanteen.ui.GridViewForScroll;
+import com.mobile.younthcanteen.bean.MoreGoodsResultBean;
 import com.mobile.younthcanteen.util.BitmapUtil;
 import com.mobile.younthcanteen.util.FileUtil;
 import com.mobile.younthcanteen.util.UIUtils;
@@ -26,13 +26,13 @@ import butterknife.ButterKnife;
  * 套餐、炒菜的Adapter
  */
 
-public class HomeGridViewAdapter1 extends BaseAdapter {
-    private static GridViewForScroll gridview;
+public class MoreGoodsGridViewAdapter extends BaseAdapter {
+    private static GridView gridview;
     private BitmapUtil bitmapUtil;
     private Context context;
-    private List<HomeDataBean.CenterEntity.ProsEntity> prosList;
+    private List<MoreGoodsResultBean.CenterEntity.ProsEntity> prosList;
 
-    public HomeGridViewAdapter1(GridViewForScroll gridview, Context context, List<HomeDataBean.CenterEntity.ProsEntity> prosList) {
+    public MoreGoodsGridViewAdapter(GridView gridview, Context context, List<MoreGoodsResultBean.CenterEntity.ProsEntity> prosList) {
         this.gridview = gridview;
         this.context = context;
         this.prosList = prosList;
@@ -59,14 +59,14 @@ public class HomeGridViewAdapter1 extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
-            convertView = UIUtils.inflate(R.layout.item_homegridview1);
+            convertView = UIUtils.inflate(R.layout.item_moregoods_gridview);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        HomeDataBean.CenterEntity.ProsEntity bean = prosList.get(position);
+        MoreGoodsResultBean.CenterEntity.ProsEntity bean = prosList.get(position);
         bitmapUtil.display(viewHolder.iv, bean.getUrl());
         viewHolder.tvName.setText(bean.getName());
         viewHolder.tvPrice.setText("优惠价：" + bean.getPrice() + "元/份");
@@ -89,7 +89,7 @@ public class HomeGridViewAdapter1 extends BaseAdapter {
         }
     }
 
-    public void setProsList(List<HomeDataBean.CenterEntity.ProsEntity> prosList) {
+    public void setProsList(List<MoreGoodsResultBean.CenterEntity.ProsEntity> prosList) {
         this.prosList = prosList;
     }
 }
