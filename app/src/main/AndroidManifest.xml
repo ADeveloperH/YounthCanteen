@@ -163,6 +163,11 @@
             android:name=".activity.CheckOfficeActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <!-- 选择商圈页面 -->
+        <activity
+            android:name=".activity.CheckBusinessCircleActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
 
         <!-- 更多套餐页面 -->
         <activity

@@ -5,7 +5,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,14 +25,12 @@ import butterknife.ButterKnife;
  * 套餐、炒菜的Adapter
  */
 
-public class MoreGoodsGridViewAdapter extends BaseAdapter {
-    private static GridView gridview;
+public class MoreGoodsLvAdapter extends BaseAdapter {
     private BitmapUtil bitmapUtil;
     private Context context;
     private List<MoreGoodsResultBean.CenterEntity.ProsEntity> prosList;
 
-    public MoreGoodsGridViewAdapter(GridView gridview, Context context, List<MoreGoodsResultBean.CenterEntity.ProsEntity> prosList) {
-        this.gridview = gridview;
+    public MoreGoodsLvAdapter(Context context, List<MoreGoodsResultBean.CenterEntity.ProsEntity> prosList) {
         this.context = context;
         this.prosList = prosList;
         bitmapUtil = new BitmapUtil(context, FileUtil.getCachePath(context, "/bitmapcache"),

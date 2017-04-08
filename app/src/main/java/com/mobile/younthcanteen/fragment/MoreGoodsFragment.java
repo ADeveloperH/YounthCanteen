@@ -8,12 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.GridView;
+import android.widget.ListView;
 
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.activity.GoodsDetailInfoActivity;
 import com.mobile.younthcanteen.activity.PackageGoodsInfoActivity;
-import com.mobile.younthcanteen.adapter.MoreGoodsGridViewAdapter;
+import com.mobile.younthcanteen.adapter.MoreGoodsLvAdapter;
 import com.mobile.younthcanteen.bean.MoreGoodsResultBean;
 import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
@@ -30,7 +30,7 @@ public class MoreGoodsFragment extends Fragment{
     private View rootView;//缓存Fragment的View
     private boolean isNeedReLoad = true;//是否需要重新加载该Fragment数据
     private Context context;
-    private GridView gridView;
+    private ListView listView;
     private String typeId;
     private MoreGoodsResultBean bean;
 
@@ -106,9 +106,9 @@ public class MoreGoodsFragment extends Fragment{
                         ToastUtils.showShortToast(bean.getReturnMessage());
                         return;
                     }
-                    MoreGoodsGridViewAdapter adapter = new MoreGoodsGridViewAdapter(gridView,getActivity(),
+                    MoreGoodsLvAdapter adapter = new MoreGoodsLvAdapter(getActivity(),
                             bean.getCenter().get(0).getPros());
-                    gridView.setAdapter(adapter);
+                    listView.setAdapter(adapter);
                 } else {
                     ToastUtils.showShortToast("服务器异常，请稍后重试");
                 }
@@ -131,7 +131,7 @@ public class MoreGoodsFragment extends Fragment{
     }
 
     private void initView(View view) {
-        gridView = (GridView) view.findViewById(R.id.gv);
+        listView = (ListView) view.findViewById(R.id.gv);
 
         typeId = getArguments().getString("typeid","1");
 
@@ -139,7 +139,7 @@ public class MoreGoodsFragment extends Fragment{
 
     private void setListener() {
 
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();

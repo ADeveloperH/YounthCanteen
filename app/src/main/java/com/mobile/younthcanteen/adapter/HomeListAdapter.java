@@ -77,8 +77,8 @@ public class HomeListAdapter extends BaseAdapter {
                 adapter1.notifyDataSetChanged();
             } else {
                 adapter = new HomeGridViewAdapter1(viewHolder.gvHome, context, bean.getPros());
+                viewHolder.gvHome.setAdapter(adapter);
             }
-            viewHolder.gvHome.setAdapter(adapter);
         } else {
             viewHolder.gvHome.setNumColumns(2);
             if (adapter != null && (adapter instanceof  HomeGridViewAdapter2)) {
@@ -87,8 +87,8 @@ public class HomeListAdapter extends BaseAdapter {
                 adapter2.notifyDataSetChanged();
             } else {
                 adapter = new HomeGridViewAdapter2(viewHolder.gvHome, context, bean.getPros());
+                viewHolder.gvHome.setAdapter(adapter);
             }
-            viewHolder.gvHome.setAdapter(adapter);
         }
 
         viewHolder.llTitle.setOnClickListener(new View.OnClickListener() {

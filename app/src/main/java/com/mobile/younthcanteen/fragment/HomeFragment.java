@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
-import com.mobile.younthcanteen.activity.CheckOfficeActivity;
+import com.mobile.younthcanteen.activity.CheckBusinessCircleActivity;
 import com.mobile.younthcanteen.activity.MoreGoodsActivity;
 import com.mobile.younthcanteen.adapter.HomeFragmentPagerAdapter;
 import com.mobile.younthcanteen.adapter.HomeListAdapter;
@@ -172,7 +172,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         tvOfficeName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(getActivity(), CheckOfficeActivity.class), CHECKOFFICE_REQUEST_CODE);
+                startActivityForResult(new Intent(getActivity(), CheckBusinessCircleActivity.class), CHECKOFFICE_REQUEST_CODE);
             }
         });
         llTaoCan.setOnClickListener(new View.OnClickListener() {
@@ -237,7 +237,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                         ToastUtils.showShortToast("当前无可配送地址");
                     } else {
                         //默认展示第一个
-                        tvOfficeName.setText(officeDataList.get(0).getOffice().get(0).getOfficename());
+                        tvOfficeName.setText(officeDataList.get(0).getBusiness());
                     }
                 } else {
                     ToastUtils.showShortToast("服务器异常，请稍后重试");
@@ -515,7 +515,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == CHECKOFFICE_RESULT_CODE) {
             if (data != null) {
-                tvOfficeName.setText(data.getStringExtra("officename"));
+                tvOfficeName.setText(data.getStringExtra("businessname"));
             }
         }
     }
