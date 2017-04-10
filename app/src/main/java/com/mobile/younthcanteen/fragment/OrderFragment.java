@@ -3,7 +3,6 @@ package com.mobile.younthcanteen.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.LinearLayout;
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.activity.LoginActivity;
 import com.mobile.younthcanteen.adapter.OrderFragmentPagerAdapter;
+import com.mobile.younthcanteen.ui.NoScrollViewPager;
 import com.mobile.younthcanteen.ui.TabPageIndicator;
 import com.mobile.younthcanteen.util.LoginUtils;
 import com.mobile.younthcanteen.util.UIUtils;
@@ -34,7 +34,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
     private ArrayList<Fragment> listFragmentsa = new ArrayList<Fragment>();
     private static List<String> titleList = new ArrayList<String>();
     private TabPageIndicator tabPageIndicator;
-    private ViewPager viewpager;
+    private NoScrollViewPager viewpager;
     private LinearLayout llAlLogin;
     private LinearLayout llUnLogin;
 
@@ -104,9 +104,11 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
     private void initView(View view) {
         btnLogin = (Button) view.findViewById(R.id.btn_login);
         tabPageIndicator = (TabPageIndicator) view.findViewById(R.id.tab_page_indicator);
-        viewpager = (ViewPager) view.findViewById(R.id.viewpager);
+        viewpager = (NoScrollViewPager) view.findViewById(R.id.viewpager);
         llAlLogin = (LinearLayout) view.findViewById(R.id.ll_allogin);
         llUnLogin = (LinearLayout) view.findViewById(R.id.ll_unlogin);
+
+        viewpager.setNoScroll(true);
     }
 
     private void setListener() {

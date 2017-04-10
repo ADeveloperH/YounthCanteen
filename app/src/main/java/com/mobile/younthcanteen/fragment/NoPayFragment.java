@@ -7,14 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.activity.MainActivity;
-import com.mobile.younthcanteen.activity.OrderDetailActivity;
 import com.mobile.younthcanteen.adapter.NoPayOrderLvAdapter;
 import com.mobile.younthcanteen.bean.OrderResultBean;
 import com.mobile.younthcanteen.http.Http;
@@ -171,22 +169,22 @@ public class NoPayFragment extends Fragment implements View.OnClickListener {
     private void setListener() {
         btnOrder.setOnClickListener(this);
 
-        lvNoPayOrder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (noPayOrderLvAdapter != null ) {
-                    List<OrderResultBean.ResultsEntity> listData = noPayOrderLvAdapter.getResults();
-                    if (listData != null && listData.size() > 0) {
-                        OrderResultBean.ResultsEntity bean = listData.get(position);
-                        Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("orderInfo",bean);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    }
-                }
-            }
-        });
+//        lvNoPayOrder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                if (noPayOrderLvAdapter != null ) {
+//                    List<OrderResultBean.ResultsEntity> listData = noPayOrderLvAdapter.getResults();
+//                    if (listData != null && listData.size() > 0) {
+//                        OrderResultBean.ResultsEntity bean = listData.get(position);
+//                        Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
+//                        Bundle bundle = new Bundle();
+//                        bundle.putSerializable("orderInfo",bean);
+//                        intent.putExtras(bundle);
+//                        startActivity(intent);
+//                    }
+//                }
+//            }
+//        });
     }
 
     @Override

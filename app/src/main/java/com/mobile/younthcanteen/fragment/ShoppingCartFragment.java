@@ -27,6 +27,7 @@ import com.mobile.younthcanteen.bean.CommitOrderResult;
 import com.mobile.younthcanteen.bean.ShoppingCartItemBean;
 import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
+import com.mobile.younthcanteen.http.RequestParams;
 import com.mobile.younthcanteen.ui.ListViewForScroll;
 import com.mobile.younthcanteen.util.JsonUtil;
 import com.mobile.younthcanteen.util.LoginUtils;
@@ -92,6 +93,7 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
             initView(getView());
             setListener();
 //            getData();
+            getDefaultAddress();
             isNeedReLoad = false;
         }
     }
@@ -296,6 +298,16 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
         shoppingCartList = getAllShoppingList();
         if (shoppingCartList != null && shoppingCartList.size() > 0) {
             //购物车中有物品
+            if (addressBean != null) {
+                llNoAddress.setVisibility(View.GONE);
+                rlAddress.setVisibility(View.VISIBLE);
+                tvAddress.setText(addressBean.getAddr());
+                tvOffice.setText(addressBean.getOffice());
+                tvName.setText(addressBean.getConsignee());
+                tvTel.setText(addressBean.getTel());
+                tvSex.setText("1".equals(addressBean.getSex()) ? "女士" : "先生");
+            }
+
             tvModify.setVisibility(View.VISIBLE);
             tvNoShopping.setVisibility(View.GONE);
             svCartContent.setVisibility(View.VISIBLE);
@@ -334,5 +346,43 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
             svCartContent.setVisibility(View.GONE);
         }
         isRefreshUI = false;
+    }
+
+    /**
+     * 获取收货地址列表。默认展示第一个
+     */
+    private void getDefaultAddress() {
+        RequestParams params = new RequestParams();
+        params.put("token", SharedPreferencesUtil.getToken());
+        Http.post(Http.GETADDRESSLIST, params, new MyTextAsyncResponseHandler(getActivity(), "正在加载中...") {
+            @Override
+            public void onSuccess(String content) {
+                super.onSuccess(content);
+                try {
+                    AddressListBean bean = JsonUtil.fromJson(content, AddressListBean.class);
+                    if (bean == null) {
+                        ToastUtils.showShortToast("服务器数据异常，请稍后重试");
+                    } else {
+                        if (Http.SUCCESS.equals(bean.getReturnCode())) {
+                            List<AddressListBean.ResultsEntity> addressDataList = bean.getResults();
+                            if (addressDataList != null && addressDataList.size() > 0) {
+                                addressBean = addressDataList.get(0);
+                            }
+                        } else {
+                            ToastUtils.showShortToast(bean.getReturnMessage());
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showShortToast("数据异常，请稍后重试");
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable error) {
+                super.onFailure(error);
+                ToastUtils.showShortToast("服务器异常，请稍后重试");
+            }
+        });
     }
 }

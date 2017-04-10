@@ -3,15 +3,19 @@ package com.mobile.younthcanteen.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
+import com.mobile.younthcanteen.activity.OrderDetailActivity;
 import com.mobile.younthcanteen.activity.PayActivity;
 import com.mobile.younthcanteen.bean.OrderResultBean;
+import com.mobile.younthcanteen.ui.SwipeMenuLayout;
 import com.mobile.younthcanteen.util.BitmapUtil;
 import com.mobile.younthcanteen.util.FileUtil;
 import com.mobile.younthcanteen.util.UIUtils;
@@ -88,6 +92,16 @@ public class NoPayOrderLvAdapter extends BaseAdapter {
                 context.startActivity(intent);
             }
         });
+        vh.llContent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, OrderDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("orderInfo", resultsEntity);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
         return convertView;
     }
 
@@ -112,6 +126,10 @@ public class NoPayOrderLvAdapter extends BaseAdapter {
         TextView tvPay;
         @BindView(R.id.tv_state)
         TextView tvState;
+        @BindView(R.id.ll_content)
+        LinearLayout llContent;
+        @BindView(R.id.swiplayout)
+        SwipeMenuLayout swipLayout;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
