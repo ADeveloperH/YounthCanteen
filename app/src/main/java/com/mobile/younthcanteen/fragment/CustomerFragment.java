@@ -2,6 +2,8 @@ package com.mobile.younthcanteen.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,12 +24,15 @@ import com.mobile.younthcanteen.bean.UserDetailInfoBean;
 import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
 import com.mobile.younthcanteen.http.RequestParams;
+import com.mobile.younthcanteen.ui.CircleDrawable;
+import com.mobile.younthcanteen.util.BitmapUtil;
 import com.mobile.younthcanteen.util.DownLoader;
 import com.mobile.younthcanteen.util.JsonUtil;
 import com.mobile.younthcanteen.util.LoginUtils;
 import com.mobile.younthcanteen.util.NetWorkUtil;
 import com.mobile.younthcanteen.util.SharedPreferencesUtil;
 import com.mobile.younthcanteen.util.ToastUtils;
+import com.mobile.younthcanteen.util.UIUtils;
 import com.mobile.younthcanteen.util.UpdateAppUtil;
 
 /**
@@ -50,6 +55,7 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
     private ImageView ivRightArrow;
     private Activity mActivity;
     private TextView tvServicePhone;
+    private BitmapUtil bitmapUtil;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -126,22 +132,34 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
-                UserDetailInfoBean bean = JsonUtil.fromJson(content, UserDetailInfoBean.class);
-                if (null != bean) {
-                    if (!Http.SUCCESS.equals(bean.getReturnCode())) {
-                        ToastUtils.showShortToast(bean.getReturnMessage());
-                        return;
+                try {
+                    UserDetailInfoBean bean = JsonUtil.fromJson(content, UserDetailInfoBean.class);
+                    if (null != bean) {
+                        if (!Http.SUCCESS.equals(bean.getReturnCode())) {
+                            ToastUtils.showShortToast(bean.getReturnMessage());
+                            return;
+                        }
+                        UserDetailInfoBean.ResultsEntity result = bean.getResults();
+                        SharedPreferencesUtil.setNickName(result.getNick());
+                        SharedPreferencesUtil.setToken(result.getToken());
+                        SharedPreferencesUtil.setUserId(result.getUserid());
+                        SharedPreferencesUtil.setPoint(result.getPoint());
+                        SharedPreferencesUtil.setMoney(result.getMoney());
+                        SharedPreferencesUtil.setIsSetPayPwd(result.isIspaypassset());
+                        tvNickName.setText(result.getNick());
+                        bitmapUtil.display(ivUserIcon, result.getImgs(), new BitmapUtil.BitmapLoadCallBack() {
+                            @Override
+                            public void onLoadCompleted(Bitmap bitmap) {
+                                ivUserIcon.setImageDrawable(new CircleDrawable(bitmap));
+                            }
+                        });
+
+                    } else {
+                        ToastUtils.showShortToast("服务器数据异常，请稍后重试");
                     }
-                    UserDetailInfoBean.ResultsEntity result = bean.getResults();
-                    SharedPreferencesUtil.setNickName(result.getNick());
-                    SharedPreferencesUtil.setToken(result.getToken());
-                    SharedPreferencesUtil.setUserId(result.getUserid());
-                    SharedPreferencesUtil.setPoint(result.getPoint());
-                    SharedPreferencesUtil.setMoney(result.getMoney());
-                    SharedPreferencesUtil.setIsSetPayPwd(result.isIspaypassset());
-                    tvNickName.setText(result.getNick());
-                } else {
-                    ToastUtils.showShortToast("服务器数据异常，请稍后重试");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showShortToast("数据异常，请稍后重试");
                 }
 
             }
@@ -170,6 +188,9 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
         llYaoQing = (LinearLayout) view.findViewById(R.id.ll_yaoqing);
         llFanKui = (LinearLayout) view.findViewById(R.id.ll_fankui);
         llUpdate = (LinearLayout) view.findViewById(R.id.ll_update);
+
+        Drawable drawable = UIUtils.getDrawable(R.drawable.user_icon_default);
+        bitmapUtil = new BitmapUtil(getActivity(),drawable,drawable);
     }
 
     private void setListener() {

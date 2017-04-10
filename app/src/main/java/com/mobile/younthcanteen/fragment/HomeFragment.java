@@ -226,21 +226,26 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
-                OfficeAddressBean bean = JsonUtil.fromJson(content, OfficeAddressBean.class);
-                if (null != bean) {
-                    if (!Http.SUCCESS.equals(bean.getReturnCode())) {
-                        ToastUtils.showShortToast(bean.getReturnMessage());
-                        return;
-                    }
-                    List<OfficeAddressBean.ResultsEntity> officeDataList = bean.getResults();
-                    if (officeDataList == null || officeDataList.size() == 0) {
-                        ToastUtils.showShortToast("当前无可配送地址");
+                try {
+                    OfficeAddressBean bean = JsonUtil.fromJson(content, OfficeAddressBean.class);
+                    if (null != bean) {
+                        if (!Http.SUCCESS.equals(bean.getReturnCode())) {
+                            ToastUtils.showShortToast(bean.getReturnMessage());
+                            return;
+                        }
+                        List<OfficeAddressBean.ResultsEntity> officeDataList = bean.getResults();
+                        if (officeDataList == null || officeDataList.size() == 0) {
+                            ToastUtils.showShortToast("当前无可配送地址");
+                        } else {
+                            //默认展示第一个
+                            tvOfficeName.setText(officeDataList.get(0).getBusiness());
+                        }
                     } else {
-                        //默认展示第一个
-                        tvOfficeName.setText(officeDataList.get(0).getBusiness());
+                        ToastUtils.showShortToast("服务器异常，请稍后重试");
                     }
-                } else {
-                    ToastUtils.showShortToast("服务器异常，请稍后重试");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showShortToast("数据异常，请稍后重试");
                 }
             }
 
@@ -259,20 +264,25 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
-                HomeDataBean homeDataBean = JsonUtil.fromJson(content, HomeDataBean.class);
-                if (null != homeDataBean) {
-                    if (Http.SUCCESS.equals(homeDataBean.getReturnCode())) {
-                        //成功
-                        showListView(homeDataBean.getCenter());
-                        viewPagerDataList = homeDataBean.getTop();
-                        initViewPagerData();
-                        //保存类别数据
-                        saveTypeData(homeDataBean.getCenter());
-                    }
-                    ToastUtils.showShortToast(homeDataBean.getReturnMessage());
+                try {
+                    HomeDataBean homeDataBean = JsonUtil.fromJson(content, HomeDataBean.class);
+                    if (null != homeDataBean) {
+                        if (Http.SUCCESS.equals(homeDataBean.getReturnCode())) {
+                            //成功
+                            showListView(homeDataBean.getCenter());
+                            viewPagerDataList = homeDataBean.getTop();
+                            initViewPagerData();
+                            //保存类别数据
+                            saveTypeData(homeDataBean.getCenter());
+                        }
+                        ToastUtils.showShortToast(homeDataBean.getReturnMessage());
 
-                } else {
-                    ToastUtils.showShortToast("服务器数据异常,请稍后重试.");
+                    } else {
+                        ToastUtils.showShortToast("服务器数据异常,请稍后重试.");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showShortToast("数据异常，请稍后重试");
                 }
             }
 

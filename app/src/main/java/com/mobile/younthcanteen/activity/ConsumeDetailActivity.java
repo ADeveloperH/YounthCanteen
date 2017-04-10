@@ -52,22 +52,27 @@ public class ConsumeDetailActivity extends BaseActivity {
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
-                ConsumeDetailBean bean = JsonUtil.fromJson(content, ConsumeDetailBean.class);
-                if (null != bean) {
-                    if (!Http.SUCCESS.equals(bean.getReturnCode())) {
-                        ToastUtils.showShortToast(bean.getReturnMessage());
-                        return;
-                    }
+                try {
+                    ConsumeDetailBean bean = JsonUtil.fromJson(content, ConsumeDetailBean.class);
+                    if (null != bean) {
+                        if (!Http.SUCCESS.equals(bean.getReturnCode())) {
+                            ToastUtils.showShortToast(bean.getReturnMessage());
+                            return;
+                        }
 
-                    List<ConsumeDetailBean.ResultsEntity> results = bean.getResults();
-                    if (results == null || results.size() <= 0) {
-                        ToastUtils.showShortToast("暂无消费记录");
+                        List<ConsumeDetailBean.ResultsEntity> results = bean.getResults();
+                        if (results == null || results.size() <= 0) {
+                            ToastUtils.showShortToast("暂无消费记录");
+                        } else {
+                            showDetail(results);
+                        }
+
                     } else {
-                        showDetail(results);
+                        ToastUtils.showShortToast("服务器数据异常，请稍后重试");
                     }
-
-                } else {
-                    ToastUtils.showShortToast("服务器数据异常，请稍后重试");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showShortToast("数据异常，请稍后重试");
                 }
             }
 

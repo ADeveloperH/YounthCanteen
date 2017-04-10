@@ -97,32 +97,37 @@ public class MyAddressActivity extends BaseActivity {
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
-                AddressListBean bean = JsonUtil.fromJson(content, AddressListBean.class);
-                if (bean == null) {
-                    ToastUtils.showShortToast("服务器数据异常，请稍后重试");
-                } else {
-                    if (Http.SUCCESS.equals(bean.getReturnCode())) {
-                        addressDataList = bean.getResults();
-                        if (addressDataList != null && addressDataList.size() > 0) {
-                            adapter = new MyAddressListAdapter(act,addressDataList, isShowModify, new DeleteAddressListener() {
-                                @Override
-                                public void deleteSucess() {
-                                    ToastUtils.showShortToast("删除成功");
-                                    getAddList();
-                                }
-                            });
-                            lvAddress.setAdapter(adapter);
-                        } else {
-                            if (adapter != null) {
-                                adapter.setAddressDataList(null);
-                                adapter.notifyDataSetChanged();
-                            }
-                            ToastUtils.showShortToast("当前暂无常用收货地址");
-                            showInitState();
-                        }
+                try {
+                    AddressListBean bean = JsonUtil.fromJson(content, AddressListBean.class);
+                    if (bean == null) {
+                        ToastUtils.showShortToast("服务器数据异常，请稍后重试");
                     } else {
-                        ToastUtils.showShortToast(bean.getReturnMessage());
+                        if (Http.SUCCESS.equals(bean.getReturnCode())) {
+                            addressDataList = bean.getResults();
+                            if (addressDataList != null && addressDataList.size() > 0) {
+                                adapter = new MyAddressListAdapter(act,addressDataList, isShowModify, new DeleteAddressListener() {
+                                    @Override
+                                    public void deleteSucess() {
+                                        ToastUtils.showShortToast("删除成功");
+                                        getAddList();
+                                    }
+                                });
+                                lvAddress.setAdapter(adapter);
+                            } else {
+                                if (adapter != null) {
+                                    adapter.setAddressDataList(null);
+                                    adapter.notifyDataSetChanged();
+                                }
+                                ToastUtils.showShortToast("当前暂无常用收货地址");
+                                showInitState();
+                            }
+                        } else {
+                            ToastUtils.showShortToast(bean.getReturnMessage());
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showShortToast("数据异常，请稍后重试");
                 }
             }
 

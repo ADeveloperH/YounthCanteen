@@ -231,6 +231,31 @@ public class Http {
      *
      * @param url             相对地址
      * @param filePath        文件绝对路径
+     * @param responseHandler
+     */
+    public static void uploadFileImage(final String url,
+                                       final String filePath,
+                                       String token,
+                                       String imgtype,
+                                       final Callback<ResponseBody> responseHandler) {
+        if (TextUtils.isEmpty(url) || TextUtils.isEmpty(filePath)) {
+            Log.e("Http", "请求地址和文件路径不能为空");
+        } else {
+            //带参数
+            File file = new File(filePath);
+            RequestBody photoRequestBody = RequestBody.create(MediaType.parse("image/*"), file);
+            MultipartBody.Part photo = MultipartBody.Part.createFormData("photos", file.getName(),
+                    photoRequestBody);
+            ApiRequestFactory.INSTANCE.getiUploadFileRequest()
+                    .uploadFileWithHeader(url, token,imgtype,photo).enqueue(responseHandler);
+        }
+    }
+
+    /**
+     * POST上传单个文件
+     *
+     * @param url             相对地址
+     * @param filePath        文件绝对路径
      * @param params          参数Map
      * @param responseHandler
      */

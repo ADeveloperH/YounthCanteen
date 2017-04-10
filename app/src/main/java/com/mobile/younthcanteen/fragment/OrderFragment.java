@@ -122,10 +122,10 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
             listFragmentsa.clear();
         }
 
-        titleList.add("已付款");
         titleList.add("未付款");
-        listFragmentsa.add(new PaidFragment());
+        titleList.add("已付款");
         listFragmentsa.add(new NoPayFragment());
+        listFragmentsa.add(new PaidFragment());
         if (mAdatpter == null) {
             // 此处，如果不是继承的FragmentActivity,而是继承的Fragment，则参数应该传入getChildFragmentManager()
             mAdatpter = new OrderFragmentPagerAdapter(getChildFragmentManager(),

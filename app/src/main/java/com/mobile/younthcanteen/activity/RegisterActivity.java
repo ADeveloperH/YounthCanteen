@@ -182,20 +182,25 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
-                if (TextUtils.isEmpty(content)) {
-                    ToastUtils.showLongToast("服务器响应失败");
-                    return;
-                }
-                RegisterResultBean registerResultBean = JsonUtil.fromJson(content,
-                        RegisterResultBean.class);
-                ToastUtils.showLongToast(registerResultBean.getReturnMessage());
-                if (Http.SUCCESS.equals(registerResultBean.getReturnCode())) {
-                    SharedPreferencesUtil.setToken(registerResultBean.getResults().getToken());
-                    SharedPreferencesUtil.setAccount(phoneNumStr);
-                    SharedPreferencesUtil.setUserId(registerResultBean.getResults().getUserid());
-                    SharedPreferencesUtil.setNickName(registerResultBean.getResults().getNick());
-                    startActivity(new Intent(act,MainActivity.class));
-                    finish();
+                try {
+                    if (TextUtils.isEmpty(content)) {
+                        ToastUtils.showLongToast("服务器响应失败");
+                        return;
+                    }
+                    RegisterResultBean registerResultBean = JsonUtil.fromJson(content,
+                            RegisterResultBean.class);
+                    ToastUtils.showLongToast(registerResultBean.getReturnMessage());
+                    if (Http.SUCCESS.equals(registerResultBean.getReturnCode())) {
+                        SharedPreferencesUtil.setToken(registerResultBean.getResults().getToken());
+                        SharedPreferencesUtil.setAccount(phoneNumStr);
+                        SharedPreferencesUtil.setUserId(registerResultBean.getResults().getUserid());
+                        SharedPreferencesUtil.setNickName(registerResultBean.getResults().getNick());
+                        startActivity(new Intent(act,MainActivity.class));
+                        finish();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showShortToast("数据异常，请稍后重试");
                 }
 
             }

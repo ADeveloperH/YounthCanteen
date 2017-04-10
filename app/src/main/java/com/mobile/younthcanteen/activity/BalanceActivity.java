@@ -74,22 +74,27 @@ public class BalanceActivity extends BaseActivity {
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
-                UserDetailInfoBean bean = JsonUtil.fromJson(content, UserDetailInfoBean.class);
-                if (null != bean) {
-                    if (!Http.SUCCESS.equals(bean.getReturnCode())) {
-                        ToastUtils.showShortToast(bean.getReturnMessage());
-                        return;
+                try {
+                    UserDetailInfoBean bean = JsonUtil.fromJson(content, UserDetailInfoBean.class);
+                    if (null != bean) {
+                        if (!Http.SUCCESS.equals(bean.getReturnCode())) {
+                            ToastUtils.showShortToast(bean.getReturnMessage());
+                            return;
+                        }
+                        UserDetailInfoBean.ResultsEntity result = bean.getResults();
+                        SharedPreferencesUtil.setNickName(result.getNick());
+                        SharedPreferencesUtil.setToken(result.getToken());
+                        SharedPreferencesUtil.setUserId(result.getUserid());
+                        SharedPreferencesUtil.setPoint(result.getPoint());
+                        SharedPreferencesUtil.setMoney(result.getMoney());
+                        SharedPreferencesUtil.setIsSetPayPwd(result.isIspaypassset());
+                        tvYue.setText(result.getMoney());
+                    } else {
+                        ToastUtils.showShortToast("服务器数据异常，请稍后重试");
                     }
-                    UserDetailInfoBean.ResultsEntity result = bean.getResults();
-                    SharedPreferencesUtil.setNickName(result.getNick());
-                    SharedPreferencesUtil.setToken(result.getToken());
-                    SharedPreferencesUtil.setUserId(result.getUserid());
-                    SharedPreferencesUtil.setPoint(result.getPoint());
-                    SharedPreferencesUtil.setMoney(result.getMoney());
-                    SharedPreferencesUtil.setIsSetPayPwd(result.isIspaypassset());
-                    tvYue.setText(result.getMoney());
-                } else {
-                    ToastUtils.showShortToast("服务器数据异常，请稍后重试");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showShortToast("数据异常，请稍后重试");
                 }
 
             }

@@ -107,15 +107,20 @@ public class PaidFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
-                OrderResultBean bean = JsonUtil.fromJson(content, OrderResultBean.class);
-                if (null != bean) {
-                    if (!Http.SUCCESS.equals(bean.getReturnCode())) {
-                        ToastUtils.showShortToast(bean.getReturnMessage());
-                        return;
+                try {
+                    OrderResultBean bean = JsonUtil.fromJson(content, OrderResultBean.class);
+                    if (null != bean) {
+                        if (!Http.SUCCESS.equals(bean.getReturnCode())) {
+                            ToastUtils.showShortToast(bean.getReturnMessage());
+                            return;
+                        }
+                        showOrder(bean.getResults());
+                    } else {
+                        ToastUtils.showShortToast("服务器异常，请稍后重试");
                     }
-                    showOrder(bean.getResults());
-                } else {
-                    ToastUtils.showShortToast("服务器异常，请稍后重试");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showShortToast("数据异常，请稍后重试");
                 }
             }
 

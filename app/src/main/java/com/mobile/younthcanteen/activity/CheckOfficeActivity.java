@@ -67,25 +67,30 @@ public class CheckOfficeActivity extends BaseActivity {
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
-                OfficeAddressBean bean = JsonUtil.fromJson(content, OfficeAddressBean.class);
-                if (null != bean) {
-                    if (!Http.SUCCESS.equals(bean.getReturnCode())) {
-                        ToastUtils.showShortToast(bean.getReturnMessage());
-                        return;
-                    }
-                    List<OfficeAddressBean.ResultsEntity> officeDataList = bean.getResults();
-                    if (officeDataList == null || officeDataList.size() == 0) {
-                        ToastUtils.showShortToast("当前无可配送地址");
-                    } else {
-                        CheckOfficeELvAdapter adapter = new CheckOfficeELvAdapter(act,officeDataList);
-                        expandListView.setAdapter(adapter);
-                        for (int i = 0; i < adapter.getGroupCount(); i++) {
-                            // 展开所有分组
-                            expandListView.expandGroup(i);
+                try {
+                    OfficeAddressBean bean = JsonUtil.fromJson(content, OfficeAddressBean.class);
+                    if (null != bean) {
+                        if (!Http.SUCCESS.equals(bean.getReturnCode())) {
+                            ToastUtils.showShortToast(bean.getReturnMessage());
+                            return;
                         }
+                        List<OfficeAddressBean.ResultsEntity> officeDataList = bean.getResults();
+                        if (officeDataList == null || officeDataList.size() == 0) {
+                            ToastUtils.showShortToast("当前无可配送地址");
+                        } else {
+                            CheckOfficeELvAdapter adapter = new CheckOfficeELvAdapter(act,officeDataList);
+                            expandListView.setAdapter(adapter);
+                            for (int i = 0; i < adapter.getGroupCount(); i++) {
+                                // 展开所有分组
+                                expandListView.expandGroup(i);
+                            }
+                        }
+                    } else {
+                        ToastUtils.showShortToast("服务器异常，请稍后重试");
                     }
-                } else {
-                    ToastUtils.showShortToast("服务器异常，请稍后重试");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showShortToast("数据异常，请稍后重试");
                 }
             }
 

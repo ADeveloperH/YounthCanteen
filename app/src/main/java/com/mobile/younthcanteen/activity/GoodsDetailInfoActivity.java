@@ -228,16 +228,21 @@ public class GoodsDetailInfoActivity extends Activity implements ViewPager.OnPag
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
-                GoodsDetailInfoBean bean = JsonUtil.fromJson(content, GoodsDetailInfoBean.class);
-                if (bean == null) {
-                    ToastUtils.showShortToast("服务器数据异常，请稍后重试");
-                } else {
-                    if (Http.SUCCESS.equals(bean.getReturnCode())) {
-                        goodsInfoBean = bean.getResults();
-                        showDetailInfo(goodsInfoBean);
+                try {
+                    GoodsDetailInfoBean bean = JsonUtil.fromJson(content, GoodsDetailInfoBean.class);
+                    if (bean == null) {
+                        ToastUtils.showShortToast("服务器数据异常，请稍后重试");
                     } else {
-                        ToastUtils.showShortToast(bean.getReturnMessage());
+                        if (Http.SUCCESS.equals(bean.getReturnCode())) {
+                            goodsInfoBean = bean.getResults();
+                            showDetailInfo(goodsInfoBean);
+                        } else {
+                            ToastUtils.showShortToast(bean.getReturnMessage());
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showShortToast("数据异常，请稍后重试");
                 }
             }
 

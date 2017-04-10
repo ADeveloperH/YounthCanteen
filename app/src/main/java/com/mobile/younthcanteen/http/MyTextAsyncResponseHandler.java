@@ -4,14 +4,20 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.widget.Toast;
+
+import com.mobile.younthcanteen.AppManager;
+import com.mobile.younthcanteen.activity.LoginActivity;
+import com.mobile.younthcanteen.util.ToastUtils;
 
 import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.HttpHostConnectException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.SocketException;
@@ -96,31 +102,26 @@ public class MyTextAsyncResponseHandler extends MyCallback {
         /**
          * 这里判断，如果此时的token已经失效了就提醒账户重新登录
          */
-//        if(!TextUtils.isEmpty(content)){
-//            try {
-//                JSONObject jsonObject = new JSONObject(content);
-//                if(jsonObject.has("Returncode")){
-//                    String returnCode = jsonObject.getString("Returncode");
-//                    String returnMessage = jsonObject
-//                            .getString("Returnmessage");
-//                    if ("444".equals(returnCode)) {
-//                        ResponseHandlerUtil.handleRelogin(context,returnMessage);
-////						ResponseHandlerUtil.handleExceptionState(context,returnMessage);
-//                        return;
-//                    } else if ("222".equals(returnCode)) {
-//                        ResponseHandlerUtil.handleExceptionState(context,returnMessage);
-//                        return;
-//                    }else if ("944".equals(returnCode)) {
-//                        //非法请求
-//                        ToastUtils.showLongToast(returnMessage);
-//                        return;
-//                    }
-//                }
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//                return;
-//            }
-//        }
+        if(!TextUtils.isEmpty(content)){
+            try {
+                JSONObject jsonObject = new JSONObject(content);
+                if(jsonObject.has("returnCode")){
+                    String returnCode = jsonObject.getString("returnCode");
+                    String returnMessage = jsonObject
+                            .getString("returnMessage");
+                    if ("-101".equals(returnCode)) {
+                        //用户下线
+                        ToastUtils.showShortToast(returnMessage);
+                        AppManager.getAppManager().finishAllActivity();
+                        context.startActivity(new Intent(context, LoginActivity.class));
+                        return;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+        }
     }
 
     @Override

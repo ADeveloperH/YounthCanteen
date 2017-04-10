@@ -18,7 +18,6 @@ import com.mobile.younthcanteen.AppManager;
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
-import com.mobile.younthcanteen.http.RequestParams;
 import com.mobile.younthcanteen.ui.SelectPicPopupWindow;
 import com.mobile.younthcanteen.util.DataCheckUtils;
 import com.mobile.younthcanteen.util.DialogUtil;
@@ -216,12 +215,8 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
     private void submitIcon() {
         try {
             String filePath = StringUtil.getThumbUploadPath(tempFile.getAbsolutePath(), 200);//得到压缩后的图片地址
-            File file = new File(filePath);
-            RequestParams params = new RequestParams();
-            params.put("token", SharedPreferencesUtil.getToken());
-            System.out.println("token::" + SharedPreferencesUtil.getToken()) ;
-
-            Http.uploadFile(Http.UPLOADIMG, filePath, params, new MyTextAsyncResponseHandler(act, "正在上传中...") {
+            Http.uploadFileImage(Http.UPLOADIMG, filePath, SharedPreferencesUtil.getToken(),"jpg"
+                    , new MyTextAsyncResponseHandler(act, "正在上传中...") {
                 @Override
                 public void onSuccess(String content) {
                     super.onSuccess(content);

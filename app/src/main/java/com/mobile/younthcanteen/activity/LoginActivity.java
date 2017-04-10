@@ -163,19 +163,24 @@ public class LoginActivity extends Activity implements View.OnClickListener, Vie
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
-                if (!TextUtils.isEmpty(content)) {
-                    LoginResultBean loginResultBean = JsonUtil.fromJson(content, LoginResultBean.class);
-                    ToastUtils.showLongToast(loginResultBean.getReturnMessage());
-                    if (Http.SUCCESS.equals(loginResultBean.getReturnCode())) {
-                        SharedPreferencesUtil.setToken(loginResultBean.getResults().getToken());
-                        SharedPreferencesUtil.setAccount(inputAccountStr);
-                        SharedPreferencesUtil.setUserId(loginResultBean.getResults().getUserid());
-                        SharedPreferencesUtil.setNickName(loginResultBean.getResults().getNick());
-                        startActivity(new Intent(act,MainActivity.class));
-                        finish();
+                try {
+                    if (!TextUtils.isEmpty(content)) {
+                        LoginResultBean loginResultBean = JsonUtil.fromJson(content, LoginResultBean.class);
+                        ToastUtils.showLongToast(loginResultBean.getReturnMessage());
+                        if (Http.SUCCESS.equals(loginResultBean.getReturnCode())) {
+                            SharedPreferencesUtil.setToken(loginResultBean.getResults().getToken());
+                            SharedPreferencesUtil.setAccount(inputAccountStr);
+                            SharedPreferencesUtil.setUserId(loginResultBean.getResults().getUserid());
+                            SharedPreferencesUtil.setNickName(loginResultBean.getResults().getNick());
+                            startActivity(new Intent(act,MainActivity.class));
+                            finish();
+                        }
+                    } else {
+                        ToastUtils.showLongToast("服务器响应失败");
                     }
-                } else {
-                    ToastUtils.showLongToast("服务器响应失败");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showShortToast("数据异常，请稍后重试");
                 }
             }
 

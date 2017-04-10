@@ -128,16 +128,21 @@ public class AccountRechargeActivity extends BaseActivity {
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
-                OrderResultByAlipayBean bean = JsonUtil.fromJson(content,
-                        OrderResultByAlipayBean.class);
-                if (null != bean) {
-                    if (!Http.SUCCESS.equals(bean.getReturnCode())) {
-                        ToastUtils.showShortToast(bean.getReturnMessage());
-                        return;
+                try {
+                    OrderResultByAlipayBean bean = JsonUtil.fromJson(content,
+                            OrderResultByAlipayBean.class);
+                    if (null != bean) {
+                        if (!Http.SUCCESS.equals(bean.getReturnCode())) {
+                            ToastUtils.showShortToast(bean.getReturnMessage());
+                            return;
+                        }
+                        awakeAlipay(bean.getSignOrder());
+                    } else {
+                        ToastUtils.showShortToast("服务器异常，请稍后重试");
                     }
-                    awakeAlipay(bean.getSignOrder());
-                } else {
-                    ToastUtils.showShortToast("服务器异常，请稍后重试");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showShortToast("数据异常，请稍后重试");
                 }
             }
 
@@ -196,14 +201,19 @@ public class AccountRechargeActivity extends BaseActivity {
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
-                SimpleResultBean bean = JsonUtil.fromJson(content, SimpleResultBean.class);
-                if (null != bean) {
-                    ToastUtils.showLongToast(bean.getReturnMessage());
-                    if (Http.SUCCESS.equals(bean.getReturnCode())) {
-                        finish();
+                try {
+                    SimpleResultBean bean = JsonUtil.fromJson(content, SimpleResultBean.class);
+                    if (null != bean) {
+                        ToastUtils.showLongToast(bean.getReturnMessage());
+                        if (Http.SUCCESS.equals(bean.getReturnCode())) {
+                            finish();
+                        }
+                    } else {
+                        ToastUtils.showLongToast("服务器异常，请稍后重试");
                     }
-                } else {
-                    ToastUtils.showLongToast("服务器异常，请稍后重试");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showShortToast("数据异常，请稍后重试");
                 }
             }
 

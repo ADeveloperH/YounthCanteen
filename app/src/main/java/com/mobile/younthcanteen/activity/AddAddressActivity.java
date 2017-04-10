@@ -156,14 +156,19 @@ public class AddAddressActivity extends BaseActivity {
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
-                SimpleResultBean bean = JsonUtil.fromJson(content, SimpleResultBean.class);
-                if (null != bean) {
-                    ToastUtils.showLongToast(bean.getReturnMessage());
-                    if (Http.SUCCESS.equals(bean.getReturnCode())) {
-                        finish();
+                try {
+                    SimpleResultBean bean = JsonUtil.fromJson(content, SimpleResultBean.class);
+                    if (null != bean) {
+                        ToastUtils.showLongToast(bean.getReturnMessage());
+                        if (Http.SUCCESS.equals(bean.getReturnCode())) {
+                            finish();
+                        }
+                    } else {
+                        ToastUtils.showShortToast("服务器异常，请稍后重试");
                     }
-                } else {
-                    ToastUtils.showShortToast("服务器异常，请稍后重试");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showShortToast("数据异常，请稍后重试");
                 }
             }
 

@@ -100,17 +100,22 @@ public class MoreGoodsFragment extends Fragment{
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
-                bean = JsonUtil.fromJson(content, MoreGoodsResultBean.class);
-                if (null != bean) {
-                    if (!Http.SUCCESS.equals(bean.getReturnCode())) {
-                        ToastUtils.showShortToast(bean.getReturnMessage());
-                        return;
+                try {
+                    bean = JsonUtil.fromJson(content, MoreGoodsResultBean.class);
+                    if (null != bean) {
+                        if (!Http.SUCCESS.equals(bean.getReturnCode())) {
+                            ToastUtils.showShortToast(bean.getReturnMessage());
+                            return;
+                        }
+                        MoreGoodsLvAdapter adapter = new MoreGoodsLvAdapter(getActivity(),
+                                bean.getCenter().get(0).getPros());
+                        listView.setAdapter(adapter);
+                    } else {
+                        ToastUtils.showShortToast("服务器异常，请稍后重试");
                     }
-                    MoreGoodsLvAdapter adapter = new MoreGoodsLvAdapter(getActivity(),
-                            bean.getCenter().get(0).getPros());
-                    listView.setAdapter(adapter);
-                } else {
-                    ToastUtils.showShortToast("服务器异常，请稍后重试");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showShortToast("数据异常，请稍后重试");
                 }
             }
 
