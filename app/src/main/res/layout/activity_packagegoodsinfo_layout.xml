@@ -124,18 +124,20 @@
 
                     <TextView
                         android:id="@+id/tv_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:text="五香烤肠"
+                        android:gravity="left"
                         android:textColor="@color/textblack"
                         android:textSize="18dp" />
 
                     <TextView
                         android:id="@+id/tv_price"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
-                        android:layout_weight="1"
+                        android:layout_marginRight="8dp"
                         android:gravity="left|center_vertical"
                         android:text="￥2元"
                         android:textColor="@color/text_price_red"

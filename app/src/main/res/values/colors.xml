@@ -8,7 +8,7 @@
     <color name="black">#000000</color>
     <color name="textblack">#333333</color>
     <color name="grayblack">#666666</color>
-    <color name="divideline">#666666</color>
+    <color name="divideline">#e6e6e6</color>
     <color name="myyellow">#fd9800</color>
     <color name="gray_bg">#eeeeee</color>
     <color name="text_price_red">#ff4038</color>

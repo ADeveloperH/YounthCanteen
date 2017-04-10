@@ -178,6 +178,10 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
                 break;
             case R.id.ll_remark://备注
                 Intent intent = new Intent(getActivity(), AddRemarkActivity.class);
+                String markStr = tvRemark.getText().toString().trim();
+                if (!TextUtils.isEmpty(markStr) && !remarkDefault.equals(markStr)) {
+                    intent.putExtra("remark", markStr);
+                }
                 startActivityForResult(intent, GETREMARK_REQUESTCODE);
                 break;
         }

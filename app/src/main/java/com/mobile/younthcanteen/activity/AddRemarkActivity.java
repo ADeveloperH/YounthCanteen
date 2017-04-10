@@ -46,6 +46,13 @@ public class AddRemarkActivity extends BaseActivity {
         setContentView(R.layout.activity_add_remark_layout);
         ButterKnife.bind(this);
 
+
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("remark")) {
+            etRemark.setText(intent.getStringExtra("remark"));
+            etRemark.setSelection(etRemark.getText().toString().trim().length());
+        }
+
         setClickSubTitleListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -32,6 +32,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:text="铁板烧烤"
                 android:textColor="@color/black"
                 android:textSize="14dp" />
@@ -42,6 +44,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_name"
                 android:layout_marginTop="8dp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:gravity="center"
                 android:text="米饭+鱼香肉丝（赠送煎蛋一枚）"
                 android:textColor="@color/textblack"
@@ -60,7 +64,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="bottom"
+                    android:gravity="bottom|left"
                     android:text="优惠价：10元/份"
                     android:textColor="@color/textblack"
                     android:textSize="11dp" />

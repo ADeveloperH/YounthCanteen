@@ -99,7 +99,7 @@ public class TabPageIndicator extends HorizontalScrollView {
         MODE_NOWEIGHT_NOEXPAND_SAME(2),// 非平均分配，非扩展，导标相等
         MODE_NOWEIGHT_NOEXPAND_NOSAME(3),// 非平均分配，非扩展，导标不相等
         MODE_NOWEIGHT_EXPAND_SAME(4),// 可扩展，导标相等
-        MODE_NOWEIGHT_EXPAND_NOSAME(5);// 不可扩展，导标不相等
+        MODE_NOWEIGHT_EXPAND_NOSAME(5);// 可扩展，导标不相等
         private int value;
 
         IndicatorMode(int value) {
@@ -220,6 +220,7 @@ public class TabPageIndicator extends HorizontalScrollView {
                 break;
             case MODE_NOWEIGHT_EXPAND_NOSAME:
                 isExpand = true;
+                isSameLine = true;
                 isExpandSameLine = false;
                 tabPadding = dip2px(10);
                 break;
@@ -510,6 +511,25 @@ public class TabPageIndicator extends HorizontalScrollView {
                     TextView textView = (TextView) v;
                     textView.setTextColor(i == pager.getCurrentItem() ? tabTextColorSelected : tabTextColor);
                 }
+            }
+        }
+    }
+
+    public void setCurrentItem(int position) {
+        currentPosition = position;
+        int offset = (tabsContainer.getChildAt(position).getWidth());
+        scrollToChild(position, offset);
+        invalidate();
+        if (delegatePageListener != null) {
+            delegatePageListener.onPageSelected(position);
+        }
+
+        //使当前item高亮
+        for (int i = 0; i < tabCount; i++) {
+            View v = tabsContainer.getChildAt(i);
+            if (v instanceof TextView) {
+                TextView textView = (TextView) v;
+                textView.setTextColor(i == pager.getCurrentItem() ? tabTextColorSelected : tabTextColor);
             }
         }
     }
