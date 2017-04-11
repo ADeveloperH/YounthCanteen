@@ -2,6 +2,7 @@ package com.mobile.younthcanteen.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -19,8 +20,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
-import com.mobile.younthcanteen.adapter.MoreGoodsLvAdapter;
+import com.mobile.younthcanteen.adapter.SearchGoodsLvAdapter;
 import com.mobile.younthcanteen.bean.MoreGoodsResultBean;
+import com.mobile.younthcanteen.bean.SearchBean;
 import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
 import com.mobile.younthcanteen.http.RequestParams;
@@ -57,8 +59,8 @@ public class SearchActivity extends Activity {
     private int lastRequestSize = 0;//上次请求返回的数据大小
     private final int pageCount = 15;//每页的数量。后台写死的
     private Context context;
-    List<MoreGoodsResultBean.CenterEntity.ProsEntity> prosList;
-    private MoreGoodsLvAdapter moreGoodsLvAdapter;
+    List<SearchBean> searchBeanList = new ArrayList<SearchBean>();
+    private SearchGoodsLvAdapter searchGoodsLvAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,8 +85,6 @@ public class SearchActivity extends Activity {
                         if (lastRequestSize == pageCount) {
                             //还有可能有更多
                             getOrderData();
-                        } else {
-                            ToastUtils.showShortToast("没有更多了");
                         }
                     }
                 }
@@ -99,26 +99,27 @@ public class SearchActivity extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent();
-//                MoreGoodsResultBean.CenterEntity.ProsEntity bean =
-//                        prosList.get(position);
-//                if ("1".equals(typeId)) {
-//                    //套餐类
-//                    intent.setClass(context, PackageGoodsInfoActivity.class);
-//                } else {
-//                    //非套餐类
-//                    intent.setClass(context, GoodsDetailInfoActivity.class);
-//                }
-//                intent.putExtra("proid", prosList.get(position).getProid());
-//                intent.putExtra("imageUrl", prosList.get(position).getUrl());
-//                context.startActivity(intent);
+                if (searchGoodsLvAdapter != null) {
+                    Intent intent = new Intent();
+                    SearchBean bean = (SearchBean) searchGoodsLvAdapter.getItem(position);
+                    if ("1".equals(bean.getTypeid())) {
+                        //套餐类
+                        intent.setClass(context, PackageGoodsInfoActivity.class);
+                    } else {
+                        //非套餐类
+                        intent.setClass(context, GoodsDetailInfoActivity.class);
+                    }
+                    intent.putExtra("proid", bean.getProid());
+                    intent.putExtra("imageUrl", bean.getUrl());
+                    context.startActivity(intent);
+                }
             }
         });
 
         etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH){
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     // 先隐藏键盘
                     ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
                             .hideSoftInputFromWindow(SearchActivity.this.getCurrentFocus()
@@ -131,15 +132,24 @@ public class SearchActivity extends Activity {
         });
 
         etSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public String befroeSearchKey = "";
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                befroeSearchKey = etSearch.getText().toString().trim();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
                 String searchKey = etSearch.getText().toString().trim();
+                //关键字改变了。
+                if (!befroeSearchKey.equals(searchKey)) {
+                    lastId = "0";
+                }
                 if (TextUtils.isEmpty(searchKey)) {
                     ivDel.setVisibility(View.GONE);
                 } else {
@@ -168,14 +178,15 @@ public class SearchActivity extends Activity {
      * 获取订单数据
      */
     private void getOrderData() {
-        RequestParams params = new RequestParams();
+        final RequestParams params = new RequestParams();
         String keyStr = etSearch.getText().toString().trim();
         if (TextUtils.isEmpty(keyStr)) {
             return;
         }
         params.put("id", lastId);
         params.put("key", keyStr);
-        Http.post(Http.GETMOREGOODS, params, new MyTextAsyncResponseHandler(context, null) {
+        params.put("type", "0");
+        Http.post(Http.GETSEARCHGOODS, params, new MyTextAsyncResponseHandler(context, null) {
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
@@ -186,24 +197,63 @@ public class SearchActivity extends Activity {
                             ToastUtils.showShortToast(bean.getReturnMessage());
                             return;
                         }
-                        if (prosList == null) {
-                            prosList = new ArrayList<MoreGoodsResultBean.CenterEntity.ProsEntity>();
+
+                        if ("0".equals(lastId)) {
+                            //重新搜索的
+                            if (searchBeanList.size() > 0 ) {
+                                //代表上次搜索的有
+                                searchBeanList.clear();
+                                searchGoodsLvAdapter.notifyDataSetChanged();
+                            }
                         }
-                        List<MoreGoodsResultBean.CenterEntity.ProsEntity> requestList
-                                = bean.getCenter().get(0).getPros();
-                        if (requestList != null && requestList.size() > 0) {
-                            //最后一个proid作为id请求更多
-                            lastRequestSize = requestList.size();
-                            lastId = requestList.get(lastRequestSize - 1).getProid();
-                            prosList.addAll(requestList);
-                            if (moreGoodsLvAdapter == null) {
-                                moreGoodsLvAdapter = new MoreGoodsLvAdapter(context, prosList);
-                                listView.setAdapter(moreGoodsLvAdapter);
+
+                        if (bean != null && bean.getCenter().size() > 0) {
+                            List<MoreGoodsResultBean.CenterEntity> centerEntityList = bean.getCenter();
+                            List<SearchBean> requestList = new ArrayList<SearchBean>();
+                            for (int i = 0; i < centerEntityList.size(); i++) {
+                                MoreGoodsResultBean.CenterEntity centerEntity = centerEntityList.get(i);
+                                if (centerEntity != null && centerEntity.getPros().size() > 0) {
+                                    List<MoreGoodsResultBean.CenterEntity.ProsEntity> list =
+                                            centerEntity.getPros();
+                                    for (int j = 0; j < list.size(); j++) {
+                                        MoreGoodsResultBean.CenterEntity.ProsEntity prosEntity = list.get(j);
+
+                                        SearchBean searchBean = new SearchBean();
+                                        searchBean.setIntro(prosEntity.getIntro());
+                                        searchBean.setName(prosEntity.getName());
+                                        searchBean.setPrice(prosEntity.getPrice());
+                                        searchBean.setProid(prosEntity.getProid());
+                                        searchBean.setUrl(prosEntity.getUrl());
+                                        searchBean.setTypeid(centerEntity.getTypeid());
+                                        searchBean.setTypename(centerEntity.getTypename());
+                                        requestList.add(searchBean);
+                                    }
+                                }
+                            }
+                            if (requestList != null && requestList.size() > 0) {
+                                //最后一个proid作为id请求更 多
+                                lastRequestSize = requestList.size();
+                                lastId = requestList.get(lastRequestSize - 1).getProid();
+                                searchBeanList.addAll(requestList);
+                                if (searchGoodsLvAdapter == null) {
+                                    searchGoodsLvAdapter = new SearchGoodsLvAdapter(context, searchBeanList);
+                                    listView.setAdapter(searchGoodsLvAdapter);
+                                } else {
+                                    searchGoodsLvAdapter.setSearchBeanList(searchBeanList);
+                                    searchGoodsLvAdapter.notifyDataSetChanged();
+                                }
                             } else {
-                                moreGoodsLvAdapter.setProsList(prosList);
-                                moreGoodsLvAdapter.notifyDataSetChanged();
+                                lastRequestSize = 0;
+                                if ("0".equals(lastId)) {
+                                    //重新搜索的
+                                    ToastUtils.showShortToast("暂未查询到相关信息");
+                                }
                             }
                         } else {
+                            if ("0".equals(lastId)) {
+                                //重新搜索的
+                                ToastUtils.showShortToast("暂未查询到相关信息");
+                            }
                             lastRequestSize = 0;
                         }
                     } else {

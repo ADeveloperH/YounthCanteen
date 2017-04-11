@@ -179,6 +179,7 @@
         <activity
             android:name=".activity.SearchActivity"
             android:launchMode="singleTask"
+            android:windowSoftInputMode="stateAlwaysVisible"
             android:screenOrientation="portrait" />
 
 

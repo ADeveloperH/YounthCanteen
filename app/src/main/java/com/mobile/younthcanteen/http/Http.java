@@ -41,6 +41,7 @@ public class Http {
     public static final String GETCONSUMEDETAIL = "moneyList";//获取消费明细
     public static final String SIGNATURERECHARGE = "signaturesRecharge";//支付宝充值，加签要充值的金额
     public static final String GETMOREGOODS = "proMore";//获取更多列表
+    public static final String GETSEARCHGOODS = "proSearch";//搜索列表
 
 
     public static String getAbsoluteUrl(String relativeUrl) {
