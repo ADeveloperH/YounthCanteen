@@ -189,6 +189,13 @@
             android:windowSoftInputMode="stateAlwaysVisible"
             android:screenOrientation="portrait" />
 
+        <!-- 申请退款页面 -->
+        <activity
+            android:name=".activity.ApplyForRefund"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateAlwaysVisible"
+            android:screenOrientation="portrait" />
+
 
         <!-- 下载apk -->
         <service android:name=".service.DownLoadService" />

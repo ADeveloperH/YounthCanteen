@@ -12,8 +12,8 @@ import java.util.List;
 public class OrderResultBean implements Serializable{
 
     /**
-     * id : 15
-     * results : [{"addTime":"2017-3-19 9:11:59","address":"御玺大厦 520","allMoney":20,"consignee":"苗苗","deliveryLocation":"","deliveryMan":"","deliveryPhone":"","deliveryTime":"","freight":0,"orderMoney":20,"orderno":"170319091159000000620327","overTime":"","payTime":"","payType":"余额","phone":"13373931172","pros":[{"choices":"","combo":"土豆丝+绿豆芽+红烧肉+土豆鸡块","counts":1,"ids":"","imgs":"","price":20,"proid":4,"sale":0,"title":"二荤二素米饭套餐"}],"remark":"","sex":0,"shoptel":"","status":"未付款"},{"addTime":"2017-3-17 16:59:15","address":"御玺大厦 520","allMoney":12,"consignee":"苗苗","deliveryLocation":"","deliveryMan":"","deliveryPhone":"","deliveryTime":"","freight":0,"orderMoney":12,"orderno":"170317165915000000308080","overTime":"","payTime":"","payType":"余额","phone":"13373931172","pros":[{"choices":"","combo":"","counts":1,"ids":"","imgs":"","price":12,"proid":6,"sale":0,"title":"烧青菜"}],"remark":"好改过","sex":0,"shoptel":"","status":"未付款"},{"addTime":"2017-3-17 15:34:30","address":"御玺大厦 520","allMoney":12,"consignee":"苗苗","deliveryLocation":"","deliveryMan":"","deliveryPhone":"","deliveryTime":"","freight":0,"orderMoney":12,"orderno":"170317153430000000286683","overTime":"","payTime":"","payType":"余额","phone":"13373931172","pros":[{"choices":"","combo":"","counts":1,"ids":"","imgs":"","price":12,"proid":6,"sale":0,"title":"烧青菜"}],"remark":"","sex":0,"shoptel":"","status":"未付款"},{"addTime":"2017-3-16 23:55:44","address":"写字楼22 520","allMoney":24,"consignee":"黄键","deliveryLocation":"","deliveryMan":"","deliveryPhone":"","deliveryTime":"","freight":0,"orderMoney":24,"orderno":"170316235544000000131979","overTime":"","payTime":"","payType":"余额","phone":"13373931173","pros":[{"choices":"","combo":"","counts":2,"ids":"","imgs":"","price":12,"proid":6,"sale":0,"title":"烧青菜"}],"remark":"","sex":0,"shoptel":"","status":"未付款"},{"addTime":"2017-3-16 23:49:39","address":"写字楼22 520","allMoney":24,"consignee":"黄键","deliveryLocation":"","deliveryMan":"","deliveryPhone":"","deliveryTime":"","freight":0,"orderMoney":24,"orderno":"170316234939000000123429","overTime":"","payTime":"","payType":"余额","phone":"13373931173","pros":[{"choices":"","combo":"","counts":2,"ids":"","imgs":"","price":12,"proid":6,"sale":0,"title":"烧青菜"}],"remark":"","sex":0,"shoptel":"","status":"未付款"},{"addTime":"2017-3-16 23:47:41","address":"写字楼22 520","allMoney":12,"consignee":"黄键","deliveryLocation":"","deliveryMan":"","deliveryPhone":"","deliveryTime":"","freight":0,"orderMoney":12,"orderno":"170316234741000000116673","overTime":"","payTime":"","payType":"余额","phone":"13373931173","pros":[{"choices":"","combo":"","counts":1,"ids":"","imgs":"","price":12,"proid":6,"sale":0,"title":"烧青菜"}],"remark":"","sex":0,"shoptel":"","status":"未付款"},{"addTime":"2017-3-16 23:32:54","address":"御玺大厦 520","allMoney":72,"consignee":"苗苗","deliveryLocation":"","deliveryMan":"","deliveryPhone":"","deliveryTime":"","freight":0,"orderMoney":72,"orderno":"170316233254000000073751","overTime":"","payTime":"","payType":"余额","phone":"13373931172","pros":[{"choices":"","combo":"","counts":6,"ids":"","imgs":"","price":12,"proid":6,"sale":0,"title":"烧青菜"}],"remark":"","sex":0,"shoptel":"","status":"未付款"},{"addTime":"2017-3-16 23:30:47","address":"御玺大厦 520","allMoney":60,"consignee":"苗苗","deliveryLocation":"","deliveryMan":"","deliveryPhone":"","deliveryTime":"","freight":0,"orderMoney":60,"orderno":"170316233047000000063707","overTime":"","payTime":"","payType":"余额","phone":"13373931172","pros":[{"choices":"","combo":"","counts":5,"ids":"","imgs":"","price":12,"proid":6,"sale":0,"title":"烧青菜"}],"remark":"","sex":0,"shoptel":"","status":"未付款"},{"addTime":"2017-3-16 23:30:10","address":"御玺大厦 520","allMoney":60,"consignee":"苗苗","deliveryLocation":"","deliveryMan":"","deliveryPhone":"","deliveryTime":"","freight":0,"orderMoney":60,"orderno":"170316233010000000055758","overTime":"","payTime":"","payType":"余额","phone":"13373931172","pros":[{"choices":"","combo":"","counts":5,"ids":"","imgs":"","price":12,"proid":6,"sale":0,"title":"烧青菜"}],"remark":"","sex":0,"shoptel":"","status":"未付款"},{"addTime":"2017-3-16 23:29:59","address":"御玺大厦 520","allMoney":60,"consignee":"苗苗","deliveryLocation":"","deliveryMan":"","deliveryPhone":"","deliveryTime":"","freight":0,"orderMoney":60,"orderno":"170316232959000000041632","overTime":"","payTime":"","payType":"余额","phone":"13373931172","pros":[{"choices":"","combo":"","counts":5,"ids":"","imgs":"","price":12,"proid":6,"sale":0,"title":"烧青菜"}],"remark":"","sex":0,"shoptel":"","status":"未付款"},{"addTime":"2017-3-16 23:29:49","address":"御玺大厦 520","allMoney":60,"consignee":"苗苗","deliveryLocation":"","deliveryMan":"","deliveryPhone":"","deliveryTime":"","freight":0,"orderMoney":60,"orderno":"170316232949000000038028","overTime":"","payTime":"","payType":"余额","phone":"13373931172","pros":[{"choices":"","combo":"","counts":5,"ids":"","imgs":"","price":12,"proid":6,"sale":0,"title":"烧青菜"}],"remark":"","sex":0,"shoptel":"","status":"未付款"},{"addTime":"2017-3-16 23:17:06","address":"写字楼22 520","allMoney":116,"consignee":"黄键","deliveryLocation":"","deliveryMan":"","deliveryPhone":"","deliveryTime":"","freight":0,"orderMoney":116,"orderno":"170316231706000000020595","overTime":"","payTime":"","payType":"余额","phone":"13373931173","pros":[{"choices":"","combo":"","counts":8,"ids":"","imgs":"","price":12,"proid":6,"sale":0,"title":"烧青菜"},{"choices":"","combo":"","counts":1,"ids":"","imgs":"","price":20,"proid":5,"sale":0,"title":"鱼香肉丝"}],"remark":"","sex":0,"shoptel":"","status":"未付款"},{"addTime":"2017-3-18 23:05:32","address":"御玺大厦 520","allMoney":3,"consignee":"苗苗","deliveryLocation":"","deliveryMan":"","deliveryPhone":"","deliveryTime":"","freight":0,"orderMoney":3,"orderno":"170318230532000000618481","overTime":"","payTime":"2017-3-18 23:05:35","payType":"支付宝","phone":"13373931172","pros":[{"choices":"","combo":"","counts":1,"ids":"","imgs":"","price":3,"proid":13,"sale":0,"title":"花花牛"}],"remark":"","sex":0,"shoptel":"","status":"待接单"},{"addTime":"2017-3-17 17:06:00","address":"御玺大厦 520","allMoney":12,"consignee":"苗苗","deliveryLocation":"","deliveryMan":"","deliveryPhone":"","deliveryTime":"","freight":0,"orderMoney":12,"orderno":"170317170600000000311197","overTime":"","payTime":"2017-3-17 17:06:11","payType":"余额","phone":"13373931172","pros":[{"choices":"","combo":"","counts":1,"ids":"","imgs":"","price":12,"proid":6,"sale":0,"title":"烧青菜"}],"remark":"好改过","sex":0,"shoptel":"","status":"待接单"},{"addTime":"2017-3-16 23:38:01","address":"御玺大厦 520","allMoney":12,"consignee":"苗苗","deliveryLocation":"","deliveryMan":"","deliveryPhone":"","deliveryTime":"","freight":0,"orderMoney":12,"orderno":"170316233801000000107732","overTime":"","payTime":"2017-3-16 23:38:09","payType":"余额","phone":"13373931172","pros":[{"choices":"","combo":"","counts":1,"ids":"","imgs":"","price":12,"proid":6,"sale":0,"title":"烧青菜"}],"remark":"","sex":0,"shoptel":"","status":"待接单"}]
+     * id : 11
+     * results : [{"addTime":"2017-3-27 21:36:33","address":"御玺大厦 520","allMoney":12,"backAgreeTime":"","backApplyResult":"","backApplyTime":"2017-4-11 23:24:49","backOverTime":"","consignee":"苗苗","deliveryLocation":"","deliveryMan":"","deliveryPhone":"","deliveryTime":"","freight":0,"imgs":"http://116.255.130.49:10001/pros/007.jpg","orderMoney":12,"orderno":"170327213633000000340322","payTime":"2017-3-27 21:37:02","payType":"支付宝","paybackstatus":"申请退款","phone":"13373931172","pros":[{"choices":"","combo":"","counts":1,"ids":"","imgs":"http://116.255.130.49:10001/pros/007.jpg","price":12,"proid":6,"sale":0,"title":"烧青菜"}],"receiveTime":"","remark":"","sex":0,"shoptel":"614361574admin2","status":"待配送"},{"addTime":"2017-3-23 21:33:29","address":"御玺大厦 520","allMoney":12,"backAgreeTime":"","backApplyResult":"","backApplyTime":"","backOverTime":"","consignee":"苗苗","deliveryLocation":"","deliveryMan":"","deliveryPhone":"","deliveryTime":"","freight":0,"imgs":"http://116.255.130.49:10001/pros/007.jpg","orderMoney":12,"orderno":"170323213329000000106680","payTime":"2017-3-23 21:33:47","payType":"余额","paybackstatus":"","phone":"13373931172","pros":[{"choices":"","combo":"","counts":1,"ids":"","imgs":"http://116.255.130.49:10001/pros/007.jpg","price":12,"proid":6,"sale":0,"title":"烧青菜"}],"receiveTime":"","remark":"","sex":0,"shoptel":"614361574admin2","status":"待配送"},{"addTime":"2017-3-23 21:36:04","address":"御玺大厦 520","allMoney":12,"backAgreeTime":"","backApplyResult":"","backApplyTime":"","backOverTime":"","consignee":"苗苗","deliveryLocation":"","deliveryMan":"","deliveryPhone":"1231230","deliveryTime":"2017-3-25 22:18:58","freight":0,"imgs":"http://116.255.130.49:10001/pros/007.jpg","orderMoney":12,"orderno":"170323213604000000116509","payTime":"2017-3-23 21:37:12","payType":"支付宝","paybackstatus":"","phone":"13373931172","pros":[{"choices":"","combo":"","counts":1,"ids":"","imgs":"http://116.255.130.49:10001/pros/007.jpg","price":12,"proid":6,"sale":0,"title":"烧青菜"}],"receiveTime":"","remark":"","sex":0,"shoptel":"614361574admin2","status":"配送中"}]
      * returnCode : 0
      * returnMessage : 获取成功
      */
@@ -22,26 +22,32 @@ public class OrderResultBean implements Serializable{
     private String returnCode;
     private String returnMessage;
     /**
-     * addTime : 2017-3-19 9:11:59
+     * addTime : 2017-3-27 21:36:33
      * address : 御玺大厦 520
-     * allMoney : 20
+     * allMoney : 12
+     * backAgreeTime :
+     * backApplyResult :
+     * backApplyTime : 2017-4-11 23:24:49
+     * backOverTime :
      * consignee : 苗苗
      * deliveryLocation :
      * deliveryMan :
      * deliveryPhone :
      * deliveryTime :
      * freight : 0
-     * orderMoney : 20
-     * orderno : 170319091159000000620327
-     * overTime :
-     * payTime :
-     * payType : 余额
+     * imgs : http://116.255.130.49:10001/pros/007.jpg
+     * orderMoney : 12
+     * orderno : 170327213633000000340322
+     * payTime : 2017-3-27 21:37:02
+     * payType : 支付宝
+     * paybackstatus : 申请退款
      * phone : 13373931172
-     * pros : [{"choices":"","combo":"土豆丝+绿豆芽+红烧肉+土豆鸡块","counts":1,"ids":"","imgs":"","price":20,"proid":4,"sale":0,"title":"二荤二素米饭套餐"}]
+     * pros : [{"choices":"","combo":"","counts":1,"ids":"","imgs":"http://116.255.130.49:10001/pros/007.jpg","price":12,"proid":6,"sale":0,"title":"烧青菜"}]
+     * receiveTime :
      * remark :
      * sex : 0
-     * shoptel :
-     * status : 未付款
+     * shoptel : 614361574admin2
+     * status : 待配送
      */
 
     private List<ResultsEntity> results;
@@ -82,32 +88,38 @@ public class OrderResultBean implements Serializable{
         private String addTime;
         private String address;
         private String allMoney;
+        private String backAgreeTime;
+        private String backApplyResult;
+        private String backApplyTime;
+        private String backOverTime;
         private String consignee;
         private String deliveryLocation;
         private String deliveryMan;
         private String deliveryPhone;
         private String deliveryTime;
         private String freight;
+        private String imgs;
         private String orderMoney;
         private String orderno;
-        private String overTime;
         private String payTime;
         private String payType;
+        private String paybackstatus;
         private String phone;
+        private String receiveTime;
         private String remark;
         private String sex;
         private String shoptel;
         private String status;
         /**
          * choices :
-         * combo : 土豆丝+绿豆芽+红烧肉+土豆鸡块
+         * combo :
          * counts : 1
          * ids :
-         * imgs :
-         * price : 20
-         * proid : 4
+         * imgs : http://116.255.130.49:10001/pros/007.jpg
+         * price : 12
+         * proid : 6
          * sale : 0
-         * title : 二荤二素米饭套餐
+         * title : 烧青菜
          */
 
         private List<ProsEntity> pros;
@@ -134,6 +146,38 @@ public class OrderResultBean implements Serializable{
 
         public void setAllMoney(String allMoney) {
             this.allMoney = allMoney;
+        }
+
+        public String getBackAgreeTime() {
+            return backAgreeTime;
+        }
+
+        public void setBackAgreeTime(String backAgreeTime) {
+            this.backAgreeTime = backAgreeTime;
+        }
+
+        public String getBackApplyResult() {
+            return backApplyResult;
+        }
+
+        public void setBackApplyResult(String backApplyResult) {
+            this.backApplyResult = backApplyResult;
+        }
+
+        public String getBackApplyTime() {
+            return backApplyTime;
+        }
+
+        public void setBackApplyTime(String backApplyTime) {
+            this.backApplyTime = backApplyTime;
+        }
+
+        public String getBackOverTime() {
+            return backOverTime;
+        }
+
+        public void setBackOverTime(String backOverTime) {
+            this.backOverTime = backOverTime;
         }
 
         public String getConsignee() {
@@ -184,6 +228,14 @@ public class OrderResultBean implements Serializable{
             this.freight = freight;
         }
 
+        public String getImgs() {
+            return imgs;
+        }
+
+        public void setImgs(String imgs) {
+            this.imgs = imgs;
+        }
+
         public String getOrderMoney() {
             return orderMoney;
         }
@@ -198,14 +250,6 @@ public class OrderResultBean implements Serializable{
 
         public void setOrderno(String orderno) {
             this.orderno = orderno;
-        }
-
-        public String getOverTime() {
-            return overTime;
-        }
-
-        public void setOverTime(String overTime) {
-            this.overTime = overTime;
         }
 
         public String getPayTime() {
@@ -224,12 +268,28 @@ public class OrderResultBean implements Serializable{
             this.payType = payType;
         }
 
+        public String getPaybackstatus() {
+            return paybackstatus;
+        }
+
+        public void setPaybackstatus(String paybackstatus) {
+            this.paybackstatus = paybackstatus;
+        }
+
         public String getPhone() {
             return phone;
         }
 
         public void setPhone(String phone) {
             this.phone = phone;
+        }
+
+        public String getReceiveTime() {
+            return receiveTime;
+        }
+
+        public void setReceiveTime(String receiveTime) {
+            this.receiveTime = receiveTime;
         }
 
         public String getRemark() {

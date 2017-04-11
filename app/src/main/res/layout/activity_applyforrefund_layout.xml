@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+
+    <EditText
+        android:id="@+id/et_reson"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_oval_bg"
+        android:gravity="top"
+        android:hint="请填写具体退款原因"
+        android:maxLength="100"
+        android:padding="10dp"
+        android:lines="5"
+        android:textSize="14dp" />
+
+    <Button
+        android:id="@+id/btn_apply"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:text="申请退款"
+        android:layout_marginTop="15dp"
+        android:textSize="14dp"
+        android:gravity="center"
+        android:background="@drawable/login_btn_enable"/>
+</LinearLayout>

@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.mobile.younthcanteen.R;
+import com.mobile.younthcanteen.bean.OrderDetailInfoBean;
 import com.mobile.younthcanteen.bean.OrderResultBean;
 import com.mobile.younthcanteen.util.UIUtils;
 
@@ -25,10 +26,10 @@ import butterknife.ButterKnife;
 
 public class OrderDetailLvAdapter extends BaseAdapter {
     private Context context;
-    private List<OrderResultBean.ResultsEntity.ProsEntity> pros;
+    private List<OrderDetailInfoBean.OrderGetResultEntity.ResultsEntity.ProsEntity> pros;
 
     public OrderDetailLvAdapter(Context context,
-                                List<OrderResultBean.ResultsEntity.ProsEntity> pros) {
+                                List<OrderDetailInfoBean.OrderGetResultEntity.ResultsEntity.ProsEntity> pros) {
         this.context = context;
         this.pros = pros;
     }
@@ -59,7 +60,7 @@ public class OrderDetailLvAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        OrderResultBean.ResultsEntity.ProsEntity bean = pros.get(position);
+        OrderDetailInfoBean.OrderGetResultEntity.ResultsEntity.ProsEntity bean = pros.get(position);
         String name = bean.getTitle();
         if (!TextUtils.isEmpty(bean.getCombo())) {
             name += ("(" + bean.getCombo() + ")");

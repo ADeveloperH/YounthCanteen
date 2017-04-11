@@ -178,9 +178,8 @@ public class PaidFragment extends Fragment implements View.OnClickListener {
                     if (listData != null && listData.size() > 0) {
                         OrderResultBean.ResultsEntity bean = listData.get(position);
                         Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("orderInfo",bean);
-                        intent.putExtras(bundle);
+                        intent.putExtra("isAlreadyPaid", true);
+                        intent.putExtra("orderno", bean.getOrderno());
                         startActivity(intent);
                     }
                 }

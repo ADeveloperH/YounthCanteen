@@ -3,7 +3,6 @@ package com.mobile.younthcanteen.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -111,9 +110,8 @@ public class NoPayOrderLvAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, OrderDetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("orderInfo", resultsEntity);
-                intent.putExtras(bundle);
+                intent.putExtra("isAlreadyPaid", false);
+                intent.putExtra("orderno", resultsEntity.getOrderno());
                 context.startActivity(intent);
             }
         });

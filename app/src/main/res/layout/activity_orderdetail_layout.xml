@@ -203,6 +203,27 @@
                 android:text="￥20元"
                 android:textColor="@color/myyellow"
                 android:textSize="14dp" />
+
+
+            <TextView
+                android:id="@+id/tv_payback_status"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="(申请退款中)"
+                android:textColor="@color/grayblack"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/tv_apply_for_refund"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14dp"
+                android:background="@drawable/login_btn_enable"
+                android:padding="10dp"
+                android:textColor="@color/textblack"
+                android:text="申请退款"/>
         </LinearLayout>
 
         <View

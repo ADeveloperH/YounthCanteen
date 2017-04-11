@@ -44,6 +44,9 @@ public class Http {
     public static final String GETSEARCHGOODS = "proSearch";//搜索列表
     public static final String COMMITSUGGEST = "suggestionAdd";//提交反馈建议
     public static final String DELETEORDER = "orderDelete";//删除订单
+    public static final String APPLYPAYBACK = "orderApplyPayBack";//申请退款
+    public static final String CANCELAPPLYPAYBACK = "orderCancelPayBack";//申请退款
+    public static final String GETORDERINFO = "orderGet";//获取订单信息
 
 
     public static String getAbsoluteUrl(String relativeUrl) {
