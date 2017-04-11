@@ -182,6 +182,13 @@
             android:windowSoftInputMode="stateAlwaysVisible"
             android:screenOrientation="portrait" />
 
+        <!-- 反馈建议页面 -->
+        <activity
+            android:name=".activity.FeedBackActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateAlwaysVisible"
+            android:screenOrientation="portrait" />
+
 
         <!-- 下载apk -->
         <service android:name=".service.DownLoadService" />

@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.activity.BalanceActivity;
+import com.mobile.younthcanteen.activity.FeedBackActivity;
 import com.mobile.younthcanteen.activity.LoginActivity;
 import com.mobile.younthcanteen.activity.MyAccountActivity;
 import com.mobile.younthcanteen.activity.MyAddressActivity;
@@ -202,6 +203,7 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
         tvServicePhone.setOnClickListener(this);
         llYuE.setOnClickListener(this);
         llJiFen.setOnClickListener(this);
+        llFanKui.setOnClickListener(this);
     }
 
     @Override
@@ -241,6 +243,9 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.ll_yue://余额页面
                 startActivity(new Intent(getActivity(), BalanceActivity.class));
+                break;
+            case R.id.ll_fankui://反馈建议页面
+                startActivity(new Intent(getActivity(), FeedBackActivity.class));
                 break;
             case R.id.ll_jifen://积分页面
                 ToastUtils.showShortToast("本功能暂未开发");
