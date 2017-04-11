@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.activity.CheckBusinessCircleActivity;
 import com.mobile.younthcanteen.activity.MoreGoodsActivity;
+import com.mobile.younthcanteen.activity.SearchActivity;
 import com.mobile.younthcanteen.adapter.HomeFragmentPagerAdapter;
 import com.mobile.younthcanteen.adapter.HomeListAdapter;
 import com.mobile.younthcanteen.bean.GoodsTypeBean;
@@ -66,6 +67,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     private LinearLayout llChaoCai;
     private LinearLayout llMianShi;
     private LinearLayout llYinLiao;
+    private LinearLayout llSearch;
 
     private static class MyHandler extends Handler {
         private WeakReference<HomeFragment> homeFragmentWeakReference;
@@ -146,6 +148,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         llPointGroup = (LinearLayout) view.findViewById(R.id.ll_point_group);
         tvOfficeName = (TextView) view.findViewById(R.id.tv_office_name);
+        llSearch = (LinearLayout) view.findViewById(R.id.ll_search);
 
         llTaoCan = (LinearLayout) view.findViewById(R.id.ll_taocan);
         llChaoCai = (LinearLayout) view.findViewById(R.id.ll_chaocai);
@@ -207,6 +210,13 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                 startActivity(intent);
             }
         });
+        llSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), SearchActivity.class));
+            }
+        });
+
         lvHome.setOnRefreshListener(new HomeRefreshListView.OnListViewRefreshListener() {
 
             @Override

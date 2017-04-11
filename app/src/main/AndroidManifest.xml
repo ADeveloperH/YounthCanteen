@@ -175,6 +175,12 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
+        <!-- 搜索页面 -->
+        <activity
+            android:name=".activity.SearchActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
 
         <!-- 下载apk -->
         <service android:name=".service.DownLoadService" />

@@ -28,6 +28,7 @@
             android:src="@drawable/home_arrow_down_iocn" />
 
         <LinearLayout
+            android:id="@+id/ll_search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
