@@ -143,7 +143,12 @@ public class NoPayFragment extends Fragment implements View.OnClickListener {
             llNoOrder.setVisibility(View.GONE);
             lvNoPayOrder.setVisibility(View.VISIBLE);
             if (noPayOrderLvAdapter == null) {
-                noPayOrderLvAdapter = new NoPayOrderLvAdapter(context, results);
+                noPayOrderLvAdapter = new NoPayOrderLvAdapter(context, results, new NoPayOrderLvAdapter.DeleteOrderListener() {
+                    @Override
+                    public void deleteOrderSuc() {
+                        getOrderData();
+                    }
+                });
                 lvNoPayOrder.setAdapter(noPayOrderLvAdapter);
             } else {
                 noPayOrderLvAdapter.setResults(results);

@@ -43,6 +43,7 @@ public class Http {
     public static final String GETMOREGOODS = "proMore";//获取更多列表
     public static final String GETSEARCHGOODS = "proSearch";//搜索列表
     public static final String COMMITSUGGEST = "suggestionAdd";//提交反馈建议
+    public static final String DELETEORDER = "orderDelete";//删除订单
 
 
     public static String getAbsoluteUrl(String relativeUrl) {
