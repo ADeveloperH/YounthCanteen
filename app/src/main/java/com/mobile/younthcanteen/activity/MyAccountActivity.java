@@ -2,6 +2,8 @@ package com.mobile.younthcanteen.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -10,23 +12,34 @@ import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mobile.younthcanteen.AppManager;
 import com.mobile.younthcanteen.R;
+import com.mobile.younthcanteen.bean.SimpleResultBean;
+import com.mobile.younthcanteen.bean.UserDetailInfoBean;
+import com.mobile.younthcanteen.fragment.CustomerFragment;
 import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
+import com.mobile.younthcanteen.http.RequestParams;
+import com.mobile.younthcanteen.ui.CircleImageView;
 import com.mobile.younthcanteen.ui.SelectPicPopupWindow;
 import com.mobile.younthcanteen.util.DataCheckUtils;
 import com.mobile.younthcanteen.util.DialogUtil;
+import com.mobile.younthcanteen.util.JsonUtil;
 import com.mobile.younthcanteen.util.SharedPreferencesUtil;
 import com.mobile.younthcanteen.util.StringUtil;
+import com.mobile.younthcanteen.util.ThreadManager;
 import com.mobile.younthcanteen.util.ToastUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import static android.R.attr.phoneNumber;
 
 /**
  * author：hj
@@ -38,13 +51,15 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
     private LinearLayout llNickName;
     private LinearLayout llPwd;
     private LinearLayout llPhoneNumber;
-    private ImageView ivUserIcon;
+    private CircleImageView ivUserIcon;
     private TextView tvNickName;
     private TextView tvPhoneNumber;
     private Button btnLogout;
     private String nickNameStr;
     private SelectPicPopupWindow menuWindow;
     private LinearLayout llPayPwd;
+    private boolean isFirstIn = true;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,7 +76,7 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        initData();
+        getUserDetailInfo();
     }
 
     private void initView() {
@@ -70,20 +85,11 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
         llPwd = (LinearLayout) findViewById(R.id.ll_pwd);
         llPayPwd = (LinearLayout) findViewById(R.id.ll_pay_pwd);
         llPhoneNumber = (LinearLayout) findViewById(R.id.ll_phonenumber);
-        ivUserIcon = (ImageView) findViewById(R.id.iv_usericon);
+        ivUserIcon = (CircleImageView) findViewById(R.id.iv_usericon);
         tvNickName = (TextView) findViewById(R.id.tv_nickname);
         tvPhoneNumber = (TextView) findViewById(R.id.tv_phonenumber);
         btnLogout = (Button) findViewById(R.id.btn_logout);
-    }
 
-    private void initData() {
-        nickNameStr = SharedPreferencesUtil.getNickName();
-        tvNickName.setText(nickNameStr);
-        String phoneNumber = SharedPreferencesUtil.getAccount().replace(" ", "");
-        if (DataCheckUtils.isValidatePhone(phoneNumber)) {
-            phoneNumber = phoneNumber.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
-        }
-        tvPhoneNumber.setText(phoneNumber);
     }
 
     private void setListener() {
@@ -93,6 +99,59 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
         llUser.setOnClickListener(this);
         llPayPwd.setOnClickListener(this);
     }
+
+    /**
+     * 获取用户的详细信息
+     */
+    private void getUserDetailInfo() {
+        RequestParams params = new RequestParams();
+        params.put("userid", SharedPreferencesUtil.getUserId());
+        params.put("token", SharedPreferencesUtil.getToken());
+        Http.post(Http.GETUSERDETAILINFO, params, new MyTextAsyncResponseHandler(act, "加载中...") {
+            @Override
+            public void onSuccess(String content) {
+                super.onSuccess(content);
+                try {
+                    UserDetailInfoBean bean = JsonUtil.fromJson(content, UserDetailInfoBean.class);
+                    if (null != bean) {
+                        if (!Http.SUCCESS.equals(bean.getReturnCode())) {
+                            ToastUtils.showShortToast(bean.getReturnMessage());
+                            return;
+                        }
+                        UserDetailInfoBean.ResultsEntity result = bean.getResults();
+                        SharedPreferencesUtil.setNickName(result.getNick());
+                        SharedPreferencesUtil.setToken(result.getToken());
+                        SharedPreferencesUtil.setUserId(result.getUserid());
+                        SharedPreferencesUtil.setPoint(result.getPoint());
+                        SharedPreferencesUtil.setMoney(result.getMoney());
+                        SharedPreferencesUtil.setIsSetPayPwd(result.isIspaypassset());
+                        SharedPreferencesUtil.setUserIconUrl(result.getImgs());
+                        tvNickName.setText(result.getNick());
+                        String phoneNumber = SharedPreferencesUtil.getAccount().replace(" ", "");
+                        if (DataCheckUtils.isValidatePhone(phoneNumber)) {
+                            phoneNumber = phoneNumber.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
+                        }
+                        tvPhoneNumber.setText(phoneNumber);
+                        getUserIconFromServer(result.getImgs());
+                    } else {
+                        ToastUtils.showShortToast("服务器数据异常，请稍后重试");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showShortToast("数据异常，请稍后重试");
+                }
+
+            }
+
+            @Override
+            public void onFailure(Throwable error) {
+                super.onFailure(error);
+                ToastUtils.showShortToast("服务器异常，请稍后重试");
+            }
+        });
+
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -159,6 +218,7 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
     private static final int PHOTO_REQUEST_CUT = 3;// 结果
     // 创建一个以当前时间为名称的文件
     File tempFile = new File(Environment.getExternalStorageDirectory(), "cache_user_icon.jpg");
+
     /**
      * 拍照获取图片
      */
@@ -215,21 +275,80 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
     private void submitIcon() {
         try {
             String filePath = StringUtil.getThumbUploadPath(tempFile.getAbsolutePath(), 200);//得到压缩后的图片地址
-            Http.uploadFileImage(Http.UPLOADIMG, filePath, SharedPreferencesUtil.getToken(),"jpg"
+            Http.uploadFileImage(Http.UPLOADIMG, filePath, SharedPreferencesUtil.getToken(), "jpg"
                     , new MyTextAsyncResponseHandler(act, "正在上传中...") {
-                @Override
-                public void onSuccess(String content) {
-                    super.onSuccess(content);
-                }
+                        @Override
+                        public void onSuccess(String content) {
+                            super.onSuccess(content);
+                            try {
+                                SimpleResultBean bean = JsonUtil.fromJson(content, SimpleResultBean.class);
+                                if (null != bean) {
+                                    ToastUtils.showShortToast(bean.getReturnMessage());
+                                    if (Http.SUCCESS.equals(bean.getReturnCode())) {
+                                        CustomerFragment.isNeedLoadUserInfo = true;
+                                        getUserDetailInfo();
+                                    }
+                                } else {
+                                    ToastUtils.showLongToast("服务器异常，请稍后重试");
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                ToastUtils.showShortToast("数据异常，请稍后重试");
+                            }
+                        }
 
-                @Override
-                public void onFailure(Throwable error) {
-                    super.onFailure(error);
-                }
-            });
+                        @Override
+                        public void onFailure(Throwable error) {
+                            super.onFailure(error);
+                            ToastUtils.showLongToast("服务器异常，请稍后重试");
+                        }
+                    });
 
         } catch (Exception e) {
             ToastUtils.showShortToast("上传失败" + e.getMessage());
         }
+    }
+
+
+
+    /**
+     * 将服务器端的图片显示并缓存到本地
+     *
+     * @param userIconUrl
+     */
+    private void getUserIconFromServer(final String userIconUrl) {
+        ThreadManager.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL(userIconUrl);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setConnectTimeout(30000); // 设置联接超时时间
+                    conn.setReadTimeout(30000); // 设置读取内容的超时时间
+                    conn.setRequestMethod("GET");// 设置为get 请求
+
+                    int responseCode = conn.getResponseCode();
+                    if (responseCode == 200) { // 说明，连网成功
+                        InputStream inputStream = conn.getInputStream();
+                        final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                        File cacheDir = new File(act.getFilesDir(), "userIconCache");
+                        if (!cacheDir.exists()) {
+                            cacheDir.mkdirs();
+                        }
+                        // 把图片存入文件
+                        FileOutputStream outputStream = new FileOutputStream(cacheDir.getAbsolutePath() + "/" + phoneNumber);
+                        bitmap.compress(CompressFormat.JPEG, 100, outputStream);
+                        act.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ivUserIcon.setImageBitmap(bitmap);
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                }
+
+            }
+        });
     }
 }

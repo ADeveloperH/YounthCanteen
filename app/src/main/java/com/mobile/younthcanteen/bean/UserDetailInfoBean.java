@@ -1,12 +1,14 @@
 package com.mobile.younthcanteen.bean;
 
+import java.io.Serializable;
+
 /**
  * author：hj
  * time: 2017/3/11 0011 19:17
  */
 
 
-public class UserDetailInfoBean {
+public class UserDetailInfoBean implements Serializable{
 
     /**
      * account :
@@ -59,7 +61,7 @@ public class UserDetailInfoBean {
         this.returnMessage = returnMessage;
     }
 
-    public static class ResultsEntity {
+    public static class ResultsEntity implements Serializable{
         private String account;
         private String birthday;
         private String email;

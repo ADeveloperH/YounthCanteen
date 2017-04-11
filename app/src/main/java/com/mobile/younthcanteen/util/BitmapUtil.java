@@ -75,10 +75,54 @@ public class BitmapUtil {
         }
     }
 
+    public <T extends View> void displayNoCache(T container, String uri) {
+        bitmapUtils.clearCache();
+        if (null != bitmapDisplsyConfig) {
+            bitmapUtils.display(container, uri, bitmapDisplsyConfig);
+        } else {
+            bitmapUtils.display(container, uri);
+        }
+    }
+
     public <T extends View> void display(T container, String uri, final BitmapLoadCallBack callBack) {
         if (null == callBack) {
             throw new IllegalArgumentException("callBack may not be null");
         }
+        if (null != bitmapDisplsyConfig) {
+            bitmapUtils.display(container, uri, bitmapDisplsyConfig, new com.lidroid.xutils.bitmap.callback.BitmapLoadCallBack<T>() {
+                @Override
+                public void onLoadCompleted(T t, String s, Bitmap bitmap, BitmapDisplayConfig bitmapDisplayConfig, BitmapLoadFrom bitmapLoadFrom) {
+                    if (callBack != null) {
+                        callBack.onLoadCompleted(bitmap);
+                    }
+                }
+
+                @Override
+                public void onLoadFailed(T t, String s, Drawable drawable) {
+                }
+            });
+        } else {
+            bitmapUtils.display(container, uri, new com.lidroid.xutils.bitmap.callback.BitmapLoadCallBack<T>() {
+                @Override
+                public void onLoadCompleted(T t, String s, Bitmap bitmap, BitmapDisplayConfig bitmapDisplayConfig, BitmapLoadFrom bitmapLoadFrom) {
+                    if (callBack != null) {
+                        callBack.onLoadCompleted(bitmap);
+                    }
+                }
+
+                @Override
+                public void onLoadFailed(T t, String s, Drawable drawable) {
+                }
+            });
+        }
+    }
+
+    public <T extends View> void displayNoCache(T container, String uri, final BitmapLoadCallBack callBack) {
+        if (null == callBack) {
+            throw new IllegalArgumentException("callBack may not be null");
+        }
+
+        bitmapUtils.clearCache();
         if (null != bitmapDisplsyConfig) {
             bitmapUtils.display(container, uri, bitmapDisplsyConfig, new com.lidroid.xutils.bitmap.callback.BitmapLoadCallBack<T>() {
                 @Override

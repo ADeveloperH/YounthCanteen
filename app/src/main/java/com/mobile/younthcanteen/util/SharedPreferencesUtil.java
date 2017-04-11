@@ -29,6 +29,7 @@ public class SharedPreferencesUtil {
 
     public static final String KEY_USERID = "KEY_USERID";//userid
     public static final String KEY_NICKNAME = "KEY_NICKNAME";//nickname
+    public static final String KEY_USERICON = "KEY_USERICON";//usericonurl
     public static final String KEY_DOWNLODEMSG = "downlodemsg"; //已下载安装包的信息
 
     public static final String KEY_HOME_TYPE_LIST = "hometypelist"; //商品类别信息
@@ -223,6 +224,29 @@ public class SharedPreferencesUtil {
     public static String getNickName() {
         if (getPreferencesPrivate() != null) {
             return getPreferencesPrivate().getString(KEY_NICKNAME, "");
+        }
+        return "";
+    }
+
+    /**
+     * 保存nickName
+     * @return
+     */
+    public static boolean setUserIconUrl(String userIconUrl) {
+        if (getPreferencesPrivate() != null) {
+            return getPreferencesPrivate().edit().putString(KEY_USERICON, userIconUrl).commit();
+        }
+        return false;
+    }
+
+    /**
+     * 获取当前nickName
+     *
+     * @return
+     */
+    public static String getUserIconUrl() {
+        if (getPreferencesPrivate() != null) {
+            return getPreferencesPrivate().getString(KEY_USERICON, "");
         }
         return "";
     }

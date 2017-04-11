@@ -93,7 +93,6 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
             initView(getView());
             setListener();
 //            getData();
-            getDefaultAddress();
             isNeedReLoad = false;
         }
     }
@@ -298,16 +297,7 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
         shoppingCartList = getAllShoppingList();
         if (shoppingCartList != null && shoppingCartList.size() > 0) {
             //购物车中有物品
-            if (addressBean != null) {
-                llNoAddress.setVisibility(View.GONE);
-                rlAddress.setVisibility(View.VISIBLE);
-                tvAddress.setText(addressBean.getAddr());
-                tvOffice.setText(addressBean.getOffice());
-                tvName.setText(addressBean.getConsignee());
-                tvTel.setText(addressBean.getTel());
-                tvSex.setText("1".equals(addressBean.getSex()) ? "女士" : "先生");
-            }
-
+            getDefaultAddress();
             tvModify.setVisibility(View.VISIBLE);
             tvNoShopping.setVisibility(View.GONE);
             svCartContent.setVisibility(View.VISIBLE);
@@ -353,7 +343,11 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
      */
     private void getDefaultAddress() {
         RequestParams params = new RequestParams();
-        params.put("token", SharedPreferencesUtil.getToken());
+        String token = SharedPreferencesUtil.getToken();
+        if (TextUtils.isEmpty(token)) {
+            return;
+        }
+        params.put("token", token);
         Http.post(Http.GETADDRESSLIST, params, new MyTextAsyncResponseHandler(getActivity(), "正在加载中...") {
             @Override
             public void onSuccess(String content) {
@@ -367,6 +361,15 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
                             List<AddressListBean.ResultsEntity> addressDataList = bean.getResults();
                             if (addressDataList != null && addressDataList.size() > 0) {
                                 addressBean = addressDataList.get(0);
+                                if (addressBean != null) {
+                                    llNoAddress.setVisibility(View.GONE);
+                                    rlAddress.setVisibility(View.VISIBLE);
+                                    tvAddress.setText(addressBean.getAddr());
+                                    tvOffice.setText(addressBean.getOffice());
+                                    tvName.setText(addressBean.getConsignee());
+                                    tvTel.setText(addressBean.getTel());
+                                    tvSex.setText("1".equals(addressBean.getSex()) ? "女士" : "先生");
+                                }
                             }
                         } else {
                             ToastUtils.showShortToast(bean.getReturnMessage());

@@ -3,10 +3,13 @@ package com.mobile.younthcanteen.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,16 +28,25 @@ import com.mobile.younthcanteen.bean.UserDetailInfoBean;
 import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
 import com.mobile.younthcanteen.http.RequestParams;
-import com.mobile.younthcanteen.ui.CircleDrawable;
+import com.mobile.younthcanteen.ui.CircleImageView;
 import com.mobile.younthcanteen.util.BitmapUtil;
 import com.mobile.younthcanteen.util.DownLoader;
 import com.mobile.younthcanteen.util.JsonUtil;
 import com.mobile.younthcanteen.util.LoginUtils;
 import com.mobile.younthcanteen.util.NetWorkUtil;
 import com.mobile.younthcanteen.util.SharedPreferencesUtil;
+import com.mobile.younthcanteen.util.ThreadManager;
 import com.mobile.younthcanteen.util.ToastUtils;
 import com.mobile.younthcanteen.util.UIUtils;
 import com.mobile.younthcanteen.util.UpdateAppUtil;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import static android.R.attr.phoneNumber;
 
 /**
  * author：hj
@@ -45,7 +57,7 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
     private View rootView;//缓存Fragment的View
     private boolean isNeedReLoad = true;//是否需要重新加载该Fragment数据
     private LinearLayout llUser;
-    private ImageView ivUserIcon;
+    private CircleImageView ivUserIcon;
     private TextView tvNickName;
     private LinearLayout llYuE;
     private LinearLayout llJiFen;
@@ -57,6 +69,8 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
     private Activity mActivity;
     private TextView tvServicePhone;
     private BitmapUtil bitmapUtil;
+    private UserDetailInfoBean userDetailInfoBean;
+    public static boolean isNeedLoadUserInfo = true;//是否需要加载用户信息
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -126,41 +140,43 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
      * 获取用户的详细信息
      */
     private void getUserDetailInfo() {
+        if (!isNeedLoadUserInfo) {
+            return;
+        }
         RequestParams params = new RequestParams();
         params.put("userid", SharedPreferencesUtil.getUserId());
         params.put("token", SharedPreferencesUtil.getToken());
-        Http.post(Http.GETUSERDETAILINFO, params, new MyTextAsyncResponseHandler(getActivity(), null) {
+        Http.post(Http.GETUSERDETAILINFO, params, new MyTextAsyncResponseHandler(getActivity(), "加载中...") {
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
                 try {
-                    UserDetailInfoBean bean = JsonUtil.fromJson(content, UserDetailInfoBean.class);
-                    if (null != bean) {
-                        if (!Http.SUCCESS.equals(bean.getReturnCode())) {
-                            ToastUtils.showShortToast(bean.getReturnMessage());
+                    userDetailInfoBean = JsonUtil.fromJson(content, UserDetailInfoBean.class);
+                    if (null != userDetailInfoBean) {
+                        if (!Http.SUCCESS.equals(userDetailInfoBean.getReturnCode())) {
+                            ToastUtils.showShortToast(userDetailInfoBean.getReturnMessage());
                             return;
                         }
-                        UserDetailInfoBean.ResultsEntity result = bean.getResults();
+                        isNeedLoadUserInfo = false;
+                        UserDetailInfoBean.ResultsEntity result = userDetailInfoBean.getResults();
                         SharedPreferencesUtil.setNickName(result.getNick());
                         SharedPreferencesUtil.setToken(result.getToken());
                         SharedPreferencesUtil.setUserId(result.getUserid());
                         SharedPreferencesUtil.setPoint(result.getPoint());
                         SharedPreferencesUtil.setMoney(result.getMoney());
+                        SharedPreferencesUtil.setUserIconUrl(result.getImgs());
                         SharedPreferencesUtil.setIsSetPayPwd(result.isIspaypassset());
                         tvNickName.setText(result.getNick());
-                        bitmapUtil.display(ivUserIcon, result.getImgs(), new BitmapUtil.BitmapLoadCallBack() {
-                            @Override
-                            public void onLoadCompleted(Bitmap bitmap) {
-                                ivUserIcon.setImageDrawable(new CircleDrawable(bitmap));
-                            }
-                        });
-
+                        Log.d("okhttp", "result.getImgs()::" + result.getImgs());
+                        getUserIconFromServer(result.getImgs());
                     } else {
                         ToastUtils.showShortToast("服务器数据异常，请稍后重试");
+                        isNeedLoadUserInfo = true;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     ToastUtils.showShortToast("数据异常，请稍后重试");
+                    isNeedLoadUserInfo = true;
                 }
 
             }
@@ -169,6 +185,7 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
             public void onFailure(Throwable error) {
                 super.onFailure(error);
                 ToastUtils.showShortToast("服务器异常，请稍后重试");
+                isNeedLoadUserInfo = true;
 
             }
         });
@@ -177,7 +194,7 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
 
     private void initView(View view) {
         llUser = (LinearLayout) view.findViewById(R.id.ll_userinfo);
-        ivUserIcon = (ImageView) view.findViewById(R.id.iv_usericon);
+        ivUserIcon = (CircleImageView) view.findViewById(R.id.iv_usericon);
         ivRightArrow = (ImageView) view.findViewById(R.id.iv_right_arrow);
         tvNickName = (TextView) view.findViewById(R.id.tv_nickname);
         tvServicePhone = (TextView) view.findViewById(R.id.tv_service_phone);
@@ -191,7 +208,7 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
         llUpdate = (LinearLayout) view.findViewById(R.id.ll_update);
 
         Drawable drawable = UIUtils.getDrawable(R.drawable.user_icon_default);
-        bitmapUtil = new BitmapUtil(getActivity(),drawable,drawable);
+        bitmapUtil = new BitmapUtil(getActivity(), drawable, drawable);
     }
 
     private void setListener() {
@@ -216,7 +233,12 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                     return;
                 }
-                startActivity(new Intent(getActivity(), MyAccountActivity.class));
+                if (userDetailInfoBean == null) {
+                    //如果当前获取信息失败。重新获取
+                    getUserDetailInfo();
+                } else {
+                    startActivity(new Intent(getActivity(), MyAccountActivity.class));
+                }
                 break;
             case R.id.ll_update://检查更新
                 if (!NetWorkUtil.hasAvailableNetWork(mActivity)) {
@@ -285,5 +307,47 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
                     public void startRequest() {
                     }
                 });
+    }
+
+
+    /**
+     * 将服务器端的图片显示并缓存到本地
+     *
+     * @param userIconUrl
+     */
+    private void getUserIconFromServer(final String userIconUrl) {
+        ThreadManager.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL(userIconUrl);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setConnectTimeout(30000); // 设置联接超时时间
+                    conn.setReadTimeout(30000); // 设置读取内容的超时时间
+                    conn.setRequestMethod("GET");// 设置为get 请求
+
+                    int responseCode = conn.getResponseCode();
+                    if (responseCode == 200) { // 说明，连网成功
+                        InputStream inputStream = conn.getInputStream();
+                        final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                        File cacheDir = new File(getActivity().getFilesDir(), "userIconCache");
+                        if (!cacheDir.exists()) {
+                            cacheDir.mkdirs();
+                        }
+                        // 把图片存入文件
+                        FileOutputStream outputStream = new FileOutputStream(cacheDir.getAbsolutePath() + "/" + phoneNumber);
+                        bitmap.compress(CompressFormat.JPEG, 100, outputStream);
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ivUserIcon.setImageBitmap(bitmap);
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                }
+
+            }
+        });
     }
 }
