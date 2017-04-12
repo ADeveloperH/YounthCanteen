@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="分享我的邀请信息"
+        android:textColor="@color/textblack"
+        android:textSize="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="(点击复制分享给好友)"
+        android:textColor="@color/grayblack"
+        android:textSize="14dp" />
+
+    <TextView
+        android:id="@+id/tv_myinvitedcode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:layout_marginRight="10dp"
+        android:text="好东西要和最亲密的人分享，欢迎访问www.baidu.com下载青春食堂APP，注册时请填写好友推荐码：I5RSC5"
+        android:textColor="@color/textblack"
+        android:textSize="20dp" />
+
+    <Button
+        android:id="@+id/btn_copy"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/login_btn_enable"
+        android:text="复制邀请信息" />
+</LinearLayout>

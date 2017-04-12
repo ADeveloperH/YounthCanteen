@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -126,7 +127,8 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
                         SharedPreferencesUtil.setMoney(result.getMoney());
                         SharedPreferencesUtil.setIsSetPayPwd(result.isIspaypassset());
                         SharedPreferencesUtil.setUserIconUrl(result.getImgs());
-                        tvNickName.setText(result.getNick());
+                        nickNameStr = result.getNick();
+                        tvNickName.setText(nickNameStr);
                         String phoneNumber = SharedPreferencesUtil.getAccount().replace(" ", "");
                         if (DataCheckUtils.isValidatePhone(phoneNumber)) {
                             phoneNumber = phoneNumber.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
@@ -157,9 +159,13 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_nick_name://修改用户名
-                Intent nickNameIntent = new Intent(this, ModifyNickNameActivity.class);
-                nickNameIntent.putExtra("nickName", nickNameStr);
-                startActivity(nickNameIntent);
+                if (!TextUtils.isEmpty(nickNameStr)) {
+                    Intent nickNameIntent = new Intent(this, ModifyNickNameActivity.class);
+                    nickNameIntent.putExtra("nickName", nickNameStr);
+                    startActivity(nickNameIntent);
+                } else {
+                    getUserDetailInfo();
+                }
                 break;
             case R.id.btn_logout://退出登录
                 DialogUtil.getSimpleDialog(act, "提示", "确定退出?", "取消", "确认", null, new View.OnClickListener() {

@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import com.mobile.younthcanteen.AppManager;
 import com.mobile.younthcanteen.activity.LoginActivity;
-import com.mobile.younthcanteen.util.ToastUtils;
 
 import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.HttpResponseException;
@@ -111,7 +110,7 @@ public class MyTextAsyncResponseHandler extends MyCallback {
                             .getString("returnMessage");
                     if ("-101".equals(returnCode)) {
                         //用户下线
-                        ToastUtils.showShortToast(returnMessage);
+//                        ToastUtils.showShortToast(returnMessage);
                         AppManager.getAppManager().finishAllActivity();
                         context.startActivity(new Intent(context, LoginActivity.class));
                         return;

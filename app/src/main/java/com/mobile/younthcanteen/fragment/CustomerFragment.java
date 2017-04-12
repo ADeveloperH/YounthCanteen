@@ -24,6 +24,7 @@ import com.mobile.younthcanteen.activity.FeedBackActivity;
 import com.mobile.younthcanteen.activity.LoginActivity;
 import com.mobile.younthcanteen.activity.MyAccountActivity;
 import com.mobile.younthcanteen.activity.MyAddressActivity;
+import com.mobile.younthcanteen.activity.RecommendActivity;
 import com.mobile.younthcanteen.bean.UserDetailInfoBean;
 import com.mobile.younthcanteen.http.Http;
 import com.mobile.younthcanteen.http.MyTextAsyncResponseHandler;
@@ -221,6 +222,7 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
         llYuE.setOnClickListener(this);
         llJiFen.setOnClickListener(this);
         llFanKui.setOnClickListener(this);
+        llYaoQing.setOnClickListener(this);
     }
 
     @Override
@@ -271,6 +273,9 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.ll_jifen://积分页面
                 ToastUtils.showShortToast("本功能暂未开发");
+                break;
+            case R.id.ll_yaoqing://推荐邀请页面
+                startActivity(new Intent(getActivity(), RecommendActivity.class));
                 break;
         }
     }
