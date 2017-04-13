@@ -200,7 +200,6 @@
         <activity
             android:name=".activity.RecommendActivity"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="stateAlwaysVisible"
             android:screenOrientation="portrait" />
 
 

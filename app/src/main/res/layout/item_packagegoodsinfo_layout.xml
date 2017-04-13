@@ -14,6 +14,6 @@
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:text="土豆丝"
-        android:textColor="@color/home_txt_red"
+        android:textColor="#fb5f0b"
         android:textSize="16dp" />
 </LinearLayout>

@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:text=""
                     android:textColor="@color/textblack"
-                    android:textSize="16dp" />
+                    android:textSize="14dp" />
 
                 <ImageView
                     android:id="@+id/iv_right_arrow"
@@ -78,7 +78,7 @@
                 android:layout_weight="1"
                 android:text="余额"
                 android:textColor="@color/textblack"
-                android:textSize="16dp" />
+                android:textSize="14dp" />
 
             <ImageView
                 android:layout_width="10dp"
@@ -114,7 +114,7 @@
                 android:layout_weight="1"
                 android:text="积分"
                 android:textColor="@color/textblack"
-                android:textSize="16dp" />
+                android:textSize="14dp" />
 
             <ImageView
                 android:layout_width="10dp"
@@ -151,7 +151,7 @@
                 android:layout_weight="1"
                 android:text="常用地址"
                 android:textColor="@color/textblack"
-                android:textSize="16dp" />
+                android:textSize="14dp" />
 
             <ImageView
                 android:layout_width="10dp"
@@ -187,7 +187,7 @@
                 android:layout_weight="1"
                 android:text="邀请有奖"
                 android:textColor="@color/textblack"
-                android:textSize="16dp" />
+                android:textSize="14dp" />
 
             <ImageView
                 android:layout_width="10dp"
@@ -224,7 +224,7 @@
                 android:layout_weight="1"
                 android:text="帮助与反馈"
                 android:textColor="@color/textblack"
-                android:textSize="16dp" />
+                android:textSize="14dp" />
 
             <ImageView
                 android:layout_width="10dp"
@@ -260,7 +260,7 @@
                 android:layout_weight="1"
                 android:text="检查更新"
                 android:textColor="@color/textblack"
-                android:textSize="16dp" />
+                android:textSize="14dp" />
 
             <ImageView
                 android:layout_width="10dp"
@@ -276,11 +276,11 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="43dp"
             android:layout_marginTop="15dp"
+            android:background="@color/white"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="10dp">
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -288,7 +288,7 @@
                 android:gravity="center"
                 android:text="客服电话:"
                 android:textColor="@color/grayblack"
-                android:textSize="16dp" />
+                android:textSize="14dp" />
 
             <TextView
                 android:id="@+id/tv_service_phone"
@@ -297,16 +297,17 @@
                 android:gravity="center"
                 android:text="18137127017"
                 android:textColor="@color/myyellow"
-                android:textSize="16dp" />
+                android:textSize="14dp" />
         </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
             android:gravity="center"
-            android:padding="10dp"
             android:text="服务时间:9:00-23:00"
-            android:textColor="@color/grayblack"
-            android:textSize="16dp" />
+            android:textColor="@color/myyellow"
+            android:textSize="14dp" />
     </LinearLayout>
 </ScrollView>

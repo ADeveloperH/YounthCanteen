@@ -42,6 +42,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private EditText etPassword;
     private EditText etRePassword;
     private EditText etCode;
+    private EditText etRecommendCode;
     private Button btnGetCode;
     private Button btnRegister;
     private CheckBox checkBox;
@@ -106,6 +107,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     private void initView() {
         etPhone = (EditText) findViewById(R.id.et_phone);
+        etRecommendCode = (EditText) findViewById(R.id.et_recommend_code);
         etPassword = (EditText) findViewById(R.id.et_password);
         etRePassword = (EditText) findViewById(R.id.et_repassword);
         etCode = (EditText) findViewById(R.id.et_code);
@@ -167,6 +169,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         final String phoneNumStr = etPhone.getText().toString().trim();
         String codeStr = etCode.getText().toString().trim();
         String pwdStr = etPassword.getText().toString().trim();
+        String recommendCodeStr = etRecommendCode.getText().toString().trim();
         final String rePwdStr = etRePassword.getText().toString().trim();
         if (!pwdStr.equals(rePwdStr)) {
             ToastUtils.showLongToast("两次输入的密码不一致。");
@@ -178,6 +181,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         params.put("phone", phoneNumStr);
         params.put("password", pwdStr);
         params.put("code", codeStr);
+        params.put("tjaccount", TextUtils.isEmpty(recommendCodeStr) ? "" : recommendCodeStr);
         Http.post(Http.REGISTER, params, new MyTextAsyncResponseHandler(act, "注册中...") {
             @Override
             public void onSuccess(String content) {

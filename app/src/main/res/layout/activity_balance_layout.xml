@@ -4,6 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/white"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,16 +22,16 @@
             android:layout_height="wrap_content"
             android:text="余额账户（元）"
             android:textColor="@color/white"
-            android:textSize="14dp" />
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/tv_yue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="0.00"
+            android:text=""
             android:textColor="@color/white"
-            android:textSize="50dp" />
+            android:textSize="58dp" />
 
     </LinearLayout>
 
@@ -35,10 +39,11 @@
     <LinearLayout
         android:id="@+id/ll_recharge"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
+        android:paddingLeft="22dp"
+        android:paddingRight="30dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="15dp">
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -67,10 +72,11 @@
     <LinearLayout
         android:id="@+id/ll_consume_detail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
+        android:paddingLeft="22dp"
+        android:paddingRight="30dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="15dp">
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="wrap_content"

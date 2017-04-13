@@ -58,7 +58,7 @@
         android:layout_marginLeft="8dp"
         android:layout_toRightOf="@id/iv_cart"
         android:layout_weight="1"
-        android:text="￥0"
+        android:text=""
         android:textColor="@color/white"
         android:textSize="20dp" />
 
@@ -78,7 +78,7 @@
             <RelativeLayout
                 android:id="@+id/rl_container"
                 android:layout_width="match_parent"
-                android:layout_height="260dp">
+                android:layout_height="250dp">
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/viewpager"
@@ -127,7 +127,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="五香烤肠"
+                        android:text=""
                         android:gravity="left"
                         android:textColor="@color/textblack"
                         android:textSize="18dp" />
@@ -137,11 +137,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
+                        android:layout_marginRight="10dp"
                         android:gravity="left|center_vertical"
-                        android:text="￥2元"
+                        android:text=""
                         android:textColor="@color/text_price_red"
-                        android:textSize="20dp" />
+                        android:textSize="24dp" />
 
                     <RelativeLayout
                         android:id="@+id/rl_add_to_cart"
@@ -231,8 +231,9 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="发放邓丽君安静了的房间丽君安静了的房间老接口老接口丽君安静了的房间老接口"
+                    android:text=""
                     android:textColor="@color/grayblack"
+                    android:lineSpacingExtra="5dp"
                     android:textSize="14dp" />
 
             </LinearLayout>

@@ -3,6 +3,11 @@ package com.mobile.younthcanteen.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.View;
+import android.widget.TextView;
+
+import com.mobile.younthcanteen.R;
+import com.mobile.younthcanteen.util.UIUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,5 +40,15 @@ public class MoreGoodsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         return titles.get(position);
+    }
+
+
+    public View getTabView(int position){
+        View view = UIUtils.inflate(R.layout.tab_item);
+        TextView tv= (TextView) view.findViewById(R.id.textView);
+        tv.setText(titles.get(position));
+//        ImageView img = (ImageView) view.findViewById(R.id.imageView);
+//        img.setImageResource(imageResId[position]);
+        return view;
     }
 }

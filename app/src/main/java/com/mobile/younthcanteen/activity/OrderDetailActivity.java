@@ -60,10 +60,30 @@ public class OrderDetailActivity extends BaseActivity {
     TextView tvOrderMoney;
     @BindView(R.id.tv_apply_for_refund)
     TextView tvApplyForRefund;
-    @BindView(R.id.tv_payback_status)
-    TextView tvPayBackStatus;
     @BindView(R.id.lv)
     ListViewForScroll lv;
+    @BindView(R.id.tv_addTime)
+    TextView tvAddTime;
+    @BindView(R.id.tv_address)
+    TextView tvAddress;
+    @BindView(R.id.tv_consignee)
+    TextView tvConsignee;
+    @BindView(R.id.tv_payType)
+    TextView tvPayType;
+    @BindView(R.id.tv_deliveryTime)
+    TextView tvDeliveryTime;
+    @BindView(R.id.tv_backApplyTime)
+    TextView tvBackApplyTime;
+    @BindView(R.id.tv_backApplyResult)
+    TextView tvBackApplyResult;
+    @BindView(R.id.tv_paybackstatus)
+    TextView tvPaybackstatus;
+    @BindView(R.id.tv_shoptel)
+    TextView tvShoptel;
+    @BindView(R.id.tv_backAgreeTime)
+    TextView tvBackAgreeTime;
+    @BindView(R.id.tv_backOverTime)
+    TextView tvBackOverTime;
     private OrderDetailInfoBean.OrderGetResultEntity.ResultsEntity orderDetailBean;
     private String orderno;
 
@@ -133,20 +153,44 @@ public class OrderDetailActivity extends BaseActivity {
         Intent intent = getIntent();
         boolean isAlreadyPaid = intent.getBooleanExtra("isAlreadyPaid", false);//是否已经付款
         if (isAlreadyPaid) {
-            //已付款。可申请退款
+            //已付款。
+            tvPayType.setVisibility(View.VISIBLE);
+            tvPayType.setText("支付方式：" + orderDetailBean.getPayType());
+            tvDeliveryTime.setVisibility(View.VISIBLE);
+            tvDeliveryTime.setText("接单时间：" + orderDetailBean.getDeliveryTime());
+            //可申请退款
             tvApplyForRefund.setVisibility(View.VISIBLE);
             if (TextUtils.isEmpty(orderDetailBean.getPaybackstatus())) {
                 //当前没有申请退款
                 tvApplyForRefund.setText("申请退款");
-                tvPayBackStatus.setText("");
+                tvBackApplyTime.setVisibility(View.GONE);
+                tvPaybackstatus.setVisibility(View.GONE);
+                tvBackApplyResult.setVisibility(View.GONE);
+                tvBackAgreeTime.setVisibility(View.GONE);
+                tvBackOverTime.setVisibility(View.GONE);
             } else {
                 //当前已经申请退款
                 tvApplyForRefund.setText("取消申请退款");
-                tvPayBackStatus.setText("(" + orderDetailBean.getPaybackstatus() + ")");
+                tvBackApplyTime.setVisibility(View.VISIBLE);
+                tvBackApplyTime.setText("申请时间：" + orderDetailBean.getBackApplyTime());
+                tvPaybackstatus.setVisibility(View.VISIBLE);
+                tvPaybackstatus.setText("退款状态：" + orderDetailBean.getPaybackstatus());
+                tvBackApplyResult.setVisibility(View.VISIBLE);
+                tvBackApplyResult.setText("申请原因：" + orderDetailBean.getBackApplyResult());
+                tvBackAgreeTime.setVisibility(View.VISIBLE);
+                tvBackAgreeTime.setText("处理时间：" + orderDetailBean.getBackAgreeTime());
+                tvBackOverTime.setVisibility(View.VISIBLE);
+                tvBackOverTime.setText("到账时间：" + orderDetailBean.getBackOverTime());
             }
         } else {
             tvApplyForRefund.setVisibility(View.GONE);
-            tvPayBackStatus.setText("");
+            tvBackApplyTime.setVisibility(View.GONE);
+            tvPaybackstatus.setVisibility(View.GONE);
+            tvBackApplyResult.setVisibility(View.GONE);
+            tvPayType.setVisibility(View.GONE);
+            tvDeliveryTime.setVisibility(View.GONE);
+            tvBackAgreeTime.setVisibility(View.GONE);
+            tvBackOverTime.setVisibility(View.GONE);
         }
         OrderDetailInfoBean.OrderGetResultEntity.ResultsEntity.ProsEntity prosEntity;
         String title = "";
@@ -168,9 +212,13 @@ public class OrderDetailActivity extends BaseActivity {
         tvCounts.setText("数量：" + count);
         tvOrderno.setText("订单号：" + orderDetailBean.getOrderno());
         tvPayTime.setText("付款时间：" + orderDetailBean.getPayTime());
-        tvPhone.setText("收货人：" + orderDetailBean.getPhone());
-        tvDeliveryPhone.setText("配送人：" + orderDetailBean.getDeliveryPhone());
+        tvPhone.setText("联系电话：" + orderDetailBean.getPhone());
+        tvDeliveryPhone.setText("配送电话：" + orderDetailBean.getDeliveryPhone());
         tvOrderMoney.setText(orderDetailBean.getOrderMoney() + "元");
+        tvAddTime.setText("下单时间：" + orderDetailBean.getAddTime());
+        tvAddress.setText("收货地址：" + orderDetailBean.getAddress());
+        tvConsignee.setText("收货人：" + orderDetailBean.getConsignee());
+        tvShoptel.setText("商家电话：" + orderDetailBean.getShoptel());
 
         //显示具体的订单
         OrderDetailLvAdapter adapter = new OrderDetailLvAdapter(act, orderDetailBean.getPros());

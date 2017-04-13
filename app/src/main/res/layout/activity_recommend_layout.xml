@@ -12,7 +12,7 @@
         android:layout_marginTop="20dp"
         android:text="分享我的邀请信息"
         android:textColor="@color/textblack"
-        android:textSize="20dp" />
+        android:textSize="18dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -30,9 +30,9 @@
         android:layout_marginLeft="10dp"
         android:gravity="center"
         android:layout_marginRight="10dp"
-        android:text="好东西要和最亲密的人分享，欢迎访问www.baidu.com下载青春食堂APP，注册时请填写好友推荐码：I5RSC5"
+        android:text=""
         android:textColor="@color/textblack"
-        android:textSize="20dp" />
+        android:textSize="16dp" />
 
     <Button
         android:id="@+id/btn_copy"
