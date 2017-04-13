@@ -1,7 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     android:id="@+id/ll_tab_container"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#cc6309"
     android:orientation="horizontal"
     android:paddingBottom="5dp"
     android:paddingTop="5dp">
@@ -25,6 +26,7 @@
             android:id="@+id/home_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:text="首页"
             android:textColor="@drawable/tab_selector_textview"
             android:textSize="14dp" />
@@ -50,6 +52,7 @@
             android:id="@+id/cart_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:text="购物车"
             android:textColor="@drawable/tab_selector_textview"
             android:textSize="14dp" />
@@ -74,6 +77,7 @@
             android:id="@+id/order_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:text="订单"
             android:textColor="@drawable/tab_selector_textview"
             android:textSize="14dp" />
@@ -98,6 +102,7 @@
             android:id="@+id/custome_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:text="我的"
             android:textColor="@drawable/tab_selector_textview"
             android:textSize="14dp" />

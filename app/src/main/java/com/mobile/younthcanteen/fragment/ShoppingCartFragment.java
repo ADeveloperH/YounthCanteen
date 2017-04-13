@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.mobile.younthcanteen.R;
 import com.mobile.younthcanteen.activity.AddRemarkActivity;
 import com.mobile.younthcanteen.activity.GoodsDetailInfoActivity;
+import com.mobile.younthcanteen.activity.LoginActivity;
 import com.mobile.younthcanteen.activity.MyAddressActivity;
 import com.mobile.younthcanteen.activity.PackageGoodsInfoActivity;
 import com.mobile.younthcanteen.activity.PayActivity;
@@ -155,7 +156,7 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
                     Intent intent = new Intent(getActivity(), MyAddressActivity.class);
                     startActivityForResult(intent, GETADDRESS_REQUESTCODE);
                 } else {
-                    ToastUtils.showShortToast("请先登录");
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
                 }
                 break;
             case R.id.tv_modify://编辑完成
@@ -193,7 +194,7 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
      */
     private void commitOrder() {
         if (!LoginUtils.isLogin()) {
-            ToastUtils.showShortToast("请先登录");
+            startActivity(new Intent(getActivity(), LoginActivity.class));
             return;
         }
         if (addressBean == null) {
@@ -255,7 +256,7 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
                 tvTel.setText(addressBean.getTel());
                 tvSex.setText("1".equals(addressBean.getSex()) ? "女士" : "先生");
             }
-        }else if (resultCode == GETREMARK_RESULTCODE) {
+        } else if (resultCode == GETREMARK_RESULTCODE) {
             //添加备注
 
             String remark = data.getStringExtra("remark");

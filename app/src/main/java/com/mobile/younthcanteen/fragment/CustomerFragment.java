@@ -258,6 +258,10 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
             case R.id.ll_address://常用地址
+                if (!LoginUtils.isLogin()) {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    return;
+                }
                 startActivity(new Intent(mActivity, MyAddressActivity.class));
                 break;
             case R.id.tv_service_phone://拨打电话
@@ -266,15 +270,27 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.ll_yue://余额页面
+                if (!LoginUtils.isLogin()) {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    return;
+                }
                 startActivity(new Intent(getActivity(), BalanceActivity.class));
                 break;
             case R.id.ll_fankui://反馈建议页面
+                if (!LoginUtils.isLogin()) {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    return;
+                }
                 startActivity(new Intent(getActivity(), FeedBackActivity.class));
                 break;
             case R.id.ll_jifen://积分页面
                 ToastUtils.showShortToast("本功能暂未开发");
                 break;
             case R.id.ll_yaoqing://推荐邀请页面
+                if (!LoginUtils.isLogin()) {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    return;
+                }
                 startActivity(new Intent(getActivity(), RecommendActivity.class));
                 break;
         }
