@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.mobile.younthcanteen.AppManager;
 import com.mobile.younthcanteen.R;
@@ -46,6 +47,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private Button btnGetCode;
     private Button btnRegister;
     private CheckBox checkBox;
+    private TextView tvAgree;
     private Activity act;
     private boolean isTiming = false;//是否正在倒计时
     private TextWatcher watcherCanReg = new TextWatcher() {
@@ -113,7 +115,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         etCode = (EditText) findViewById(R.id.et_code);
         btnGetCode = (Button) findViewById(R.id.btn_getcode);
         btnRegister = (Button) findViewById(R.id.btn_register);
-
+        tvAgree = (TextView) findViewById(R.id.tv_agreement);
         checkBox = (CheckBox) findViewById(R.id.checkbox);
     }
 
@@ -125,6 +127,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         btnGetCode.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
+        tvAgree.setOnClickListener(this);
 
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -158,6 +161,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.btn_register:
                 register();
+                break;
+            case R.id.tv_agreement://注册协议
+                startActivity(new Intent(act, RegisterAgreementActivity.class));
                 break;
         }
     }
@@ -199,7 +205,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                         SharedPreferencesUtil.setAccount(phoneNumStr);
                         SharedPreferencesUtil.setUserId(registerResultBean.getResults().getUserid());
                         SharedPreferencesUtil.setNickName(registerResultBean.getResults().getNick());
-                        startActivity(new Intent(act,MainActivity.class));
+                        startActivity(new Intent(act, MainActivity.class));
                         finish();
                     }
                 } catch (Exception e) {

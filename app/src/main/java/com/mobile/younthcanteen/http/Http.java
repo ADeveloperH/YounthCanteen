@@ -48,6 +48,7 @@ public class Http {
     public static final String CANCELAPPLYPAYBACK = "orderCancelPayBack";//申请退款
     public static final String GETORDERINFO = "orderGet";//获取订单信息
     public static final String GETJCODE = "userTjCode";//获取我的推荐码
+    public static final String GETREGISTERAGREEMENT = "userProtocol";//获取注册协议
 
 
     public static String getAbsoluteUrl(String relativeUrl) {
