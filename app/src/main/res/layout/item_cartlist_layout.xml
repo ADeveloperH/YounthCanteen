@@ -11,41 +11,6 @@
         android:layout_centerVertical="true"
         android:scaleType="fitXY"
         android:src="@color/gray_bg" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/iv"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="商品名称"
-            android:textColor="@color/textblack"
-            android:textSize="16dp" />
-
-        <TextView
-            android:id="@+id/tv_materia"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="土豆丝"
-            android:textColor="@color/grayblack"
-            android:textSize="14dp" />
-
-        <TextView
-            android:id="@+id/tv_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="￥2元"
-            android:textColor="@color/text_price_red"
-            android:textSize="18dp" />
-    </LinearLayout>
-
     <LinearLayout
         android:id="@+id/ll_add_subtract"
         android:layout_width="wrap_content"
@@ -81,6 +46,42 @@
             android:scaleType="center"
             android:src="@drawable/add_btn_selector" />
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/iv"
+        android:layout_toLeftOf="@id/ll_add_subtract"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="商品名称"
+            android:textColor="@color/textblack"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/tv_materia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="土豆丝土豆丝土豆丝土豆丝土豆丝土豆丝"
+            android:textColor="@color/grayblack"
+            android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="￥2元"
+            android:textColor="@color/text_price_red"
+            android:textSize="18dp" />
+    </LinearLayout>
+
+
 
     <ImageView
         android:id="@+id/iv_delete"

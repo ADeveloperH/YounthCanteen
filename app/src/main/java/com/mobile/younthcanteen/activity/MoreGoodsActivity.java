@@ -66,7 +66,12 @@ public class MoreGoodsActivity extends BaseActivity {
             viewpager.setVisibility(View.VISIBLE);
             tabLayout = (TabLayout) findViewById(R.id.tablayout);
             tabLayout.setupWithViewPager(viewpager);
-            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+            if (titleList.size() <= 4) {
+                tabLayout.setTabMode(TabLayout.MODE_FIXED);
+            } else {
+                tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+            }
+
             Intent intent = getIntent();
             if (intent != null) {
                 tabIndex = intent.getIntExtra("tabIndex", 0);

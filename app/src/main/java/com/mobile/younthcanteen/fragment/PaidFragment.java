@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -24,6 +26,7 @@ import com.mobile.younthcanteen.util.JsonUtil;
 import com.mobile.younthcanteen.util.SharedPreferencesUtil;
 import com.mobile.younthcanteen.util.ToastUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,6 +43,13 @@ public class PaidFragment extends Fragment implements View.OnClickListener {
     private LinearLayout llNoOrder;
     private ListView lvPaidOrder;
     private PaidOrderLvAdapter paidOrderLvAdapter;
+
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+    private String lastId = "0";//分页用id
+    private int lastRequestSize = 0;//上次请求返回的数据大小
+    private final int pageCount = 15;//每页的数量。后台写死的
+    private List<OrderResultBean.ResultsEntity> results;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -92,6 +102,12 @@ public class PaidFragment extends Fragment implements View.OnClickListener {
 
     private void refreshUI() {
         isRefreshUI = true;
+        //刷新
+        lastId = "0";
+        lastRequestSize = 0;
+        if (results != null) {
+            results.clear();
+        }
         getOrderData();
         isRefreshUI = false;
     }
@@ -103,10 +119,12 @@ public class PaidFragment extends Fragment implements View.OnClickListener {
         RequestParams params = new RequestParams();
         params.put("token", SharedPreferencesUtil.getToken());
         params.put("status", "10");
+        params.put("id", lastId);
         Http.post(Http.GETORDERLIST, params, new MyTextAsyncResponseHandler(context, null) {
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
+                refreshComplete();
                 try {
                     OrderResultBean bean = JsonUtil.fromJson(content, OrderResultBean.class);
                     if (null != bean) {
@@ -114,7 +132,32 @@ public class PaidFragment extends Fragment implements View.OnClickListener {
                             ToastUtils.showShortToast(bean.getReturnMessage());
                             return;
                         }
-                        showOrder(bean.getResults());
+                        if (results == null) {
+                            results = new ArrayList<OrderResultBean.ResultsEntity>();
+                        }
+                        List<OrderResultBean.ResultsEntity> requestList = bean.getResults();
+                        if (requestList != null && requestList.size() > 0) {
+                            //最后一个proid作为id请求更多
+                            lastRequestSize = requestList.size();
+                            lastId = bean.getId();
+                            results.addAll(requestList);
+                            llNoOrder.setVisibility(View.GONE);
+                            swipeRefreshLayout.setVisibility(View.VISIBLE);
+                            if (paidOrderLvAdapter == null) {
+                                paidOrderLvAdapter = new PaidOrderLvAdapter(context, results);
+                                lvPaidOrder.setAdapter(paidOrderLvAdapter);
+                            } else {
+                                paidOrderLvAdapter.setResults(results);
+                                paidOrderLvAdapter.notifyDataSetChanged();
+                            }
+                        } else {
+                            if ("0".equals(lastId)) {
+                                //第一次请求没有数据
+                                llNoOrder.setVisibility(View.VISIBLE);
+                                swipeRefreshLayout.setVisibility(View.GONE);
+                            }
+                            lastRequestSize = 0;
+                        }
                     } else {
                         ToastUtils.showShortToast("服务器异常，请稍后重试");
                     }
@@ -127,31 +170,10 @@ public class PaidFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onFailure(Throwable error) {
                 super.onFailure(error);
+                refreshComplete();
                 ToastUtils.showShortToast("服务器异常，请稍后重试");
             }
         });
-    }
-
-    /**
-     * 显示订单界面
-     *
-     * @param results
-     */
-    private void showOrder(List<OrderResultBean.ResultsEntity> results) {
-        if (results == null || results.size() <= 0) {
-            llNoOrder.setVisibility(View.VISIBLE);
-            lvPaidOrder.setVisibility(View.GONE);
-        } else {
-            llNoOrder.setVisibility(View.GONE);
-            lvPaidOrder.setVisibility(View.VISIBLE);
-            if (paidOrderLvAdapter == null) {
-                paidOrderLvAdapter = new PaidOrderLvAdapter(context, results);
-                lvPaidOrder.setAdapter(paidOrderLvAdapter);
-            } else {
-                paidOrderLvAdapter.setResults(results);
-                paidOrderLvAdapter.notifyDataSetChanged();
-            }
-        }
     }
 
 
@@ -165,15 +187,57 @@ public class PaidFragment extends Fragment implements View.OnClickListener {
         btnOrder = (Button) view.findViewById(R.id.btn_order);
         llNoOrder = (LinearLayout) view.findViewById(R.id.ll_no_order);
         lvPaidOrder = (ListView) view.findViewById(R.id.lv_paid_order);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipelayout);
 
     }
 
     private void setListener() {
         btnOrder.setOnClickListener(this);
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.myyellow));
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //刷新
+                lastId = "0";
+                lastRequestSize = 0;
+                if (results != null) {
+                    results.clear();
+                }
+                getOrderData();
+            }
+        });
+
+
+        lvPaidOrder.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                    //空闲状态
+                    int lastVisiblePosition = lvPaidOrder.getLastVisiblePosition();
+                    if (lastVisiblePosition == lvPaidOrder.getCount() - 1) {
+                        //最后一个条目,加载更多
+                        if (lastRequestSize == pageCount) {
+                            //还有可能有更多
+                            getOrderData();
+                        } else {
+                            ToastUtils.showShortToast("没有更多了");
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            }
+        });
+
+
+        btnOrder.setOnClickListener(this);
         lvPaidOrder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (paidOrderLvAdapter != null ) {
+                if (paidOrderLvAdapter != null) {
                     List<OrderResultBean.ResultsEntity> listData = paidOrderLvAdapter.getResults();
                     if (listData != null && listData.size() > 0) {
                         OrderResultBean.ResultsEntity bean = listData.get(position);
@@ -185,6 +249,16 @@ public class PaidFragment extends Fragment implements View.OnClickListener {
                 }
             }
         });
+    }
+
+    /**
+     * 刷新完成
+     */
+    private void refreshComplete() {
+        if (swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
+            ToastUtils.showShortToast("刷新完成");
+        }
     }
 
     @Override

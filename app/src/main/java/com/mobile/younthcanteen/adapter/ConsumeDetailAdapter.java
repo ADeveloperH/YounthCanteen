@@ -1,6 +1,7 @@
 package com.mobile.younthcanteen.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -59,6 +60,12 @@ public class ConsumeDetailAdapter extends BaseAdapter {
         ConsumeDetailBean.ResultsEntity bean = results.get(position);
         viewHolder.tvType.setText(bean.getType());
         viewHolder.tvMoney.setText(bean.getMoney() + "元");
+        double money = Double.parseDouble(bean.getMoney());
+        if (money < 0) {
+            viewHolder.tvMoney.setTextColor(Color.parseColor("#ff224c"));
+        } else {
+            viewHolder.tvMoney.setTextColor(Color.parseColor("#333333"));
+        }
         viewHolder.tvBalance.setText("余额：" + bean.getBalance() + "元");
         viewHolder.tvTime.setText(bean.getTime());
         return convertView;
@@ -77,5 +84,9 @@ public class ConsumeDetailAdapter extends BaseAdapter {
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
+    }
+
+    public void setResults(List<ConsumeDetailBean.ResultsEntity> results) {
+        this.results = results;
     }
 }
