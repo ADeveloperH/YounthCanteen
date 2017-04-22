@@ -10,17 +10,21 @@ import java.util.List;
 public class GoodsDetailInfoBean {
 
     /**
+     * choices : ["不辣","不辣","不辣","不辣"]
      * combos : []
-     * describe :
-     * name : 农夫山泉
-     * price : 2
-     * proid : 14
-     * url : ["http://116.255.130.49:10001/pros/nongfushanquan.jpg"]
+     * count : 0
+     * describe :     “消费不满意, 我们就免单”计划的适用范围：
+     提供产品或服务与承诺的产品或服务内容严重不符经合法有效的证据证明存在严重质量问题，或有违反《中华人民共和国食品安全法》、《中华人民共和国食品安全法实施条例》、《餐饮服务食品安全监督管理办法》、《中华人民共和国消费者权益保护法》的情况
+     * intro : 简介：鱼香肉丝，“消费不满意, 我们就免单”
+     * name : 鱼香肉丝
+     * price : 20
+     * proid : 5
+     * url : ["http://116.255.130.49:10001/pros/2017413162954454120.jpeg"]
      */
 
     private ResultsEntity results;
     /**
-     * results : {"combos":[],"describe":"","name":"农夫山泉","price":2,"proid":14,"url":["http://116.255.130.49:10001/pros/nongfushanquan.jpg"]}
+     * results : {"choices":["不辣","不辣","不辣","不辣"],"combos":[],"count":0,"describe":"    \u201c消费不满意, 我们就免单\u201d计划的适用范围：\n    提供产品或服务与承诺的产品或服务内容严重不符经合法有效的证据证明存在严重质量问题，或有违反《中华人民共和国食品安全法》、《中华人民共和国食品安全法实施条例》、《餐饮服务食品安全监督管理办法》、《中华人民共和国消费者权益保护法》的情况","intro":"简介：鱼香肉丝，\u201c消费不满意, 我们就免单\u201d","name":"鱼香肉丝","price":20,"proid":5,"url":["http://116.255.130.49:10001/pros/2017413162954454120.jpeg"]}
      * returnCode : 0
      * returnMessage : 成功！
      */
@@ -53,12 +57,23 @@ public class GoodsDetailInfoBean {
     }
 
     public static class ResultsEntity {
+        private String count;
         private String describe;
+        private String intro;
         private String name;
         private String price;
         private String proid;
+        private List<String> choices;
         private List<?> combos;
         private List<String> url;
+
+        public String getCount() {
+            return count;
+        }
+
+        public void setCount(String count) {
+            this.count = count;
+        }
 
         public String getDescribe() {
             return describe;
@@ -66,6 +81,14 @@ public class GoodsDetailInfoBean {
 
         public void setDescribe(String describe) {
             this.describe = describe;
+        }
+
+        public String getIntro() {
+            return intro;
+        }
+
+        public void setIntro(String intro) {
+            this.intro = intro;
         }
 
         public String getName() {
@@ -90,6 +113,14 @@ public class GoodsDetailInfoBean {
 
         public void setProid(String proid) {
             this.proid = proid;
+        }
+
+        public List<String> getChoices() {
+            return choices;
+        }
+
+        public void setChoices(List<String> choices) {
+            this.choices = choices;
         }
 
         public List<?> getCombos() {

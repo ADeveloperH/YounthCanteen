@@ -243,6 +243,12 @@ public class PackageGoodsInfoActivity extends Activity implements ViewPager.OnPa
                 PackageGoodsInfoBean.ResultsEntity.CombosEntity.MaterialEntity bean =
                         dataList.get(position);
                 //加入当前选择的商品中
+                if (Integer.parseInt(bean.getCounts()) <= 0) {
+                    //无库存
+                    ToastUtils.showShortToast("暂无库存");
+                    return;
+                }
+
                 addMateriaToPackage(bean, clickPositon);
                 PackageGoodsSelectGVAdapter adapter = (PackageGoodsSelectGVAdapter)
                         gvSelectAdd.getAdapter();

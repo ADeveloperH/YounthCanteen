@@ -102,6 +102,11 @@ public class GoodsDetailInfoActivity extends Activity implements ViewPager.OnPag
                 break;
             case R.id.ll_add_to_cart://添加到购物车
                 curGoodsCount = Integer.parseInt(curGoodsBean.getCount());
+                if ((curGoodsCount + 1) > Integer.parseInt(goodsInfoBean.getCount())) {
+                    //已无库存
+                    ToastUtils.showShortToast("暂无库存");
+                    return;
+                }
                 curGoodsCount++;
                 curGoodsBean.setCount(curGoodsCount+"");
                 ShoppingCartUtil.addGoodsToCart(curGoodsBean);
@@ -116,6 +121,11 @@ public class GoodsDetailInfoActivity extends Activity implements ViewPager.OnPag
                 tvClearing.setVisibility(View.VISIBLE);
                 break;
             case R.id.iv_cart_add://添加购物车加号
+                if ((curGoodsCount + 1) > Integer.parseInt(goodsInfoBean.getCount())) {
+                    //已无库存
+                    ToastUtils.showShortToast("暂无库存");
+                    return;
+                }
                 curGoodsCount++;
                 curGoodsBean.setCount(curGoodsCount+"");
                 ShoppingCartUtil.addGoodsToCart(curGoodsBean);
