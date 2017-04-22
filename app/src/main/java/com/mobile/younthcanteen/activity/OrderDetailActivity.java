@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -86,6 +87,8 @@ public class OrderDetailActivity extends BaseActivity {
     TextView tvBackOverTime;
     @BindView(R.id.tv_ordermoney_desc)
     TextView tvOrdermoneyDesc;
+    @BindView(R.id.btn_comfirm)
+    Button btnComfirm;
     private OrderDetailInfoBean.OrderGetResultEntity.ResultsEntity orderDetailBean;
     private String orderno;
 
@@ -229,13 +232,22 @@ public class OrderDetailActivity extends BaseActivity {
         showTextViewContent(tvAddTime, "下单时间：", orderDetailBean.getAddTime());
         showTextViewContent(tvAddress, "收货地址：", orderDetailBean.getAddress());
         showTextViewContent(tvConsignee, "收货人：", orderDetailBean.getConsignee());
+
+        if ("配送中".equals(orderDetailBean.getStatus())) {
+            //配送中的可以确认收货
+            btnComfirm.setVisibility(View.VISIBLE);
+        } else {
+            btnComfirm.setVisibility(View.GONE);
+        }
+
+
         //显示具体的订单
         OrderDetailLvAdapter adapter = new OrderDetailLvAdapter(act, orderDetailBean.getPros());
         lv.setAdapter(adapter);
 
     }
 
-    @OnClick({R.id.rl_product_info, R.id.tv_state, R.id.tv_apply_for_refund})
+    @OnClick({R.id.rl_product_info, R.id.tv_state, R.id.tv_apply_for_refund, R.id.btn_comfirm})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_product_info:
@@ -261,7 +273,47 @@ public class OrderDetailActivity extends BaseActivity {
                     cancelApplyForRefund();
                 }
                 break;
+            case R.id.btn_comfirm://确认收货
+                confirmReceipt();
+                break;
+
         }
+    }
+
+
+    /**
+     * 确认收货
+     */
+    private void confirmReceipt() {
+        RequestParams params = new RequestParams();
+        params.put("token", SharedPreferencesUtil.getToken());
+        params.put("orderno", orderno);
+        Http.post(Http.CONFIRMRECEIPT, params, new MyTextAsyncResponseHandler(act, "正在申请中...") {
+            @Override
+            public void onSuccess(String content) {
+                super.onSuccess(content);
+                try {
+                    SimpleResultBean bean = JsonUtil.fromJson(content, SimpleResultBean.class);
+                    if (null != bean) {
+                        ToastUtils.showShortToast(bean.getReturnMessage());
+                        if (Http.SUCCESS.equals(bean.getReturnCode())) {
+                            getDetailInfo();
+                        }
+                    } else {
+                        ToastUtils.showShortToast("服务器异常，请稍后重试");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showShortToast("数据异常，请稍后重试");
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable error) {
+                super.onFailure(error);
+                ToastUtils.showShortToast("服务器异常，请稍后重试");
+            }
+        });
     }
 
 
@@ -308,4 +360,5 @@ public class OrderDetailActivity extends BaseActivity {
             }
         });
     }
+
 }
