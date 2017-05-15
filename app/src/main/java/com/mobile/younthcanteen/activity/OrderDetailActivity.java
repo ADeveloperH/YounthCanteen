@@ -2,6 +2,7 @@ package com.mobile.younthcanteen.activity;
 
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -164,9 +165,9 @@ public class OrderDetailActivity extends BaseActivity {
             tvPayTime.setVisibility(View.VISIBLE);
             tvDeliveryPhone.setVisibility(View.VISIBLE);
             tvShoptel.setVisibility(View.VISIBLE);
-            tvOrdermoneyDesc.setText("实付款");
+            tvOrdermoneyDesc.setText("实付款：");
             showTextViewContent(tvPayType, "支付方式：", orderDetailBean.getPayType());
-            showTextViewContent(tvDeliveryTime, "接单时间：", orderDetailBean.getDeliveryTime());
+            showTextViewContent(tvDeliveryTime, "接单时间：", orderDetailBean.getOkTime());
             showTextViewContent(tvPayTime, "付款时间：", orderDetailBean.getPayTime());
             showTextViewContent(tvDeliveryPhone, "配送电话：", orderDetailBean.getDeliveryPhone());
             showTextViewContent(tvShoptel, "商家电话：", orderDetailBean.getShoptel());
@@ -188,6 +189,9 @@ public class OrderDetailActivity extends BaseActivity {
                 tvBackAgreeTime.setVisibility(View.VISIBLE);
                 tvBackOverTime.setVisibility(View.VISIBLE);
                 tvApplyForRefund.setText("取消申请退款");
+                if ("已退款".equals(orderDetailBean.getPaybackstatus())) {
+                    tvApplyForRefund.setVisibility(View.GONE);
+                }
                 showTextViewContent(tvBackApplyTime, "申请时间：", orderDetailBean.getBackApplyTime());
                 showTextViewContent(tvPaybackstatus, "退款状态：", orderDetailBean.getPaybackstatus());
                 showTextViewContent(tvBackApplyResult, "申请原因：", orderDetailBean.getBackApplyResult());
@@ -247,7 +251,7 @@ public class OrderDetailActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.rl_product_info, R.id.tv_state, R.id.tv_apply_for_refund, R.id.btn_comfirm})
+    @OnClick({R.id.rl_product_info, R.id.tv_state, R.id.tv_apply_for_refund, R.id.btn_comfirm, R.id.tv_shoptel})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_product_info:
@@ -275,6 +279,13 @@ public class OrderDetailActivity extends BaseActivity {
                 break;
             case R.id.btn_comfirm://确认收货
                 confirmReceipt();
+                break;
+            case R.id.tv_shoptel://商家电话
+                String phone = tvShoptel.getText().toString().trim();
+                if (!TextUtils.isEmpty(phone)) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
+                    startActivity(intent);
+                }
                 break;
 
         }

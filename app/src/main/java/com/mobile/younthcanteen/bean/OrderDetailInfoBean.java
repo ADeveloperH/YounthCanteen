@@ -99,6 +99,7 @@ public class OrderDetailInfoBean {
             private String deliveryTime;
             private String freight;
             private String imgs;
+            private String okTime;
             private String orderMoney;
             private String orderno;
             private String payTime;
@@ -242,6 +243,14 @@ public class OrderDetailInfoBean {
 
             public void setOrderMoney(String orderMoney) {
                 this.orderMoney = orderMoney;
+            }
+
+            public String getOkTime() {
+                return okTime;
+            }
+
+            public void setOkTime(String okTime) {
+                this.okTime = okTime;
             }
 
             public String getOrderno() {
