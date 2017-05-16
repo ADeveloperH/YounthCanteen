@@ -251,7 +251,9 @@ public class OrderDetailActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.rl_product_info, R.id.tv_state, R.id.tv_apply_for_refund, R.id.btn_comfirm, R.id.tv_shoptel})
+    @OnClick({R.id.rl_product_info, R.id.tv_state,
+            R.id.tv_apply_for_refund, R.id.btn_comfirm,
+            R.id.tv_shoptel,R.id.tv_deliveryPhone})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_product_info:
@@ -281,16 +283,21 @@ public class OrderDetailActivity extends BaseActivity {
                 confirmReceipt();
                 break;
             case R.id.tv_shoptel://商家电话
-                String phone = tvShoptel.getText().toString().trim();
-                if (!TextUtils.isEmpty(phone)) {
-                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
+                String shoptelStr = tvShoptel.getText().toString().trim();
+                if (!TextUtils.isEmpty(shoptelStr)) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + shoptelStr));
                     startActivity(intent);
                 }
                 break;
-
+            case R.id.tv_deliveryPhone://配送电话
+                String deliveryPhone = tvDeliveryPhone.getText().toString().trim();
+                if (!TextUtils.isEmpty(deliveryPhone)) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + deliveryPhone));
+                    startActivity(intent);
+                }
+                break;
         }
     }
-
 
     /**
      * 确认收货
